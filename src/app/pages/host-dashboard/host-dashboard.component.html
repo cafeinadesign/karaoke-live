@@ -51,6 +51,11 @@
       </button>
     </section>
 
+    <section class="add-song">
+      <h2 i18n="@@host.addSongTitle">Adicionar música</h2>
+      <app-song-search [roomId]="room()!.id" />
+    </section>
+
     <section class="queue">
       <h2>
         <span i18n="@@host.upcoming">Próximas</span>

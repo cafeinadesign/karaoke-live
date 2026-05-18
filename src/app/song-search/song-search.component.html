@@ -1,0 +1,32 @@
+<mat-form-field appearance="outline" class="search-field">
+  <mat-icon matPrefix>search</mat-icon>
+  <mat-label i18n="@@mobile.searchLabel">Buscar música</mat-label>
+  <input
+    matInput
+    type="search"
+    autocomplete="off"
+    [formControl]="searchControl"
+    i18n-aria-label="@@mobile.searchAriaLabel"
+    aria-label="Buscar música"
+  />
+  @if (searching()) {
+    <mat-progress-spinner matSuffix mode="indeterminate" diameter="20" />
+  }
+</mat-form-field>
+
+@if (results().length > 0) {
+  <mat-action-list class="results">
+    @for (video of results(); track video.videoId) {
+      <button mat-list-item type="button" (click)="enqueue(video)" lines="2">
+        <img matListItemAvatar [src]="video.thumbnail" [alt]="''" />
+        <span matListItemTitle>{{ video.title }}</span>
+        <span matListItemLine>
+          {{ video.channelTitle }} · {{ formatDuration(video.durationSeconds) }}
+        </span>
+        <mat-icon matListItemMeta aria-hidden="true">queue_music</mat-icon>
+      </button>
+    }
+  </mat-action-list>
+} @else if (searchControl.value.length >= 2 && !searching()) {
+  <p class="empty" i18n="@@mobile.noResults">Sem resultados para "{{ searchControl.value }}".</p>
+}

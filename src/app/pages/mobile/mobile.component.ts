@@ -20,9 +20,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../auth/auth.service';
 import { RoomsService } from '../../rooms/rooms.service';
 import { QueueService } from '../../queue/queue.service';
-import { YoutubeService } from '../../youtube/youtube.service';
-import { VideoResult } from '../../types';
-import { formatDuration } from '../../utils/format';
+import { SongSearchComponent } from '../../song-search/song-search.component';
 import { YourTurnSheetComponent, YourTurnData } from './your-turn-sheet.component';
 import { QrScannerDialogComponent } from './qr-scanner-dialog.component';
 
@@ -36,6 +34,7 @@ import { QrScannerDialogComponent } from './qr-scanner-dialog.component';
     MatIconModule,
     MatListModule,
     MatProgressSpinnerModule,
+    SongSearchComponent,
   ],
   templateUrl: './mobile.component.html',
   styleUrl: './mobile.component.sass',
@@ -47,7 +46,6 @@ export class MobileComponent {
   private readonly auth = inject(AuthService);
   private readonly rooms = inject(RoomsService);
   protected readonly queue = inject(QueueService);
-  private readonly youtube = inject(YoutubeService);
   private readonly bottomSheet = inject(MatBottomSheet);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
@@ -56,10 +54,7 @@ export class MobileComponent {
     nonNullable: true,
     validators: [Validators.required, Validators.minLength(6), Validators.maxLength(6)],
   });
-  protected readonly searchControl = new FormControl<string>('', { nonNullable: true });
 
-  protected readonly results = signal<ReadonlyArray<VideoResult>>([]);
-  protected readonly searching = signal(false);
   protected readonly joining = signal(false);
   protected readonly room = this.rooms.currentRoom;
 
@@ -76,7 +71,6 @@ export class MobileComponent {
     return current !== null && current.user_id === this.auth.user()?.id;
   });
 
-  private searchTimer: number | null = null;
   private sheetRef: MatBottomSheetRef<YourTurnSheetComponent, void> | null = null;
   private shownTurnForItemId: string | null = null;
 
@@ -85,13 +79,6 @@ export class MobileComponent {
     if (code) {
       void this.tryJoin(code);
     }
-
-    this.searchControl.valueChanges.subscribe((value) => {
-      if (this.searchTimer !== null) clearTimeout(this.searchTimer);
-      this.searchTimer = window.setTimeout(() => {
-        void this.performSearch(value);
-      }, 400);
-    });
 
     effect(() => {
       const current = this.currentItem();
@@ -132,30 +119,6 @@ export class MobileComponent {
     }
   }
 
-  protected async enqueue(video: VideoResult): Promise<void> {
-    const room = this.room();
-    if (!room) return;
-    try {
-      await this.queue.enqueue(room.id, video);
-      this.snackBar.open(
-        $localize`:@@mobile.enqueued:"${video.title}:title:" entrou na fila.`,
-        undefined,
-        { duration: 2500 },
-      );
-    } catch (err) {
-      const message = err instanceof Error ? err.message : $localize`:@@common.unknownError:erro desconhecido`;
-      this.snackBar.open(
-        $localize`:@@mobile.enqueueFailed:Falha ao enfileirar: ${message}:error:`,
-        undefined,
-        { duration: 4000 },
-      );
-    }
-  }
-
-  protected formatDuration(seconds: number | null): string {
-    return formatDuration(seconds ?? 0);
-  }
-
   protected statusLabel(status: string): string {
     switch (status) {
       case 'pending': return $localize`:@@status.pending:Aguardando`;
@@ -180,28 +143,6 @@ export class MobileComponent {
       );
     } finally {
       this.joining.set(false);
-    }
-  }
-
-  private async performSearch(query: string): Promise<void> {
-    const trimmed = query.trim();
-    if (trimmed.length < 2) {
-      this.results.set([]);
-      return;
-    }
-    this.searching.set(true);
-    try {
-      const results = await this.youtube.search(trimmed);
-      this.results.set(results);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : $localize`:@@common.unknownError:erro desconhecido`;
-      this.snackBar.open(
-        $localize`:@@mobile.searchFailed:Busca falhou: ${message}:error:`,
-        undefined,
-        { duration: 4000 },
-      );
-    } finally {
-      this.searching.set(false);
     }
   }
 }

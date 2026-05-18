@@ -20,12 +20,17 @@ export class LoginComponent {
     effect(() => {
       if (this.auth.isAuthenticated()) {
         const redirect = this.route.snapshot.queryParamMap.get('redirect');
-        void this.router.navigateByUrl(redirect ? `/${redirect}` : '/');
+        const target = redirect ? new URL(redirect, document.baseURI).pathname : '/';
+        void this.router.navigateByUrl(target);
       }
     });
   }
 
   async signIn(): Promise<void> {
-    await this.auth.signInWithGoogle();
+    const redirect = this.route.snapshot.queryParamMap.get('redirect');
+    const target = redirect
+      ? new URL(redirect, document.baseURI).toString()
+      : window.location.origin;
+    await this.auth.signInWithGoogle(target);
   }
 }

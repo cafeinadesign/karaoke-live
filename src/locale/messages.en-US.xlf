@@ -2,6 +2,10 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="pt-BR" target-language="en-US" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="host.addSongTitle" datatype="html">
+        <source>Adicionar música</source>
+        <target state="translated">Add a song</target>
+      </trans-unit>
       <trans-unit id="host.shareRoom" datatype="html">
         <source>Compartilhar sala</source>
         <target state="translated">Share room</target>

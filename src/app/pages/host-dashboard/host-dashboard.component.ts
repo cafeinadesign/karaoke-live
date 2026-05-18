@@ -18,6 +18,7 @@ import { AuthService } from '../../auth/auth.service';
 import { RoomsService } from '../../rooms/rooms.service';
 import { QueueService } from '../../queue/queue.service';
 import { YoutubeService } from '../../youtube/youtube.service';
+import { SongSearchComponent } from '../../song-search/song-search.component';
 import { formatDuration } from '../../utils/format';
 import { ShareSheetComponent, ShareSheetData } from './share-sheet.component';
 
@@ -29,6 +30,7 @@ import { ShareSheetComponent, ShareSheetData } from './share-sheet.component';
     MatListModule,
     MatProgressBarModule,
     YouTubePlayer,
+    SongSearchComponent,
   ],
   templateUrl: './host-dashboard.component.html',
   styleUrl: './host-dashboard.component.sass',
