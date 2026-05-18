@@ -68,7 +68,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
   - Texto secundário: `#aaaaaa`
   - Acento ativo (YouTube Red): `#ff0000`
   - Acento de destaque alternativo (Ouro Elétrico V2): `#ffb511` — uso **exclusivo** no estado de notificação "Sua Vez" (bottom-sheet com mensagem do Gemini).
-- Use **SASS indentado** (`.sass`, sem chaves nem ponto-e-vírgula). `inlineStyleLanguage: sass` no `angular.json`. Imports: `@use '@angular/material' as mat`.
+- **SASS puro, ESTRITAMENTE.** Sintaxe indentada, extensão `.sass`, **zero chaves `{}`, zero ponto-e-vírgula `;`**. Vale para arquivos `.sass` **e** para `styles: \`...\`` inline em componentes (template literals com sintaxe SASS indentada). `inlineStyleLanguage: sass` no `angular.json`. Imports: `@use '@angular/material' as mat`. Nunca gere SCSS.
 
 ## Domínio (Karaokê Live Mode)
 
