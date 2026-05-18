@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../auth/auth.service';
 import { RoomsService } from '../../rooms/rooms.service';
+import { VersionFooterComponent } from '../../version-footer/version-footer.component';
 
 @Component({
   selector: 'app-landing',
-  imports: [RouterLink, MatButtonModule, MatIconModule],
+  imports: [MatButtonModule, MatIconModule, VersionFooterComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,

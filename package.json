@@ -1,9 +1,15 @@
 {
   "name": "karaoke-live",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cafeinadesign/karaoke-live.git"
+  },
   "scripts": {
     "ng": "ng",
+    "prestart": "node scripts/gen-version.mjs",
     "start": "ng serve",
+    "prebuild": "node scripts/gen-version.mjs",
     "build": "ng build && node scripts/post-build.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

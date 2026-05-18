@@ -51,6 +51,9 @@ Thumbs.db
 .env.local
 .env.*.local
 
+# Generated
+src/version.generated.ts
+
 # Supabase
 supabase/.temp
 supabase/.branches
