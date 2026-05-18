@@ -2,6 +2,9 @@
   command = "npm run build"
   publish = "dist/karaoke-live/browser"
 
+[build.processing.html]
+  pretty_urls = false
+
 [[headers]]
   for = "/.well-known/assetlinks.json"
   [headers.values]
@@ -21,6 +24,13 @@
   for = "/*/ngsw.json"
   [headers.values]
     Cache-Control = "no-cache"
+
+# Serve assetlinks.json at the well-known root path (TWA requires this exact URL)
+[[redirects]]
+  from = "/.well-known/assetlinks.json"
+  to = "/pt-BR/.well-known/assetlinks.json"
+  status = 200
+  force = true
 
 # Language detection on root
 [[redirects]]
