@@ -2,7 +2,15 @@
   @if (!room()) {
     <section class="join">
       <h1>Entre na sala</h1>
-      <p>Peça o código de 6 caracteres ao host.</p>
+      <p>Escaneie o QR ou digite o código de 6 caracteres.</p>
+
+      <button matButton="filled" type="button" (click)="openScanner()" class="scan-btn">
+        <mat-icon>qr_code_scanner</mat-icon>
+        Escanear QR
+      </button>
+
+      <div class="divider"><span>ou</span></div>
+
       <form (ngSubmit)="submitCode()">
         <mat-form-field appearance="outline" class="code-field">
           <mat-label>Código</mat-label>
@@ -17,11 +25,11 @@
             aria-label="Código da sala"
           />
         </mat-form-field>
-        <button matButton="filled" type="submit" [disabled]="codeControl.invalid || joining()">
+        <button matButton="tonal" type="submit" [disabled]="codeControl.invalid || joining()">
           @if (joining()) {
             <mat-progress-spinner mode="indeterminate" diameter="18" />
           } @else {
-            <span>Entrar</span>
+            <span>Entrar com código</span>
           }
         </button>
       </form>

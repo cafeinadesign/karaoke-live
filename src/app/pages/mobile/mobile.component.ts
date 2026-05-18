@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../auth/auth.service';
 import { RoomsService } from '../../rooms/rooms.service';
@@ -23,6 +24,7 @@ import { YoutubeService } from '../../youtube/youtube.service';
 import { VideoResult } from '../../types';
 import { formatDuration } from '../../utils/format';
 import { YourTurnSheetComponent, YourTurnData } from './your-turn-sheet.component';
+import { QrScannerDialogComponent } from './qr-scanner-dialog.component';
 
 @Component({
   selector: 'app-mobile',
@@ -47,6 +49,7 @@ export class MobileComponent {
   protected readonly queue = inject(QueueService);
   private readonly youtube = inject(YoutubeService);
   private readonly bottomSheet = inject(MatBottomSheet);
+  private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
 
   protected readonly codeControl = new FormControl<string>('', {
@@ -115,6 +118,18 @@ export class MobileComponent {
   protected async submitCode(): Promise<void> {
     if (this.codeControl.invalid) return;
     await this.tryJoin(this.codeControl.value);
+  }
+
+  protected async openScanner(): Promise<void> {
+    const ref = this.dialog.open<QrScannerDialogComponent, void, string | null>(
+      QrScannerDialogComponent,
+      { panelClass: 'qr-dialog-panel', autoFocus: false, restoreFocus: false },
+    );
+    const code = await ref.afterClosed().toPromise();
+    if (code) {
+      this.codeControl.setValue(code);
+      await this.tryJoin(code);
+    }
   }
 
   protected async enqueue(video: VideoResult): Promise<void> {
