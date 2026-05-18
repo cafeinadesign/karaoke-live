@@ -12,12 +12,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { YouTubePlayer } from '@angular/youtube-player';
 import { AuthService } from '../../auth/auth.service';
 import { RoomsService } from '../../rooms/rooms.service';
 import { QueueService } from '../../queue/queue.service';
 import { YoutubeService } from '../../youtube/youtube.service';
 import { formatDuration } from '../../utils/format';
+import { ShareSheetComponent, ShareSheetData } from './share-sheet.component';
 
 @Component({
   selector: 'app-host-dashboard',
@@ -40,6 +42,7 @@ export class HostDashboardComponent {
   protected readonly queue = inject(QueueService);
   private readonly youtube = inject(YoutubeService);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly bottomSheet = inject(MatBottomSheet);
 
   protected readonly room = this.rooms.currentRoom;
   protected readonly advancing = signal(false);
@@ -108,15 +111,13 @@ export class HostDashboardComponent {
     return formatDuration(seconds ?? 0);
   }
 
-  protected async copyCode(): Promise<void> {
+  protected openShareSheet(): void {
     const code = this.room()?.code;
     if (!code) return;
-    try {
-      await navigator.clipboard.writeText(code);
-      this.snackBar.open('Código copiado.', undefined, { duration: 1500 });
-    } catch {
-      this.snackBar.open(`Código: ${code}`, undefined, { duration: 3000 });
-    }
+    const url = `${window.location.origin}/mobile/${code}`;
+    this.bottomSheet.open<ShareSheetComponent, ShareSheetData>(ShareSheetComponent, {
+      data: { code, url },
+    });
   }
 
   private async loadRoom(roomId: string): Promise<void> {

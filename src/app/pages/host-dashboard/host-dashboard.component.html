@@ -5,8 +5,8 @@
         <mat-icon class="logo" aria-hidden="true">graphic_eq</mat-icon>
         <h1>Karaokê Live</h1>
       </div>
-      <button matButton="tonal" type="button" (click)="copyCode()" class="code-btn">
-        <mat-icon>tag</mat-icon>
+      <button matButton="tonal" type="button" (click)="openShareSheet()" class="code-btn" aria-label="Compartilhar sala">
+        <mat-icon>qr_code_2</mat-icon>
         {{ room()!.code }}
       </button>
     </header>
@@ -47,7 +47,13 @@
     <section class="queue">
       <h2>Próximas <span class="count">({{ pendingItems().length }})</span></h2>
       @if (pendingItems().length === 0) {
-        <p class="empty">Sem músicas na fila. Compartilhe o código <strong>{{ room()!.code }}</strong>.</p>
+        <p class="empty">
+          Sem músicas na fila.
+          <button matButton="text" type="button" (click)="openShareSheet()">
+            <mat-icon>qr_code_2</mat-icon>
+            Compartilhar sala
+          </button>
+        </p>
       } @else {
         <mat-list>
           @for (item of pendingItems(); track item.id) {
