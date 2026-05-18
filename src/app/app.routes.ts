@@ -11,6 +11,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/login/login.component').then((m) => m.LoginComponent),
   },
   {
+    path: 'privacy',
+    loadComponent: () => import('./pages/privacy/privacy.component').then((m) => m.PrivacyComponent),
+  },
+  {
     path: 'mobile',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/mobile/mobile.component').then((m) => m.MobileComponent),

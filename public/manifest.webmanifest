@@ -1,0 +1,50 @@
+{
+  "name": "Karaokê Live",
+  "short_name": "Karaokê Live",
+  "description": "Karaokê multi-sala com fila colaborativa, busca no YouTube e modo \"sua vez\" em tempo real.",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0f0f0f",
+  "background_color": "#0f0f0f",
+  "categories": ["music", "entertainment", "social"],
+  "icons": [
+    {
+      "src": "icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Entrar como convidado",
+      "short_name": "Convidado",
+      "url": "/mobile",
+      "icons": [{ "src": "icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Criar sala (host)",
+      "short_name": "Criar sala",
+      "url": "/?action=host",
+      "icons": [{ "src": "icons/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ],
+  "prefer_related_applications": false
+}

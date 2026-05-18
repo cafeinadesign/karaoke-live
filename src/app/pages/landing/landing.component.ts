@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../auth/auth.service';
@@ -7,7 +7,7 @@ import { RoomsService } from '../../rooms/rooms.service';
 
 @Component({
   selector: 'app-landing',
-  imports: [MatButtonModule, MatIconModule],
+  imports: [RouterLink, MatButtonModule, MatIconModule],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
