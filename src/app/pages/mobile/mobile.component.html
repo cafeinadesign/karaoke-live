@@ -1,0 +1,88 @@
+<main class="mobile">
+  @if (!room()) {
+    <section class="join">
+      <h1>Entre na sala</h1>
+      <p>Peça o código de 6 caracteres ao host.</p>
+      <form (ngSubmit)="submitCode()">
+        <mat-form-field appearance="outline" class="code-field">
+          <mat-label>Código</mat-label>
+          <input
+            matInput
+            type="text"
+            autocapitalize="characters"
+            autocomplete="off"
+            maxlength="6"
+            [formControl]="codeControl"
+            (input)="codeControl.setValue(codeControl.value.toUpperCase())"
+            aria-label="Código da sala"
+          />
+        </mat-form-field>
+        <button matButton="filled" type="submit" [disabled]="codeControl.invalid || joining()">
+          @if (joining()) {
+            <mat-progress-spinner mode="indeterminate" diameter="18" />
+          } @else {
+            <span>Entrar</span>
+          }
+        </button>
+      </form>
+    </section>
+  } @else {
+    <header class="room-bar">
+      <span class="dot" aria-hidden="true"></span>
+      <span class="code">{{ room()!.code }}</span>
+      @if (room()!.name) {
+        <span class="name">{{ room()!.name }}</span>
+      }
+    </header>
+
+    <section class="search">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-icon matPrefix>search</mat-icon>
+        <mat-label>Buscar música</mat-label>
+        <input
+          matInput
+          type="search"
+          autocomplete="off"
+          [formControl]="searchControl"
+          aria-label="Buscar música"
+        />
+        @if (searching()) {
+          <mat-progress-spinner matSuffix mode="indeterminate" diameter="20" />
+        }
+      </mat-form-field>
+
+      @if (results().length > 0) {
+        <mat-action-list class="results">
+          @for (video of results(); track video.videoId) {
+            <button mat-list-item type="button" (click)="enqueue(video)" lines="2">
+              <img matListItemAvatar [src]="video.thumbnail" [alt]="''" />
+              <span matListItemTitle>{{ video.title }}</span>
+              <span matListItemLine>
+                {{ video.channelTitle }} · {{ formatDuration(video.durationSeconds) }}
+              </span>
+              <mat-icon matListItemMeta aria-hidden="true">queue_music</mat-icon>
+            </button>
+          }
+        </mat-action-list>
+      } @else if (searchControl.value.length >= 2 && !searching()) {
+        <p class="empty">Sem resultados para "{{ searchControl.value }}".</p>
+      }
+    </section>
+
+    <section class="my-queue">
+      <h2>Minhas músicas</h2>
+      @if (myItems().length === 0) {
+        <p class="empty">Você ainda não enfileirou nada.</p>
+      } @else {
+        <mat-list>
+          @for (item of myItems(); track item.id) {
+            <mat-list-item [attr.data-status]="item.status">
+              <span matListItemTitle>{{ item.video_title }}</span>
+              <span matListItemLine>{{ statusLabel(item.status) }} · #{{ item.position }}</span>
+            </mat-list-item>
+          }
+        </mat-list>
+      }
+    </section>
+  }
+</main>

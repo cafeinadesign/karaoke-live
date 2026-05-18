@@ -1,0 +1,176 @@
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../auth/auth.service';
+import { RoomsService } from '../../rooms/rooms.service';
+import { QueueService } from '../../queue/queue.service';
+import { YoutubeService } from '../../youtube/youtube.service';
+import { VideoResult } from '../../types';
+import { formatDuration } from '../../utils/format';
+import { YourTurnSheetComponent, YourTurnData } from './your-turn-sheet.component';
+
+@Component({
+  selector: 'app-mobile',
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatListModule,
+    MatProgressSpinnerModule,
+  ],
+  templateUrl: './mobile.component.html',
+  styleUrl: './mobile.component.sass',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MobileComponent {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly auth = inject(AuthService);
+  private readonly rooms = inject(RoomsService);
+  protected readonly queue = inject(QueueService);
+  private readonly youtube = inject(YoutubeService);
+  private readonly bottomSheet = inject(MatBottomSheet);
+  private readonly snackBar = inject(MatSnackBar);
+
+  protected readonly codeControl = new FormControl<string>('', {
+    nonNullable: true,
+    validators: [Validators.required, Validators.minLength(6), Validators.maxLength(6)],
+  });
+  protected readonly searchControl = new FormControl<string>('', { nonNullable: true });
+
+  protected readonly results = signal<ReadonlyArray<VideoResult>>([]);
+  protected readonly searching = signal(false);
+  protected readonly joining = signal(false);
+  protected readonly room = this.rooms.currentRoom;
+
+  protected readonly currentItem = computed(() =>
+    this.queue.items().find((i) => i.status === 'now_playing') ?? null,
+  );
+  protected readonly myItems = computed(() => {
+    const userId = this.auth.user()?.id;
+    if (!userId) return [];
+    return this.queue.items().filter((i) => i.user_id === userId);
+  });
+  protected readonly isMyTurn = computed(() => {
+    const current = this.currentItem();
+    return current !== null && current.user_id === this.auth.user()?.id;
+  });
+
+  private searchTimer: number | null = null;
+  private sheetRef: MatBottomSheetRef<YourTurnSheetComponent, void> | null = null;
+  private shownTurnForItemId: string | null = null;
+
+  constructor() {
+    const code = this.route.snapshot.paramMap.get('code');
+    if (code) {
+      void this.tryJoin(code);
+    }
+
+    this.searchControl.valueChanges.subscribe((value) => {
+      if (this.searchTimer !== null) clearTimeout(this.searchTimer);
+      this.searchTimer = window.setTimeout(() => {
+        void this.performSearch(value);
+      }, 400);
+    });
+
+    effect(() => {
+      const current = this.currentItem();
+      const mine = this.isMyTurn();
+      if (!mine || !current) {
+        if (this.sheetRef && !this.isMyTurn()) {
+          this.sheetRef.dismiss();
+          this.sheetRef = null;
+          this.shownTurnForItemId = null;
+        }
+        return;
+      }
+      if (this.shownTurnForItemId === current.id) {
+        return;
+      }
+      this.shownTurnForItemId = current.id;
+      this.sheetRef = this.bottomSheet.open<YourTurnSheetComponent, YourTurnData>(
+        YourTurnSheetComponent,
+        { data: { item: current }, disableClose: false, hasBackdrop: true },
+      );
+    });
+  }
+
+  protected async submitCode(): Promise<void> {
+    if (this.codeControl.invalid) return;
+    await this.tryJoin(this.codeControl.value);
+  }
+
+  protected async enqueue(video: VideoResult): Promise<void> {
+    const room = this.room();
+    if (!room) return;
+    try {
+      await this.queue.enqueue(room.id, video);
+      this.snackBar.open(`"${video.title}" entrou na fila.`, undefined, { duration: 2500 });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'erro_desconhecido';
+      this.snackBar.open(`Falha ao enfileirar: ${message}`, undefined, { duration: 4000 });
+    }
+  }
+
+  protected formatDuration(seconds: number | null): string {
+    return formatDuration(seconds ?? 0);
+  }
+
+  protected statusLabel(status: string): string {
+    switch (status) {
+      case 'pending': return 'Aguardando';
+      case 'now_playing': return 'Cantando agora';
+      case 'done': return 'Feita';
+      case 'skipped': return 'Pulada';
+      default: return status;
+    }
+  }
+
+  private async tryJoin(code: string): Promise<void> {
+    this.joining.set(true);
+    try {
+      const room = await this.rooms.joinByCode(code);
+      await this.queue.subscribe(room.id);
+      await this.router.navigate(['/mobile', room.code], { replaceUrl: true });
+    } catch {
+      this.snackBar.open('Sala não encontrada.', undefined, { duration: 3000 });
+    } finally {
+      this.joining.set(false);
+    }
+  }
+
+  private async performSearch(query: string): Promise<void> {
+    const trimmed = query.trim();
+    if (trimmed.length < 2) {
+      this.results.set([]);
+      return;
+    }
+    this.searching.set(true);
+    try {
+      const results = await this.youtube.search(trimmed);
+      this.results.set(results);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'erro_desconhecido';
+      this.snackBar.open(`Busca falhou: ${message}`, undefined, { duration: 4000 });
+    } finally {
+      this.searching.set(false);
+    }
+  }
+}

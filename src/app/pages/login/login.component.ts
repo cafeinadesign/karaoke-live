@@ -1,0 +1,31 @@
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../../auth/auth.service';
+
+@Component({
+  selector: 'app-login',
+  imports: [MatButtonModule, MatIconModule],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.sass',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class LoginComponent {
+  protected readonly auth = inject(AuthService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
+  constructor() {
+    effect(() => {
+      if (this.auth.isAuthenticated()) {
+        const redirect = this.route.snapshot.queryParamMap.get('redirect');
+        void this.router.navigateByUrl(redirect ? `/${redirect}` : '/');
+      }
+    });
+  }
+
+  async signIn(): Promise<void> {
+    await this.auth.signInWithGoogle();
+  }
+}

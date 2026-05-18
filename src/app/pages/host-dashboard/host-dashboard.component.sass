@@ -1,0 +1,131 @@
+:host
+  display: block
+  min-height: 100dvh
+
+.host
+  max-width: 1100px
+  margin: 0 auto
+  padding: 16px 16px 64px
+  display: flex
+  flex-direction: column
+  gap: 20px
+
+.bar
+  display: flex
+  justify-content: space-between
+  align-items: center
+  padding: 8px 4px
+
+  .title
+    display: flex
+    align-items: center
+    gap: 10px
+
+    h1
+      margin: 0
+      font-size: 20px
+      font-weight: 600
+
+  .logo
+    color: var(--mat-sys-primary)
+
+  .code-btn
+    font-family: 'Roboto Mono', monospace
+    letter-spacing: 3px
+    font-weight: 700
+
+.player-wrap
+  background: var(--mat-sys-surface-container)
+  border-radius: 16px
+  padding: 16px
+  display: flex
+  flex-direction: column
+  gap: 12px
+
+  ::ng-deep youtube-player
+    display: block
+    aspect-ratio: 16 / 9
+    width: 100%
+
+    iframe
+      width: 100%
+      height: 100%
+      border-radius: 12px
+
+.player-empty
+  aspect-ratio: 16 / 9
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  gap: 8px
+  color: var(--mat-sys-on-surface-variant)
+  background: var(--mat-sys-surface-container-low)
+  border-radius: 12px
+
+  mat-icon
+    font-size: 48px
+    width: 48px
+    height: 48px
+
+  p
+    margin: 0
+
+.now-playing
+  display: flex
+  flex-direction: column
+  gap: 2px
+
+  .label
+    font-size: 12px
+    text-transform: uppercase
+    letter-spacing: 1px
+    color: var(--mat-sys-primary)
+
+  .song
+    font-size: 16px
+    font-weight: 500
+
+.controls
+  display: flex
+  justify-content: center
+
+  .next-btn
+    min-width: 240px
+    height: 48px
+    font-size: 16px
+
+.queue
+  h2
+    margin: 0 0 4px
+    font-size: 18px
+    display: flex
+    align-items: baseline
+    gap: 6px
+
+    .count
+      color: var(--mat-sys-on-surface-variant)
+      font-weight: 400
+      font-size: 14px
+
+  mat-list
+    background: var(--mat-sys-surface-container)
+    border-radius: 12px
+    overflow: hidden
+
+.empty
+  color: var(--mat-sys-on-surface-variant)
+  margin: 8px 0
+
+  strong
+    color: var(--mat-sys-on-surface)
+    font-family: 'Roboto Mono', monospace
+    letter-spacing: 3px
+
+.loading
+  padding-top: 64px
+  text-align: center
+  color: var(--mat-sys-on-surface-variant)
+
+  p
+    margin: 12px 0 0

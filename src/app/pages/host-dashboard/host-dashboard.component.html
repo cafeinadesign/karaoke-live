@@ -1,0 +1,79 @@
+<main class="host">
+  @if (room()) {
+    <header class="bar">
+      <div class="title">
+        <mat-icon class="logo" aria-hidden="true">graphic_eq</mat-icon>
+        <h1>Karaokê Live</h1>
+      </div>
+      <button matButton="tonal" type="button" (click)="copyCode()" class="code-btn">
+        <mat-icon>tag</mat-icon>
+        {{ room()!.code }}
+      </button>
+    </header>
+
+    <section class="player-wrap">
+      @if (currentVideoId()) {
+        <youtube-player
+          [videoId]="currentVideoId()"
+          [playerVars]="{ autoplay: 1, controls: 1, rel: 0 }"
+        />
+      } @else {
+        <div class="player-empty">
+          <mat-icon aria-hidden="true">play_circle</mat-icon>
+          <p>Nenhuma música tocando. Clique em "Próxima música" para começar.</p>
+        </div>
+      }
+      <div class="now-playing">
+        @if (currentItem(); as item) {
+          <span class="label">Agora</span>
+          <span class="song">{{ item.video_title }}</span>
+        }
+      </div>
+    </section>
+
+    <section class="controls">
+      <button
+        matButton="filled"
+        type="button"
+        (click)="advance()"
+        [disabled]="advancing() || (pendingItems().length === 0 && !currentItem())"
+        class="next-btn"
+      >
+        <mat-icon>skip_next</mat-icon>
+        Próxima música
+      </button>
+    </section>
+
+    <section class="queue">
+      <h2>Próximas <span class="count">({{ pendingItems().length }})</span></h2>
+      @if (pendingItems().length === 0) {
+        <p class="empty">Sem músicas na fila. Compartilhe o código <strong>{{ room()!.code }}</strong>.</p>
+      } @else {
+        <mat-list>
+          @for (item of pendingItems(); track item.id) {
+            <mat-list-item lines="2">
+              <span matListItemTitle>{{ item.video_title }}</span>
+              <span matListItemLine>
+                #{{ item.position }} · {{ formatDuration(item.video_duration_seconds) }}
+              </span>
+              <button
+                matIconButton
+                matListItemMeta
+                type="button"
+                aria-label="Remover da fila"
+                (click)="remove(item.id)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-list-item>
+          }
+        </mat-list>
+      }
+    </section>
+  } @else {
+    <div class="loading">
+      <mat-progress-bar mode="indeterminate" />
+      <p>Carregando sala...</p>
+    </div>
+  }
+</main>

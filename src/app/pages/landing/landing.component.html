@@ -1,0 +1,28 @@
+<main class="landing">
+  <header>
+    <mat-icon class="logo" aria-hidden="true">graphic_eq</mat-icon>
+    <h1>Karaokê Live</h1>
+    <p class="tagline">Fila colaborativa. Microfone aberto. Sem desculpas.</p>
+  </header>
+
+  @if (auth.isAuthenticated()) {
+    <section class="actions">
+      <button matButton="filled" type="button" (click)="hostNewRoom()">
+        <mat-icon>add_circle</mat-icon>
+        Criar sala como host
+      </button>
+      <button matButton="tonal" type="button" (click)="goToMobile()">
+        <mat-icon>mic</mat-icon>
+        Entrar como convidado
+      </button>
+      <button matButton="text" type="button" (click)="signOut()">Sair</button>
+    </section>
+  } @else {
+    <section class="actions">
+      <button matButton="filled" type="button" (click)="signIn()">
+        <mat-icon>login</mat-icon>
+        Entrar com Google
+      </button>
+    </section>
+  }
+</main>
