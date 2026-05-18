@@ -4,7 +4,9 @@
     "target": {
       "namespace": "android_app",
       "package_name": "br.app.karaokelive.twa",
-      "sha256_cert_fingerprints": []
+      "sha256_cert_fingerprints": [
+        "4A:D5:59:8F:1B:74:5D:E4:3C:68:7C:04:36:FD:D0:45:AA:BC:AF:82:C4:A2:D3:CA:19:9B:5E:A9:D5:DE:AE:77"
+      ]
     }
   }
 ]
