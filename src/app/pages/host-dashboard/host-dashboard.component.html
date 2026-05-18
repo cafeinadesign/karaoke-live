@@ -5,7 +5,14 @@
         <mat-icon class="logo" aria-hidden="true">graphic_eq</mat-icon>
         <h1>Karaokê Live</h1>
       </div>
-      <button matButton="tonal" type="button" (click)="openShareSheet()" class="code-btn" aria-label="Compartilhar sala">
+      <button
+        matButton="tonal"
+        type="button"
+        (click)="openShareSheet()"
+        class="code-btn"
+        i18n-aria-label="@@host.shareRoom"
+        aria-label="Compartilhar sala"
+      >
         <mat-icon>qr_code_2</mat-icon>
         {{ room()!.code }}
       </button>
@@ -20,12 +27,12 @@
       } @else {
         <div class="player-empty">
           <mat-icon aria-hidden="true">play_circle</mat-icon>
-          <p>Nenhuma música tocando. Clique em "Próxima música" para começar.</p>
+          <p i18n="@@host.playerEmpty">Nenhuma música tocando. Clique em "Próxima música" para começar.</p>
         </div>
       }
       <div class="now-playing">
         @if (currentItem(); as item) {
-          <span class="label">Agora</span>
+          <span class="label" i18n="@@host.nowLabel">Agora</span>
           <span class="song">{{ item.video_title }}</span>
         }
       </div>
@@ -40,18 +47,21 @@
         class="next-btn"
       >
         <mat-icon>skip_next</mat-icon>
-        Próxima música
+        <span i18n="@@host.nextSong">Próxima música</span>
       </button>
     </section>
 
     <section class="queue">
-      <h2>Próximas <span class="count">({{ pendingItems().length }})</span></h2>
+      <h2>
+        <span i18n="@@host.upcoming">Próximas</span>
+        <span class="count">({{ pendingItems().length }})</span>
+      </h2>
       @if (pendingItems().length === 0) {
         <p class="empty">
-          Sem músicas na fila.
+          <span i18n="@@host.queueEmpty">Sem músicas na fila.</span>
           <button matButton="text" type="button" (click)="openShareSheet()">
             <mat-icon>qr_code_2</mat-icon>
-            Compartilhar sala
+            <span i18n="@@host.shareRoom">Compartilhar sala</span>
           </button>
         </p>
       } @else {
@@ -66,6 +76,7 @@
                 matIconButton
                 matListItemMeta
                 type="button"
+                i18n-aria-label="@@host.removeFromQueue"
                 aria-label="Remover da fila"
                 (click)="remove(item.id)"
               >
@@ -79,7 +90,7 @@
   } @else {
     <div class="loading">
       <mat-progress-bar mode="indeterminate" />
-      <p>Carregando sala...</p>
+      <p i18n="@@host.loadingRoom">Carregando sala...</p>
     </div>
   }
 </main>

@@ -14,14 +14,14 @@ export interface YourTurnData {
   template: `
     <div class="sheet">
       <mat-icon class="mic" aria-hidden="true">mic</mat-icon>
-      <h2>É a sua vez!</h2>
+      <h2 i18n="@@yourTurn.title">É a sua vez!</h2>
       <p class="song">{{ data.item.video_title }}</p>
       @if (data.item.gemini_message) {
         <p class="roast">{{ data.item.gemini_message }}</p>
       } @else {
-        <p class="roast loading">Preparando uma palavra de incentivo...</p>
+        <p class="roast loading" i18n="@@yourTurn.loading">Preparando uma palavra de incentivo...</p>
       }
-      <button matButton="filled" type="button" (click)="dismiss()">
+      <button matButton="filled" type="button" (click)="dismiss()" i18n="@@yourTurn.ready">
         Estou pronto
       </button>
     </div>

@@ -2,31 +2,31 @@
   <header>
     <mat-icon class="logo" aria-hidden="true">graphic_eq</mat-icon>
     <h1>Karaokê Live</h1>
-    <p class="tagline">Fila colaborativa. Microfone aberto. Sem desculpas.</p>
+    <p class="tagline" i18n="@@landing.tagline">Fila colaborativa. Microfone aberto. Sem desculpas.</p>
   </header>
 
   @if (auth.isAuthenticated()) {
     <section class="actions">
       <button matButton="filled" type="button" (click)="hostNewRoom()">
         <mat-icon>add_circle</mat-icon>
-        Criar sala como host
+        <span i18n="@@landing.createRoom">Criar sala como host</span>
       </button>
       <button matButton="tonal" type="button" (click)="goToMobile()">
         <mat-icon>mic</mat-icon>
-        Entrar como convidado
+        <span i18n="@@landing.joinAsGuest">Entrar como convidado</span>
       </button>
-      <button matButton="text" type="button" (click)="signOut()">Sair</button>
+      <button matButton="text" type="button" (click)="signOut()" i18n="@@common.signOut">Sair</button>
     </section>
   } @else {
     <section class="actions">
       <button matButton="filled" type="button" (click)="signIn()">
         <mat-icon>login</mat-icon>
-        Entrar com Google
+        <span i18n="@@common.signInGoogle">Entrar com Google</span>
       </button>
     </section>
   }
 
   <footer>
-    <a routerLink="/privacy">Política de privacidade</a>
+    <a routerLink="/privacy" i18n="@@common.privacyPolicy">Política de privacidade</a>
   </footer>
 </main>

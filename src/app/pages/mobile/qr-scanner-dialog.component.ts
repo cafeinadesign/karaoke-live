@@ -18,7 +18,14 @@ import QrScanner from 'qr-scanner';
   imports: [MatButtonModule, MatIconModule],
   template: `
     <div class="dialog">
-      <button matIconButton type="button" (click)="cancel()" aria-label="Fechar" class="close">
+      <button
+        matIconButton
+        type="button"
+        (click)="cancel()"
+        i18n-aria-label="@@common.close"
+        aria-label="Fechar"
+        class="close"
+      >
         <mat-icon>close</mat-icon>
       </button>
 
@@ -31,7 +38,7 @@ import QrScanner from 'qr-scanner';
         @if (error()) {
           {{ error() }}
         } @else {
-          Aponte a câmera para o QR da sala.
+          <ng-container i18n="@@qr.aim">Aponte a câmera para o QR da sala.</ng-container>
         }
       </p>
     </div>
@@ -103,8 +110,8 @@ export class QrScannerDialogComponent implements AfterViewInit, OnDestroy {
       });
       await this.scanner.start();
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'erro_desconhecido';
-      this.error.set(`Câmera indisponível: ${message}`);
+      const message = err instanceof Error ? err.message : $localize`:@@common.unknownError:erro desconhecido`;
+      this.error.set($localize`:@@qr.cameraUnavailable:Câmera indisponível: ${message}:error:`);
     }
   }
 
@@ -121,7 +128,7 @@ export class QrScannerDialogComponent implements AfterViewInit, OnDestroy {
   private onScan(rawValue: string): void {
     const code = this.extractCode(rawValue);
     if (!code) {
-      this.error.set('QR não reconhecido. Tente o código manual.');
+      this.error.set($localize`:@@qr.notRecognized:QR não reconhecido. Tente o código manual.`);
       return;
     }
     this.ref.close(code);

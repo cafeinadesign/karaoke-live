@@ -21,7 +21,7 @@ export interface ShareSheetData {
   imports: [MatButtonModule, MatIconModule],
   template: `
     <div class="sheet">
-      <h2>Compartilhe a sala</h2>
+      <h2 i18n="@@share.title">Compartilhe a sala</h2>
 
       <div class="qr-wrap" aria-hidden="true">
         @if (qrSrc()) {
@@ -29,7 +29,12 @@ export interface ShareSheetData {
         }
       </div>
 
-      <div class="code-row" role="group" aria-label="Código da sala">
+      <div
+        class="code-row"
+        role="group"
+        i18n-aria-label="@@share.roomCodeAriaLabel"
+        aria-label="Código da sala"
+      >
         @for (char of codeChars(); track $index) {
           <span class="char">{{ char }}</span>
         }
@@ -40,16 +45,16 @@ export interface ShareSheetData {
       <div class="actions">
         <button matButton="filled" type="button" (click)="copyCode()">
           <mat-icon>content_copy</mat-icon>
-          Copiar código
+          <span i18n="@@share.copyCode">Copiar código</span>
         </button>
         <button matButton="tonal" type="button" (click)="copyUrl()">
           <mat-icon>link</mat-icon>
-          Copiar link
+          <span i18n="@@share.copyLink">Copiar link</span>
         </button>
         @if (canNativeShare) {
           <button matButton="text" type="button" (click)="nativeShare()">
             <mat-icon>share</mat-icon>
-            Compartilhar
+            <span i18n="@@share.share">Compartilhar</span>
           </button>
         }
       </div>
@@ -129,18 +134,18 @@ export class ShareSheetComponent {
   }
 
   protected async copyCode(): Promise<void> {
-    await this.copyText(this.data.code, 'Código copiado.');
+    await this.copyText(this.data.code, $localize`:@@share.codeCopied:Código copiado.`);
   }
 
   protected async copyUrl(): Promise<void> {
-    await this.copyText(this.data.url, 'Link copiado.');
+    await this.copyText(this.data.url, $localize`:@@share.linkCopied:Link copiado.`);
   }
 
   protected async nativeShare(): Promise<void> {
     try {
       await navigator.share({
         title: 'Karaokê Live',
-        text: `Entra na sala ${this.data.code}`,
+        text: $localize`:@@share.shareText:Entra na sala ${this.data.code}:code:`,
         url: this.data.url,
       });
       this.ref.dismiss();

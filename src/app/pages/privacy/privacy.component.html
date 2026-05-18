@@ -1,13 +1,13 @@
 <main class="privacy">
   <header>
-    <a routerLink="/" matIconButton aria-label="Voltar"><mat-icon>arrow_back</mat-icon></a>
-    <h1>Política de Privacidade</h1>
+    <a routerLink="/" matIconButton i18n-aria-label="@@common.back" aria-label="Voltar"><mat-icon>arrow_back</mat-icon></a>
+    <h1 i18n="@@privacy.title">Política de Privacidade</h1>
   </header>
 
-  <p class="meta">Atualizada em {{ updatedAt }}</p>
+  <p class="meta" i18n="@@privacy.updatedAt">Atualizada em {{ updatedAt }}</p>
 
   <section>
-    <p>
+    <p i18n="@@privacy.intro">
       Esta política descreve como o app <strong>Karaokê Live</strong> ("nós") coleta, usa e protege
       seus dados quando você usa o serviço em <strong>karaoke-live.app.br</strong> ou pelo app
       Android equivalente.
@@ -15,17 +15,17 @@
   </section>
 
   <section>
-    <h2>1. Dados que coletamos</h2>
+    <h2 i18n="@@privacy.section.collected">1. Dados que coletamos</h2>
     <ul>
-      <li>
+      <li i18n="@@privacy.collected.google">
         <strong>Conta Google (SSO):</strong> ao entrar, recebemos do Google seu nome, email e foto
         de perfil. Não recebemos sua senha.
       </li>
-      <li>
+      <li i18n="@@privacy.collected.activity">
         <strong>Atividade no app:</strong> salas que você cria ou entra, vídeos que você adiciona à
         fila, e mensagens geradas pelo Gemini associadas à sua vez de cantar.
       </li>
-      <li>
+      <li i18n="@@privacy.collected.camera">
         <strong>Câmera (apenas no leitor de QR):</strong> usamos a câmera somente durante o uso do
         scanner de QR para entrar numa sala. Nenhuma imagem é gravada ou enviada para servidores.
       </li>
@@ -33,54 +33,54 @@
   </section>
 
   <section>
-    <h2>2. Como usamos os dados</h2>
+    <h2 i18n="@@privacy.section.usage">2. Como usamos os dados</h2>
     <ul>
-      <li>Autenticar você na plataforma.</li>
-      <li>Mostrar quem enfileirou cada música na sala.</li>
-      <li>Sincronizar a fila em tempo real entre host e convidados.</li>
-      <li>Gerar a mensagem de "sua vez" personalizada com nome e música.</li>
+      <li i18n="@@privacy.usage.auth">Autenticar você na plataforma.</li>
+      <li i18n="@@privacy.usage.attribution">Mostrar quem enfileirou cada música na sala.</li>
+      <li i18n="@@privacy.usage.realtime">Sincronizar a fila em tempo real entre host e convidados.</li>
+      <li i18n="@@privacy.usage.gemini">Gerar a mensagem de "sua vez" personalizada com nome e música.</li>
     </ul>
   </section>
 
   <section>
-    <h2>3. Serviços de terceiros</h2>
+    <h2 i18n="@@privacy.section.thirdParty">3. Serviços de terceiros</h2>
     <ul>
-      <li><strong>Google Sign-In</strong> — autenticação.</li>
-      <li>
+      <li i18n="@@privacy.third.google"><strong>Google Sign-In</strong> — autenticação.</li>
+      <li i18n="@@privacy.third.supabase">
         <strong>Supabase</strong> — banco de dados (PostgreSQL) e canais em tempo real. Servidores
         em São Paulo (sa-east-1).
       </li>
-      <li>
+      <li i18n="@@privacy.third.youtube">
         <strong>YouTube Data API v3</strong> (Google) — busca de vídeos. As consultas saem do
         servidor, não do seu dispositivo.
       </li>
-      <li>
+      <li i18n="@@privacy.third.gemini">
         <strong>Gemini API</strong> (Google) — geração da mensagem irônica que aparece quando é a
         sua vez.
       </li>
-      <li><strong>Netlify</strong> — hospedagem do front-end.</li>
+      <li i18n="@@privacy.third.netlify"><strong>Netlify</strong> — hospedagem do front-end.</li>
     </ul>
   </section>
 
   <section>
-    <h2>4. Compartilhamento</h2>
-    <p>
+    <h2 i18n="@@privacy.section.sharing">4. Compartilhamento</h2>
+    <p i18n="@@privacy.sharing.body">
       Não vendemos seus dados. Compartilhamos somente com os processadores listados acima,
       estritamente para operar o serviço.
     </p>
   </section>
 
   <section>
-    <h2>5. Retenção</h2>
-    <p>
+    <h2 i18n="@@privacy.section.retention">5. Retenção</h2>
+    <p i18n="@@privacy.retention.body">
       Mantemos seu perfil e histórico de salas enquanto sua conta estiver ativa. Você pode pedir
       exclusão a qualquer momento pelo email abaixo — apagamos seus dados em até 30 dias.
     </p>
   </section>
 
   <section>
-    <h2>6. Direitos do usuário</h2>
-    <p>
+    <h2 i18n="@@privacy.section.rights">6. Direitos do usuário</h2>
+    <p i18n="@@privacy.rights.body">
       Conforme a LGPD, você tem direito de acessar, corrigir, excluir e portar seus dados. Para
       exercer esses direitos, escreva pra
       <a [href]="'mailto:' + contactEmail">{{ contactEmail }}</a>.
@@ -88,24 +88,24 @@
   </section>
 
   <section>
-    <h2>7. Segurança</h2>
-    <p>
+    <h2 i18n="@@privacy.section.security">7. Segurança</h2>
+    <p i18n="@@privacy.security.body">
       Tráfego sempre por HTTPS. Dados armazenados de forma criptografada em repouso pelo Supabase.
       Tokens de autenticação são guardados localmente no seu dispositivo.
     </p>
   </section>
 
   <section>
-    <h2>8. Crianças</h2>
-    <p>
+    <h2 i18n="@@privacy.section.children">8. Crianças</h2>
+    <p i18n="@@privacy.children.body">
       O serviço é destinado a maiores de 13 anos. Se você é responsável por um menor de idade e
       acredita que coletamos dados dele, entre em contato pelo email acima.
     </p>
   </section>
 
   <section>
-    <h2>9. Contato</h2>
-    <p>
+    <h2 i18n="@@privacy.section.contact">9. Contato</h2>
+    <p i18n="@@privacy.contact.body">
       Cafeína Design — <a [href]="'mailto:' + contactEmail">{{ contactEmail }}</a>.
     </p>
   </section>

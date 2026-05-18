@@ -1,19 +1,19 @@
 <main class="mobile">
   @if (!room()) {
     <section class="join">
-      <h1>Entre na sala</h1>
-      <p>Escaneie o QR ou digite o código de 6 caracteres.</p>
+      <h1 i18n="@@mobile.joinTitle">Entre na sala</h1>
+      <p i18n="@@mobile.joinHint">Escaneie o QR ou digite o código de 6 caracteres.</p>
 
       <button matButton="filled" type="button" (click)="openScanner()" class="scan-btn">
         <mat-icon>qr_code_scanner</mat-icon>
-        Escanear QR
+        <span i18n="@@mobile.scanQR">Escanear QR</span>
       </button>
 
-      <div class="divider"><span>ou</span></div>
+      <div class="divider"><span i18n="@@common.or">ou</span></div>
 
       <form (ngSubmit)="submitCode()">
         <mat-form-field appearance="outline" class="code-field">
-          <mat-label>Código</mat-label>
+          <mat-label i18n="@@common.code">Código</mat-label>
           <input
             matInput
             type="text"
@@ -22,6 +22,7 @@
             maxlength="6"
             [formControl]="codeControl"
             (input)="codeControl.setValue(codeControl.value.toUpperCase())"
+            i18n-aria-label="@@mobile.codeAriaLabel"
             aria-label="Código da sala"
           />
         </mat-form-field>
@@ -29,7 +30,7 @@
           @if (joining()) {
             <mat-progress-spinner mode="indeterminate" diameter="18" />
           } @else {
-            <span>Entrar com código</span>
+            <span i18n="@@mobile.enterWithCode">Entrar com código</span>
           }
         </button>
       </form>
@@ -46,12 +47,13 @@
     <section class="search">
       <mat-form-field appearance="outline" class="search-field">
         <mat-icon matPrefix>search</mat-icon>
-        <mat-label>Buscar música</mat-label>
+        <mat-label i18n="@@mobile.searchLabel">Buscar música</mat-label>
         <input
           matInput
           type="search"
           autocomplete="off"
           [formControl]="searchControl"
+          i18n-aria-label="@@mobile.searchAriaLabel"
           aria-label="Buscar música"
         />
         @if (searching()) {
@@ -73,14 +75,14 @@
           }
         </mat-action-list>
       } @else if (searchControl.value.length >= 2 && !searching()) {
-        <p class="empty">Sem resultados para "{{ searchControl.value }}".</p>
+        <p class="empty" i18n="@@mobile.noResults">Sem resultados para "{{ searchControl.value }}".</p>
       }
     </section>
 
     <section class="my-queue">
-      <h2>Minhas músicas</h2>
+      <h2 i18n="@@mobile.myQueueTitle">Minhas músicas</h2>
       @if (myItems().length === 0) {
-        <p class="empty">Você ainda não enfileirou nada.</p>
+        <p class="empty" i18n="@@mobile.myQueueEmpty">Você ainda não enfileirou nada.</p>
       } @else {
         <mat-list>
           @for (item of myItems(); track item.id) {

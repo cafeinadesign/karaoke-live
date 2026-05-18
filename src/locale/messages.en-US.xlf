@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="pt-BR" target-language="en-US" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="host.shareRoom" datatype="html">
+        <source>Compartilhar sala</source>
+        <target state="translated">Share room</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
+          <context context-type="linenumber">14,16</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
+          <context context-type="linenumber">64,66</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.playerEmpty" datatype="html">
+        <source>Nenhuma música tocando. Clique em &quot;Próxima música&quot; para começar.</source>
+        <target state="translated">Nothing playing. Tap "Next song" to start.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
+          <context context-type="linenumber">30,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.nowLabel" datatype="html">
+        <source>Agora</source>
+        <target state="translated">Now</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
+          <context context-type="linenumber">35,36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.nextSong" datatype="html">
+        <source>Próxima música</source>
+        <target state="translated">Next song</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
+          <context context-type="linenumber">50,52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.upcoming" datatype="html">
+        <source>Próximas</source>
+        <target state="translated">Up next</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
+          <context context-type="linenumber">56,57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.queueEmpty" datatype="html">
+        <source>Sem músicas na fila.</source>
+        <target state="translated">Queue is empty.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
+          <context context-type="linenumber">61,62</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.removeFromQueue" datatype="html">
+        <source>Remover da fila</source>
+        <target state="translated">Remove from queue</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
+          <context context-type="linenumber">80,81</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.loadingRoom" datatype="html">
+        <source>Carregando sala...</source>
+        <target state="translated">Loading room...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
+          <context context-type="linenumber">93,97</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common.unknownError" datatype="html">
+        <source>erro desconhecido</source>
+        <target state="translated">unknown error</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
+          <context context-type="linenumber">146</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
+          <context context-type="linenumber">197</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/qr-scanner-dialog.component.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.advanceFailed" datatype="html">
+        <source>Falha ao avançar: <x id="error" equiv-text="message"/></source>
+        <target state="translated">Failed to advance: <x id="error" equiv-text="message"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.removeFailed" datatype="html">
+        <source>Falha ao remover: <x id="error" equiv-text="message"/></source>
+        <target state="translated">Failed to remove: <x id="error" equiv-text="message"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.roomNotFound" datatype="html">
+        <source>Sala não encontrada.</source>
+        <target state="translated">Room not found.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
+          <context context-type="linenumber">135</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.notHost" datatype="html">
+        <source>Você não é host desta sala.</source>
+        <target state="translated">You're not the host of this room.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="share.title" datatype="html">
+        <source>Compartilhe a sala</source>
+        <target state="translated">Share the room</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/share-sheet.component.ts</context>
+          <context context-type="linenumber">24,26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="share.roomCodeAriaLabel" datatype="html">
+        <source>Código da sala</source>
+        <target state="translated">Room code</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/share-sheet.component.ts</context>
+          <context context-type="linenumber">36,38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="share.copyCode" datatype="html">
+        <source>Copiar código</source>
+        <target state="translated">Copy code</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/share-sheet.component.ts</context>
+          <context context-type="linenumber">48,50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="share.copyLink" datatype="html">
+        <source>Copiar link</source>
+        <target state="translated">Copy link</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/share-sheet.component.ts</context>
+          <context context-type="linenumber">52,54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="share.share" datatype="html">
+        <source>Compartilhar</source>
+        <target state="translated">Share</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/share-sheet.component.ts</context>
+          <context context-type="linenumber">57,58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="share.codeCopied" datatype="html">
+        <source>Código copiado.</source>
+        <target state="translated">Code copied.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/share-sheet.component.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="share.linkCopied" datatype="html">
+        <source>Link copiado.</source>
+        <target state="translated">Link copied.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/share-sheet.component.ts</context>
+          <context context-type="linenumber">141</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="share.shareText" datatype="html">
+        <source>Entra na sala <x id="code" equiv-text="this.data.code"/></source>
+        <target state="translated">Join room <x id="code" equiv-text="this.data.code"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/share-sheet.component.ts</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="landing.tagline" datatype="html">
+        <source>Fila colaborativa. Microfone aberto. Sem desculpas.</source>
+        <target state="translated">Collaborative queue. Open mic. No excuses.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/landing/landing.component.html</context>
+          <context context-type="linenumber">5,8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="landing.createRoom" datatype="html">
+        <source>Criar sala como host</source>
+        <target state="translated">Create room as host</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/landing/landing.component.html</context>
+          <context context-type="linenumber">12,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="landing.joinAsGuest" datatype="html">
+        <source>Entrar como convidado</source>
+        <target state="translated">Join as guest</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/landing/landing.component.html</context>
+          <context context-type="linenumber">16,18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common.signOut" datatype="html">
+        <source>Sair</source>
+        <target state="translated">Sign out</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/landing/landing.component.html</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common.signInGoogle" datatype="html">
+        <source>Entrar com Google</source>
+        <target state="translated">Sign in with Google</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/landing/landing.component.html</context>
+          <context context-type="linenumber">24,26</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/login.component.html</context>
+          <context context-type="linenumber">7,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common.privacyPolicy" datatype="html">
+        <source>Política de privacidade</source>
+        <target state="translated">Privacy policy</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/landing/landing.component.html</context>
+          <context context-type="linenumber">30,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="login.subtitle" datatype="html">
+        <source>Entre para criar uma sala ou enfileirar músicas.</source>
+        <target state="translated">Sign in to create a room or queue up songs.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/login.component.html</context>
+          <context context-type="linenumber">4,5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.joinTitle" datatype="html">
+        <source>Entre na sala</source>
+        <target state="translated">Join the room</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.html</context>
+          <context context-type="linenumber">4,5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.joinHint" datatype="html">
+        <source>Escaneie o QR ou digite o código de 6 caracteres.</source>
+        <target state="translated">Scan the QR or type the 6-character code.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.html</context>
+          <context context-type="linenumber">5,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.scanQR" datatype="html">
+        <source>Escanear QR</source>
+        <target state="translated">Scan QR</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.html</context>
+          <context context-type="linenumber">9,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common.or" datatype="html">
+        <source>ou</source>
+        <target state="translated">or</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.html</context>
+          <context context-type="linenumber">12,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common.code" datatype="html">
+        <source>Código</source>
+        <target state="translated">Code</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.html</context>
+          <context context-type="linenumber">16,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.codeAriaLabel" datatype="html">
+        <source>Código da sala</source>
+        <target state="translated">Room code</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.html</context>
+          <context context-type="linenumber">26,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.enterWithCode" datatype="html">
+        <source>Entrar com código</source>
+        <target state="translated">Enter with code</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.html</context>
+          <context context-type="linenumber">33,35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.searchLabel" datatype="html">
+        <source>Buscar música</source>
+        <target state="translated">Search song</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.html</context>
+          <context context-type="linenumber">50,52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.searchAriaLabel" datatype="html">
+        <source>Buscar música</source>
+        <target state="translated">Search song</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.html</context>
+          <context context-type="linenumber">57,59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.noResults" datatype="html">
+        <source>Sem resultados para &quot;<x id="INTERPOLATION" equiv-text="{{ searchControl.value }}"/>&quot;.</source>
+        <target state="translated">No results for "<x id="INTERPOLATION" equiv-text="{{ searchControl.value }}"/>".</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.html</context>
+          <context context-type="linenumber">78,80</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.myQueueTitle" datatype="html">
+        <source>Minhas músicas</source>
+        <target state="translated">My songs</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.html</context>
+          <context context-type="linenumber">83,84</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.myQueueEmpty" datatype="html">
+        <source>Você ainda não enfileirou nada.</source>
+        <target state="translated">You haven't queued anything yet.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.html</context>
+          <context context-type="linenumber">85,87</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.enqueued" datatype="html">
+        <source>&quot;<x id="title" equiv-text="video.title"/>&quot; entrou na fila.</source>
+        <target state="translated">"<x id="title" equiv-text="video.title"/>" added to the queue.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
+          <context context-type="linenumber">141</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.enqueueFailed" datatype="html">
+        <source>Falha ao enfileirar: <x id="error" equiv-text="message"/></source>
+        <target state="translated">Failed to enqueue: <x id="error" equiv-text="message"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="status.pending" datatype="html">
+        <source>Aguardando</source>
+        <target state="translated">Waiting</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
+          <context context-type="linenumber">161</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="status.nowPlaying" datatype="html">
+        <source>Cantando agora</source>
+        <target state="translated">Singing now</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
+          <context context-type="linenumber">162</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="status.done" datatype="html">
+        <source>Feita</source>
+        <target state="translated">Done</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="status.skipped" datatype="html">
+        <source>Pulada</source>
+        <target state="translated">Skipped</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
+          <context context-type="linenumber">164</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.searchFailed" datatype="html">
+        <source>Busca falhou: <x id="error" equiv-text="message"/></source>
+        <target state="translated">Search failed: <x id="error" equiv-text="message"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
+          <context context-type="linenumber">199</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common.close" datatype="html">
+        <source>Fechar</source>
+        <target state="translated">Close</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/qr-scanner-dialog.component.ts</context>
+          <context context-type="linenumber">27,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="qr.aim" datatype="html">
+        <source>Aponte a câmera para o QR da sala.</source>
+        <target state="translated">Point the camera at the room QR.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/qr-scanner-dialog.component.ts</context>
+          <context context-type="linenumber">41,42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="qr.cameraUnavailable" datatype="html">
+        <source>Câmera indisponível: <x id="error" equiv-text="message"/></source>
+        <target state="translated">Camera unavailable: <x id="error" equiv-text="message"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/qr-scanner-dialog.component.ts</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="qr.notRecognized" datatype="html">
+        <source>QR não reconhecido. Tente o código manual.</source>
+        <target state="translated">QR not recognized. Try the manual code.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/qr-scanner-dialog.component.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="yourTurn.title" datatype="html">
+        <source>É a sua vez!</source>
+        <target state="translated">It's your turn!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/your-turn-sheet.component.ts</context>
+          <context context-type="linenumber">17,18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="yourTurn.loading" datatype="html">
+        <source>Preparando uma palavra de incentivo...</source>
+        <target state="translated">Preparing an encouraging line...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/your-turn-sheet.component.ts</context>
+          <context context-type="linenumber">22,24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="yourTurn.ready" datatype="html">
+        <source> Estou pronto </source>
+        <target state="translated">I'm ready</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/your-turn-sheet.component.ts</context>
+          <context context-type="linenumber">25,27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common.back" datatype="html">
+        <source>Voltar</source>
+        <target state="translated">Back</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.title" datatype="html">
+        <source>Política de Privacidade</source>
+        <target state="translated">Privacy Policy</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">4,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.updatedAt" datatype="html">
+        <source>Atualizada em <x id="INTERPOLATION" equiv-text="{{ updatedAt }}"/></source>
+        <target state="translated">Updated on <x id="INTERPOLATION" equiv-text="{{ updatedAt }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">7,9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.intro" datatype="html">
+        <source> Esta política descreve como o app <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Karaokê Live<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> (&quot;nós&quot;) coleta, usa e protege seus dados quando você usa o serviço em <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>karaoke-live.app.br<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> ou pelo app Android equivalente. </source>
+        <target state="translated">This policy describes how the <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Karaokê Live<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> app ("we") collects, uses and protects your data when you use the service at <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>karaoke-live.app.br<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> or via the equivalent Android app.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">11,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.section.collected" datatype="html">
+        <source>1. Dados que coletamos</source>
+        <target state="translated">1. Data we collect</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.collected.google" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Conta Google (SSO):<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> ao entrar, recebemos do Google seu nome, email e foto de perfil. Não recebemos sua senha. </source>
+        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Google account (SSO):<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> when you sign in, we receive your name, email and profile picture from Google. We never receive your password.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">21,24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.collected.activity" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Atividade no app:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> salas que você cria ou entra, vídeos que você adiciona à fila, e mensagens geradas pelo Gemini associadas à sua vez de cantar. </source>
+        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>App activity:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> rooms you create or join, videos you add to the queue, and Gemini-generated messages tied to your turn.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">25,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.collected.camera" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Câmera (apenas no leitor de QR):<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> usamos a câmera somente durante o uso do scanner de QR para entrar numa sala. Nenhuma imagem é gravada ou enviada para servidores. </source>
+        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Camera (QR scanner only):<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> we use the camera only while the QR scanner is active to join a room. No image is recorded or sent to servers.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">29,32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.section.usage" datatype="html">
+        <source>2. Como usamos os dados</source>
+        <target state="translated">2. How we use the data</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">36,38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.usage.auth" datatype="html">
+        <source>Autenticar você na plataforma.</source>
+        <target state="translated">Authenticate you on the platform.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">38,39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.usage.attribution" datatype="html">
+        <source>Mostrar quem enfileirou cada música na sala.</source>
+        <target state="translated">Show who queued each song in the room.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">39,40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.usage.realtime" datatype="html">
+        <source>Sincronizar a fila em tempo real entre host e convidados.</source>
+        <target state="translated">Sync the queue in real time between host and guests.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">40,41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.usage.gemini" datatype="html">
+        <source>Gerar a mensagem de &quot;sua vez&quot; personalizada com nome e música.</source>
+        <target state="translated">Generate your personalized "your turn" message using your name and song.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">41,45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.section.thirdParty" datatype="html">
+        <source>3. Serviços de terceiros</source>
+        <target state="translated">3. Third-party services</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">46,48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.third.google" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Google Sign-In<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> — autenticação.</source>
+        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Google Sign-In<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> — authentication.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">48,49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.third.supabase" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Supabase<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> — banco de dados (PostgreSQL) e canais em tempo real. Servidores em São Paulo (sa-east-1). </source>
+        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Supabase<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> — database (PostgreSQL) and real-time channels. Servers in São Paulo (sa-east-1).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">50,53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.third.youtube" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>YouTube Data API v3<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> (Google) — busca de vídeos. As consultas saem do servidor, não do seu dispositivo. </source>
+        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>YouTube Data API v3<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> (Google) — video search. Queries go through the server, not your device.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">54,57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.third.gemini" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Gemini API<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> (Google) — geração da mensagem irônica que aparece quando é a sua vez. </source>
+        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Gemini API<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> (Google) — generates the ironic message shown when it's your turn.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">58,61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.third.netlify" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Netlify<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> — hospedagem do front-end.</source>
+        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Netlify<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> — front-end hosting.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">61,63</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.section.sharing" datatype="html">
+        <source>4. Compartilhamento</source>
+        <target state="translated">4. Sharing</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">66,67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.sharing.body" datatype="html">
+        <source> Não vendemos seus dados. Compartilhamos somente com os processadores listados acima, estritamente para operar o serviço. </source>
+        <target state="translated">We don't sell your data. We share only with the processors listed above, strictly to operate the service.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">68,73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.section.retention" datatype="html">
+        <source>5. Retenção</source>
+        <target state="translated">5. Retention</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">74,75</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.retention.body" datatype="html">
+        <source> Mantemos seu perfil e histórico de salas enquanto sua conta estiver ativa. Você pode pedir exclusão a qualquer momento pelo email abaixo — apagamos seus dados em até 30 dias. </source>
+        <target state="translated">We keep your profile and room history while your account is active. You can request deletion at any time via the email below — we erase your data within 30 days.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">76,81</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.section.rights" datatype="html">
+        <source>6. Direitos do usuário</source>
+        <target state="translated">6. User rights</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">82,83</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.rights.body" datatype="html">
+        <source> Conforme a LGPD, você tem direito de acessar, corrigir, excluir e portar seus dados. Para exercer esses direitos, escreva pra <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [href]=&quot;&apos;mailto:&apos; + contactEmail&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ contactEmail }}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
+        <target state="translated">Per LGPD, you have the right to access, correct, delete and port your data. To exercise these rights, write to <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [href]=&quot;'mailto:' + contactEmail&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ contactEmail }}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">84,88</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.section.security" datatype="html">
+        <source>7. Segurança</source>
+        <target state="translated">7. Security</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">91,92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.security.body" datatype="html">
+        <source> Tráfego sempre por HTTPS. Dados armazenados de forma criptografada em repouso pelo Supabase. Tokens de autenticação são guardados localmente no seu dispositivo. </source>
+        <target state="translated">Traffic is always over HTTPS. Data stored encrypted at rest by Supabase. Authentication tokens are kept locally on your device.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">93,98</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.section.children" datatype="html">
+        <source>8. Crianças</source>
+        <target state="translated">8. Children</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">99,100</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.children.body" datatype="html">
+        <source> O serviço é destinado a maiores de 13 anos. Se você é responsável por um menor de idade e acredita que coletamos dados dele, entre em contato pelo email acima. </source>
+        <target state="translated">The service is intended for users over 13. If you are responsible for a minor and believe we have collected their data, please contact us at the email above.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">101,106</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.section.contact" datatype="html">
+        <source>9. Contato</source>
+        <target state="translated">9. Contact</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">107,108</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="privacy.contact.body" datatype="html">
+        <source> Cafeína Design — <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [href]=&quot;&apos;mailto:&apos; + contactEmail&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ contactEmail }}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
+        <target state="translated">Cafeína Design — <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [href]=&quot;'mailto:' + contactEmail&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ contactEmail }}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/privacy/privacy.component.html</context>
+          <context context-type="linenumber">109,111</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -137,10 +137,18 @@ export class MobileComponent {
     if (!room) return;
     try {
       await this.queue.enqueue(room.id, video);
-      this.snackBar.open(`"${video.title}" entrou na fila.`, undefined, { duration: 2500 });
+      this.snackBar.open(
+        $localize`:@@mobile.enqueued:"${video.title}:title:" entrou na fila.`,
+        undefined,
+        { duration: 2500 },
+      );
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'erro_desconhecido';
-      this.snackBar.open(`Falha ao enfileirar: ${message}`, undefined, { duration: 4000 });
+      const message = err instanceof Error ? err.message : $localize`:@@common.unknownError:erro desconhecido`;
+      this.snackBar.open(
+        $localize`:@@mobile.enqueueFailed:Falha ao enfileirar: ${message}:error:`,
+        undefined,
+        { duration: 4000 },
+      );
     }
   }
 
@@ -150,10 +158,10 @@ export class MobileComponent {
 
   protected statusLabel(status: string): string {
     switch (status) {
-      case 'pending': return 'Aguardando';
-      case 'now_playing': return 'Cantando agora';
-      case 'done': return 'Feita';
-      case 'skipped': return 'Pulada';
+      case 'pending': return $localize`:@@status.pending:Aguardando`;
+      case 'now_playing': return $localize`:@@status.nowPlaying:Cantando agora`;
+      case 'done': return $localize`:@@status.done:Feita`;
+      case 'skipped': return $localize`:@@status.skipped:Pulada`;
       default: return status;
     }
   }
@@ -165,7 +173,11 @@ export class MobileComponent {
       await this.queue.subscribe(room.id);
       await this.router.navigate(['/mobile', room.code], { replaceUrl: true });
     } catch {
-      this.snackBar.open('Sala não encontrada.', undefined, { duration: 3000 });
+      this.snackBar.open(
+        $localize`:@@mobile.roomNotFound:Sala não encontrada.`,
+        undefined,
+        { duration: 3000 },
+      );
     } finally {
       this.joining.set(false);
     }
@@ -182,8 +194,12 @@ export class MobileComponent {
       const results = await this.youtube.search(trimmed);
       this.results.set(results);
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'erro_desconhecido';
-      this.snackBar.open(`Busca falhou: ${message}`, undefined, { duration: 4000 });
+      const message = err instanceof Error ? err.message : $localize`:@@common.unknownError:erro desconhecido`;
+      this.snackBar.open(
+        $localize`:@@mobile.searchFailed:Busca falhou: ${message}:error:`,
+        undefined,
+        { duration: 4000 },
+      );
     } finally {
       this.searching.set(false);
     }

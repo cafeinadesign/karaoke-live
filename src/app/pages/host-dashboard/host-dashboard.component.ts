@@ -91,8 +91,12 @@ export class HostDashboardComponent {
     try {
       await this.queue.advanceNext(room.id);
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'erro_desconhecido';
-      this.snackBar.open(`Falha ao avançar: ${message}`, undefined, { duration: 4000 });
+      const message = err instanceof Error ? err.message : $localize`:@@common.unknownError:erro desconhecido`;
+      this.snackBar.open(
+        $localize`:@@host.advanceFailed:Falha ao avançar: ${message}:error:`,
+        undefined,
+        { duration: 4000 },
+      );
     } finally {
       this.advancing.set(false);
     }
@@ -102,8 +106,12 @@ export class HostDashboardComponent {
     try {
       await this.queue.removeItem(itemId);
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'erro_desconhecido';
-      this.snackBar.open(`Falha ao remover: ${message}`, undefined, { duration: 4000 });
+      const message = err instanceof Error ? err.message : $localize`:@@common.unknownError:erro desconhecido`;
+      this.snackBar.open(
+        $localize`:@@host.removeFailed:Falha ao remover: ${message}:error:`,
+        undefined,
+        { duration: 4000 },
+      );
     }
   }
 
@@ -123,12 +131,20 @@ export class HostDashboardComponent {
   private async loadRoom(roomId: string): Promise<void> {
     const room = await this.rooms.loadRoomById(roomId);
     if (!room) {
-      this.snackBar.open('Sala não encontrada.', undefined, { duration: 3000 });
+      this.snackBar.open(
+        $localize`:@@mobile.roomNotFound:Sala não encontrada.`,
+        undefined,
+        { duration: 3000 },
+      );
       await this.router.navigate(['/']);
       return;
     }
     if (room.host_id !== this.auth.user()?.id) {
-      this.snackBar.open('Você não é host desta sala.', undefined, { duration: 3000 });
+      this.snackBar.open(
+        $localize`:@@host.notHost:Você não é host desta sala.`,
+        undefined,
+        { duration: 3000 },
+      );
       await this.router.navigate(['/']);
       return;
     }
