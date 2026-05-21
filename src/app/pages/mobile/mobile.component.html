@@ -44,20 +44,36 @@
       }
     </header>
 
+    @if (currentItem(); as current) {
+      <section class="now-playing" [class.mine]="isMine(current)">
+        <span class="label" i18n="@@status.nowPlaying">Cantando agora</span>
+        <span class="song">{{ current.video_title }}</span>
+        <app-playback-bar [elapsed]="currentElapsed()" [duration]="currentDuration()" />
+      </section>
+    }
+
     <section class="search">
       <app-song-search [roomId]="room()!.id" />
     </section>
 
-    <section class="my-queue">
-      <h2 i18n="@@mobile.myQueueTitle">Minhas músicas</h2>
-      @if (myItems().length === 0) {
-        <p class="empty" i18n="@@mobile.myQueueEmpty">Você ainda não enfileirou nada.</p>
+    <section class="queue">
+      <h2>
+        <span i18n="@@mobile.queueTitle">Fila</span>
+        <span class="count">({{ upcomingItems().length }})</span>
+      </h2>
+      @if (upcomingItems().length === 0) {
+        <p class="empty" i18n="@@mobile.queueEmpty">Nenhuma música na fila ainda.</p>
       } @else {
         <mat-list>
-          @for (item of myItems(); track item.id) {
-            <mat-list-item [attr.data-status]="item.status">
+          @for (item of upcomingItems(); track item.id) {
+            <mat-list-item lines="2" [class.mine]="isMine(item)">
               <span matListItemTitle>{{ item.video_title }}</span>
-              <span matListItemLine>{{ statusLabel(item.status) }} · #{{ item.position }}</span>
+              <span matListItemLine>
+                #{{ item.position }} · {{ formatDuration(item.video_duration_seconds) }}
+                @if (isMine(item)) {
+                  · <span class="mine-tag" i18n="@@mobile.mineTag">sua</span>
+                }
+              </span>
             </mat-list-item>
           }
         </mat-list>

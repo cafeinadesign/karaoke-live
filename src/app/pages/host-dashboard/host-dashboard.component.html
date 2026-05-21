@@ -23,6 +23,7 @@
         <youtube-player
           [videoId]="currentVideoId()"
           [playerVars]="{ autoplay: 1, controls: 1, rel: 0 }"
+          (stateChange)="onPlayerState($event)"
         />
       } @else {
         <div class="player-empty">
@@ -30,12 +31,13 @@
           <p i18n="@@host.playerEmpty">Nenhuma música tocando. Clique em "Próxima música" para começar.</p>
         </div>
       }
-      <div class="now-playing">
-        @if (currentItem(); as item) {
+      @if (currentItem(); as item) {
+        <div class="now-playing">
           <span class="label" i18n="@@host.nowLabel">Agora</span>
           <span class="song">{{ item.video_title }}</span>
-        }
-      </div>
+        </div>
+        <app-playback-bar [elapsed]="elapsed()" [duration]="duration()" />
+      }
     </section>
 
     <section class="controls">

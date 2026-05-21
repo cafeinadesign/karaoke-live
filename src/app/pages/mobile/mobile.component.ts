@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   computed,
   effect,
   inject,
@@ -21,6 +22,9 @@ import { AuthService } from '../../auth/auth.service';
 import { RoomsService } from '../../rooms/rooms.service';
 import { QueueService } from '../../queue/queue.service';
 import { SongSearchComponent } from '../../song-search/song-search.component';
+import { PlaybackBarComponent } from '../../playback-bar/playback-bar.component';
+import { QueueItem } from '../../types';
+import { formatDuration } from '../../utils/format';
 import { YourTurnSheetComponent, YourTurnData } from './your-turn-sheet.component';
 import { QrScannerDialogComponent } from './qr-scanner-dialog.component';
 
@@ -35,6 +39,7 @@ import { QrScannerDialogComponent } from './qr-scanner-dialog.component';
     MatListModule,
     MatProgressSpinnerModule,
     SongSearchComponent,
+    PlaybackBarComponent,
   ],
   templateUrl: './mobile.component.html',
   styleUrl: './mobile.component.sass',
@@ -49,6 +54,7 @@ export class MobileComponent {
   private readonly bottomSheet = inject(MatBottomSheet);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly codeControl = new FormControl<string>('', {
     nonNullable: true,
@@ -58,17 +64,29 @@ export class MobileComponent {
   protected readonly joining = signal(false);
   protected readonly room = this.rooms.currentRoom;
 
+  /** Ticks every second so playback time recomputes from started_at. */
+  private readonly nowTick = signal(Date.now());
+
   protected readonly currentItem = computed(() =>
     this.queue.items().find((i) => i.status === 'now_playing') ?? null,
   );
-  protected readonly myItems = computed(() => {
-    const userId = this.auth.user()?.id;
-    if (!userId) return [];
-    return this.queue.items().filter((i) => i.user_id === userId);
-  });
+  protected readonly upcomingItems = computed(() =>
+    this.queue.items().filter((i) => i.status === 'pending'),
+  );
+  protected readonly myUserId = computed(() => this.auth.user()?.id ?? null);
   protected readonly isMyTurn = computed(() => {
     const current = this.currentItem();
-    return current !== null && current.user_id === this.auth.user()?.id;
+    return current !== null && current.user_id === this.myUserId();
+  });
+
+  protected readonly currentDuration = computed(
+    () => this.currentItem()?.video_duration_seconds ?? 0,
+  );
+  protected readonly currentElapsed = computed(() => {
+    const item = this.currentItem();
+    if (!item?.started_at) return 0;
+    const started = new Date(item.started_at).getTime();
+    return Math.max(0, (this.nowTick() - started) / 1000);
   });
 
   private sheetRef: MatBottomSheetRef<YourTurnSheetComponent, void> | null = null;
@@ -79,6 +97,9 @@ export class MobileComponent {
     if (code) {
       void this.tryJoin(code);
     }
+
+    const tickId = window.setInterval(() => this.nowTick.set(Date.now()), 1000);
+    this.destroyRef.onDestroy(() => window.clearInterval(tickId));
 
     effect(() => {
       const current = this.currentItem();
@@ -127,6 +148,14 @@ export class MobileComponent {
       case 'skipped': return $localize`:@@status.skipped:Pulada`;
       default: return status;
     }
+  }
+
+  protected formatDuration(seconds: number | null): string {
+    return formatDuration(seconds ?? 0);
+  }
+
+  protected isMine(item: QueueItem): boolean {
+    return item.user_id === this.myUserId();
   }
 
   private async tryJoin(code: string): Promise<void> {

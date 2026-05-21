@@ -1,10 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   computed,
   effect,
   inject,
   signal,
+  viewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,8 +22,11 @@ import { QueueService } from '../../queue/queue.service';
 import { YoutubeService } from '../../youtube/youtube.service';
 import { SongSearchComponent } from '../../song-search/song-search.component';
 import { VersionFooterComponent } from '../../version-footer/version-footer.component';
+import { PlaybackBarComponent } from '../../playback-bar/playback-bar.component';
 import { formatDuration } from '../../utils/format';
 import { ShareSheetComponent, ShareSheetData } from './share-sheet.component';
+
+const YT_STATE_ENDED = 0;
 
 @Component({
   selector: 'app-host-dashboard',
@@ -33,6 +38,7 @@ import { ShareSheetComponent, ShareSheetData } from './share-sheet.component';
     YouTubePlayer,
     SongSearchComponent,
     VersionFooterComponent,
+    PlaybackBarComponent,
   ],
   templateUrl: './host-dashboard.component.html',
   styleUrl: './host-dashboard.component.sass',
@@ -47,9 +53,14 @@ export class HostDashboardComponent {
   private readonly youtube = inject(YoutubeService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly bottomSheet = inject(MatBottomSheet);
+  private readonly destroyRef = inject(DestroyRef);
+
+  private readonly player = viewChild(YouTubePlayer);
 
   protected readonly room = this.rooms.currentRoom;
   protected readonly advancing = signal(false);
+  protected readonly elapsed = signal(0);
+  protected readonly duration = signal(0);
 
   protected readonly currentItem = computed(() =>
     this.queue.items().find((i) => i.status === 'now_playing') ?? null,
@@ -65,6 +76,7 @@ export class HostDashboardComponent {
   });
 
   private lastRoastedItemId: string | null = null;
+  private autoAdvancedItemId: string | null = null;
 
   constructor() {
     const roomId = this.route.snapshot.paramMap.get('roomId');
@@ -86,6 +98,31 @@ export class HostDashboardComponent {
       this.lastRoastedItemId = current.id;
       void this.youtube.generateRoast(current.id);
     });
+
+    // Poll the YouTube player for playback position.
+    const pollId = window.setInterval(() => {
+      const p = this.player();
+      if (!p) {
+        return;
+      }
+      const dur = p.getDuration();
+      const cur = p.getCurrentTime();
+      this.duration.set(Number.isFinite(dur) ? dur : 0);
+      this.elapsed.set(Number.isFinite(cur) ? cur : 0);
+    }, 500);
+    this.destroyRef.onDestroy(() => window.clearInterval(pollId));
+  }
+
+  protected onPlayerState(event: YT.OnStateChangeEvent): void {
+    if (event.data !== YT_STATE_ENDED) {
+      return;
+    }
+    const current = this.currentItem();
+    if (!current || this.autoAdvancedItemId === current.id) {
+      return;
+    }
+    this.autoAdvancedItemId = current.id;
+    void this.advance();
   }
 
   protected async advance(): Promise<void> {

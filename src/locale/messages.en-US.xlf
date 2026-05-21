@@ -282,6 +282,18 @@
           <context context-type="linenumber">9,12</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="mobile.queueTitle" datatype="html">
+        <source>Fila</source>
+        <target state="translated">Queue</target>
+      </trans-unit>
+      <trans-unit id="mobile.queueEmpty" datatype="html">
+        <source>Nenhuma música na fila ainda.</source>
+        <target state="translated">No songs in the queue yet.</target>
+      </trans-unit>
+      <trans-unit id="mobile.mineTag" datatype="html">
+        <source>sua</source>
+        <target state="translated">yours</target>
+      </trans-unit>
       <trans-unit id="common.or" datatype="html">
         <source>ou</source>
         <target state="translated">or</target>

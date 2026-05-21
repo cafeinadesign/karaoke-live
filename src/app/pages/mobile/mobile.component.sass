@@ -109,11 +109,53 @@
   text-align: center
   margin: 12px 0
 
-.my-queue
+.now-playing
+  display: flex
+  flex-direction: column
+  gap: 8px
+  padding: 16px
+  background: var(--mat-sys-surface-container)
+  border-radius: 12px
+  border-left: 3px solid var(--mat-sys-primary)
+
+  &.mine
+    border-left-color: var(--app-accent-gold)
+
+  .label
+    font-size: 12px
+    text-transform: uppercase
+    letter-spacing: 1px
+    color: var(--mat-sys-primary)
+
+  .song
+    font-size: 16px
+    font-weight: 500
+
+  &.mine .label
+    color: var(--app-accent-gold)
+
+.queue
   h2
     margin: 0 0 8px
     font-size: 18px
+    display: flex
+    align-items: baseline
+    gap: 6px
     color: var(--mat-sys-on-surface)
 
-  mat-list-item[data-status="now_playing"]
-    --mdc-list-list-item-label-text-color: var(--mat-sys-primary)
+    .count
+      color: var(--mat-sys-on-surface-variant)
+      font-weight: 400
+      font-size: 14px
+
+  mat-list
+    background: var(--mat-sys-surface-container)
+    border-radius: 12px
+    overflow: hidden
+
+  mat-list-item.mine
+    --mdc-list-list-item-label-text-color: var(--app-accent-gold)
+
+  .mine-tag
+    color: var(--app-accent-gold)
+    font-weight: 500
