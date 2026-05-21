@@ -15,14 +15,24 @@ export class AuthService {
   readonly profile = signal<Profile | null>(null);
   readonly isAuthenticated = computed(() => this.user() !== null);
 
+  /** Resolves once the initial session lookup has completed. */
+  private resolveReady!: () => void;
+  private readonly ready: Promise<void> = new Promise((resolve) => {
+    this.resolveReady = resolve;
+  });
+
   constructor() {
-    if (!isPlatformBrowser(this.platformId)) return;
+    if (!isPlatformBrowser(this.platformId)) {
+      this.resolveReady();
+      return;
+    }
 
     void this.supabase.client.auth.getSession().then(({ data }) => {
       this.session.set(data.session);
       if (data.session?.user) {
         void this.loadProfile(data.session.user.id);
       }
+      this.resolveReady();
     });
 
     this.supabase.client.auth.onAuthStateChange((_event, session) => {
@@ -33,6 +43,11 @@ export class AuthService {
         this.profile.set(null);
       }
     });
+  }
+
+  /** Awaits the first session lookup so guards don't race the async restore. */
+  whenReady(): Promise<void> {
+    return this.ready;
   }
 
   async signInWithGoogle(redirectTo?: string): Promise<void> {

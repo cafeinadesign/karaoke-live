@@ -22,7 +22,8 @@ export class LoginComponent {
       if (this.auth.isAuthenticated()) {
         const redirect = this.route.snapshot.queryParamMap.get('redirect');
         const target = redirect ? new URL(redirect, document.baseURI).pathname : '/';
-        void this.router.navigateByUrl(target);
+        // replaceUrl so /login never stays in history — back/gesture won't return here.
+        void this.router.navigateByUrl(target, { replaceUrl: true });
       }
     });
   }
