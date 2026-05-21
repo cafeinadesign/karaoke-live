@@ -42,6 +42,16 @@
       @if (room()!.name) {
         <span class="name">{{ room()!.name }}</span>
       }
+      <button
+        matIconButton
+        type="button"
+        class="leave-btn"
+        (click)="leaveRoom()"
+        i18n-aria-label="@@common.leaveRoom"
+        aria-label="Sair da sala"
+      >
+        <mat-icon>logout</mat-icon>
+      </button>
     </header>
 
     @if (currentItem(); as current) {
@@ -79,5 +89,7 @@
         </mat-list>
       }
     </section>
+
+    <app-participants-list [participants]="people()" />
   }
 </main>

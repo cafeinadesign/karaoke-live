@@ -5,17 +5,28 @@
         <mat-icon class="logo" aria-hidden="true">graphic_eq</mat-icon>
         <h1>Karaokê Live</h1>
       </div>
-      <button
-        matButton="tonal"
-        type="button"
-        (click)="openShareSheet()"
-        class="code-btn"
-        i18n-aria-label="@@host.shareRoom"
-        aria-label="Compartilhar sala"
-      >
-        <mat-icon>qr_code_2</mat-icon>
-        {{ room()!.code }}
-      </button>
+      <div class="bar-actions">
+        <button
+          matButton="tonal"
+          type="button"
+          (click)="openShareSheet()"
+          class="code-btn"
+          i18n-aria-label="@@host.shareRoom"
+          aria-label="Compartilhar sala"
+        >
+          <mat-icon>qr_code_2</mat-icon>
+          {{ room()!.code }}
+        </button>
+        <button
+          matIconButton
+          type="button"
+          (click)="leaveRoom()"
+          i18n-aria-label="@@common.leaveRoom"
+          aria-label="Sair da sala"
+        >
+          <mat-icon>logout</mat-icon>
+        </button>
+      </div>
     </header>
 
     <section class="player-wrap">
@@ -57,6 +68,8 @@
       <h2 i18n="@@host.addSongTitle">Adicionar música</h2>
       <app-song-search [roomId]="room()!.id" />
     </section>
+
+    <app-participants-list [participants]="people()" />
 
     <section class="queue">
       <h2>

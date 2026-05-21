@@ -726,6 +726,54 @@
           <context context-type="linenumber">109,111</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="participants.title" datatype="html">
+        <source>Participantes</source>
+        <target state="translated">Participants</target>
+      </trans-unit>
+      <trans-unit id="participants.host" datatype="html">
+        <source>anfitrião</source>
+        <target state="translated">host</target>
+      </trans-unit>
+      <trans-unit id="participants.empty" datatype="html">
+        <source>Ninguém na sala ainda.</source>
+        <target state="translated">No one in the room yet.</target>
+      </trans-unit>
+      <trans-unit id="participants.anonymous" datatype="html">
+        <source>Convidado</source>
+        <target state="translated">Guest</target>
+      </trans-unit>
+      <trans-unit id="common.leaveRoom" datatype="html">
+        <source>Sair da sala</source>
+        <target state="translated">Leave room</target>
+      </trans-unit>
+      <trans-unit id="common.leave" datatype="html">
+        <source>Sair</source>
+        <target state="translated">Leave</target>
+      </trans-unit>
+      <trans-unit id="common.cancel" datatype="html">
+        <source>Cancelar</source>
+        <target state="translated">Cancel</target>
+      </trans-unit>
+      <trans-unit id="confirm.nextSong.title" datatype="html">
+        <source>Próxima música?</source>
+        <target state="translated">Next song?</target>
+      </trans-unit>
+      <trans-unit id="confirm.nextSong.message" datatype="html">
+        <source>A música atual será marcada como feita e a próxima da fila começa.</source>
+        <target state="translated">The current song will be marked as done and the next one in the queue starts.</target>
+      </trans-unit>
+      <trans-unit id="confirm.nextSong.confirm" datatype="html">
+        <source>Avançar</source>
+        <target state="translated">Advance</target>
+      </trans-unit>
+      <trans-unit id="confirm.leave.title" datatype="html">
+        <source>Sair da sala?</source>
+        <target state="translated">Leave the room?</target>
+      </trans-unit>
+      <trans-unit id="confirm.leave.message" datatype="html">
+        <source>Você volta para a tela inicial.</source>
+        <target state="translated">You'll go back to the home screen.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

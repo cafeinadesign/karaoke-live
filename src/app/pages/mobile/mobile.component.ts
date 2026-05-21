@@ -21,6 +21,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../auth/auth.service';
 import { RoomsService } from '../../rooms/rooms.service';
 import { QueueService } from '../../queue/queue.service';
+import { ParticipantsService } from '../../participants/participants.service';
+import { ParticipantsListComponent } from '../../participants/participants-list.component';
+import { ConfirmService } from '../../shared/confirm.service';
 import { SongSearchComponent } from '../../song-search/song-search.component';
 import { PlaybackBarComponent } from '../../playback-bar/playback-bar.component';
 import { QueueItem } from '../../types';
@@ -40,6 +43,7 @@ import { QrScannerDialogComponent } from './qr-scanner-dialog.component';
     MatProgressSpinnerModule,
     SongSearchComponent,
     PlaybackBarComponent,
+    ParticipantsListComponent,
   ],
   templateUrl: './mobile.component.html',
   styleUrl: './mobile.component.sass',
@@ -51,6 +55,8 @@ export class MobileComponent {
   private readonly auth = inject(AuthService);
   private readonly rooms = inject(RoomsService);
   protected readonly queue = inject(QueueService);
+  private readonly participants = inject(ParticipantsService);
+  private readonly confirmService = inject(ConfirmService);
   private readonly bottomSheet = inject(MatBottomSheet);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
@@ -63,6 +69,7 @@ export class MobileComponent {
 
   protected readonly joining = signal(false);
   protected readonly room = this.rooms.currentRoom;
+  protected readonly people = this.participants.participants;
 
   /** Ticks every second so playback time recomputes from started_at. */
   private readonly nowTick = signal(Date.now());
@@ -99,7 +106,10 @@ export class MobileComponent {
     }
 
     const tickId = window.setInterval(() => this.nowTick.set(Date.now()), 1000);
-    this.destroyRef.onDestroy(() => window.clearInterval(tickId));
+    this.destroyRef.onDestroy(() => {
+      window.clearInterval(tickId);
+      void this.participants.leave();
+    });
 
     effect(() => {
       const current = this.currentItem();
@@ -158,11 +168,37 @@ export class MobileComponent {
     return item.user_id === this.myUserId();
   }
 
+  protected async leaveRoom(): Promise<void> {
+    const confirmed = await this.confirmService.ask({
+      title: $localize`:@@confirm.leave.title:Sair da sala?`,
+      message: $localize`:@@confirm.leave.message:Você volta para a tela inicial.`,
+      confirmLabel: $localize`:@@common.leave:Sair`,
+      cancelLabel: $localize`:@@common.cancel:Cancelar`,
+      danger: true,
+    });
+    if (!confirmed) return;
+    await this.participants.leave();
+    await this.queue.unsubscribe();
+    this.rooms.clearCurrent();
+    await this.router.navigate(['/']);
+  }
+
   private async tryJoin(code: string): Promise<void> {
     this.joining.set(true);
     try {
       const room = await this.rooms.joinByCode(code);
       await this.queue.subscribe(room.id);
+      const user = this.auth.user();
+      if (user) {
+        const profile = this.auth.profile();
+        await this.participants.join(room.id, {
+          userId: user.id,
+          displayName: profile?.display_name ?? $localize`:@@participants.anonymous:Convidado`,
+          avatarUrl: profile?.avatar_url ?? null,
+          isHost: room.host_id === user.id,
+          onlineAt: new Date().toISOString(),
+        });
+      }
       await this.router.navigate(['/mobile', room.code], { replaceUrl: true });
     } catch {
       this.snackBar.open(

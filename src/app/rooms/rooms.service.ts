@@ -66,4 +66,8 @@ export class RoomsService {
     this.currentRoom.set(data);
     return data;
   }
+
+  clearCurrent(): void {
+    this.currentRoom.set(null);
+  }
 }

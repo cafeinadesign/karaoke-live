@@ -20,6 +20,9 @@ import { AuthService } from '../../auth/auth.service';
 import { RoomsService } from '../../rooms/rooms.service';
 import { QueueService } from '../../queue/queue.service';
 import { YoutubeService } from '../../youtube/youtube.service';
+import { ParticipantsService } from '../../participants/participants.service';
+import { ParticipantsListComponent } from '../../participants/participants-list.component';
+import { ConfirmService } from '../../shared/confirm.service';
 import { SongSearchComponent } from '../../song-search/song-search.component';
 import { VersionFooterComponent } from '../../version-footer/version-footer.component';
 import { PlaybackBarComponent } from '../../playback-bar/playback-bar.component';
@@ -39,6 +42,7 @@ const YT_STATE_ENDED = 0;
     SongSearchComponent,
     VersionFooterComponent,
     PlaybackBarComponent,
+    ParticipantsListComponent,
   ],
   templateUrl: './host-dashboard.component.html',
   styleUrl: './host-dashboard.component.sass',
@@ -51,6 +55,8 @@ export class HostDashboardComponent {
   private readonly rooms = inject(RoomsService);
   protected readonly queue = inject(QueueService);
   private readonly youtube = inject(YoutubeService);
+  private readonly participants = inject(ParticipantsService);
+  private readonly confirmService = inject(ConfirmService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly bottomSheet = inject(MatBottomSheet);
   private readonly destroyRef = inject(DestroyRef);
@@ -58,6 +64,7 @@ export class HostDashboardComponent {
   private readonly player = viewChild(YouTubePlayer);
 
   protected readonly room = this.rooms.currentRoom;
+  protected readonly people = this.participants.participants;
   protected readonly advancing = signal(false);
   protected readonly elapsed = signal(0);
   protected readonly duration = signal(0);
@@ -110,7 +117,10 @@ export class HostDashboardComponent {
       this.duration.set(Number.isFinite(dur) ? dur : 0);
       this.elapsed.set(Number.isFinite(cur) ? cur : 0);
     }, 500);
-    this.destroyRef.onDestroy(() => window.clearInterval(pollId));
+    this.destroyRef.onDestroy(() => {
+      window.clearInterval(pollId);
+      void this.participants.leave();
+    });
   }
 
   protected onPlayerState(event: YT.OnStateChangeEvent): void {
@@ -121,11 +131,24 @@ export class HostDashboardComponent {
     if (!current || this.autoAdvancedItemId === current.id) {
       return;
     }
+    // Video ended on its own — advance without the confirmation prompt.
     this.autoAdvancedItemId = current.id;
-    void this.advance();
+    void this.runAdvance();
   }
 
+  /** Manual "Próxima música" — asks for confirmation first. */
   protected async advance(): Promise<void> {
+    const confirmed = await this.confirmService.ask({
+      title: $localize`:@@confirm.nextSong.title:Próxima música?`,
+      message: $localize`:@@confirm.nextSong.message:A música atual será marcada como feita e a próxima da fila começa.`,
+      confirmLabel: $localize`:@@confirm.nextSong.confirm:Avançar`,
+      cancelLabel: $localize`:@@common.cancel:Cancelar`,
+    });
+    if (!confirmed) return;
+    await this.runAdvance();
+  }
+
+  private async runAdvance(): Promise<void> {
     const room = this.room();
     if (!room) return;
     this.advancing.set(true);
@@ -141,6 +164,21 @@ export class HostDashboardComponent {
     } finally {
       this.advancing.set(false);
     }
+  }
+
+  protected async leaveRoom(): Promise<void> {
+    const confirmed = await this.confirmService.ask({
+      title: $localize`:@@confirm.leave.title:Sair da sala?`,
+      message: $localize`:@@confirm.leave.message:Você volta para a tela inicial.`,
+      confirmLabel: $localize`:@@common.leave:Sair`,
+      cancelLabel: $localize`:@@common.cancel:Cancelar`,
+      danger: true,
+    });
+    if (!confirmed) return;
+    await this.participants.leave();
+    await this.queue.unsubscribe();
+    this.rooms.clearCurrent();
+    await this.router.navigate(['/']);
   }
 
   protected async remove(itemId: string): Promise<void> {
@@ -180,7 +218,8 @@ export class HostDashboardComponent {
       await this.router.navigate(['/']);
       return;
     }
-    if (room.host_id !== this.auth.user()?.id) {
+    const user = this.auth.user();
+    if (!user || room.host_id !== user.id) {
       this.snackBar.open(
         $localize`:@@host.notHost:Você não é host desta sala.`,
         undefined,
@@ -190,5 +229,13 @@ export class HostDashboardComponent {
       return;
     }
     await this.queue.subscribe(room.id);
+    const profile = this.auth.profile();
+    await this.participants.join(room.id, {
+      userId: user.id,
+      displayName: profile?.display_name ?? $localize`:@@participants.anonymous:Convidado`,
+      avatarUrl: profile?.avatar_url ?? null,
+      isHost: true,
+      onlineAt: new Date().toISOString(),
+    });
   }
 }

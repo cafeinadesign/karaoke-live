@@ -12,3 +12,11 @@ export interface VideoResult {
   readonly thumbnail: string;
   readonly durationSeconds: number;
 }
+
+export interface Participant {
+  readonly userId: string;
+  readonly displayName: string;
+  readonly avatarUrl: string | null;
+  readonly isHost: boolean;
+  readonly onlineAt: string;
+}
