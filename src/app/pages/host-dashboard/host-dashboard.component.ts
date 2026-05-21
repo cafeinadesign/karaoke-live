@@ -15,6 +15,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatDialog } from '@angular/material/dialog';
 import { YouTubePlayer } from '@angular/youtube-player';
 import { AuthService } from '../../auth/auth.service';
 import { RoomsService } from '../../rooms/rooms.service';
@@ -23,6 +24,10 @@ import { YoutubeService } from '../../youtube/youtube.service';
 import { ParticipantsService } from '../../participants/participants.service';
 import { ParticipantsListComponent } from '../../participants/participants-list.component';
 import { ConfirmService } from '../../shared/confirm.service';
+import {
+  SelectHostDialogComponent,
+  SelectHostDialogData,
+} from '../../shared/select-host-dialog.component';
 import { SongSearchComponent } from '../../song-search/song-search.component';
 import { VersionFooterComponent } from '../../version-footer/version-footer.component';
 import { PlaybackBarComponent } from '../../playback-bar/playback-bar.component';
@@ -59,6 +64,7 @@ export class HostDashboardComponent {
   private readonly confirmService = inject(ConfirmService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly bottomSheet = inject(MatBottomSheet);
+  private readonly dialog = inject(MatDialog);
   private readonly destroyRef = inject(DestroyRef);
 
   private readonly player = viewChild(YouTubePlayer);
@@ -120,6 +126,7 @@ export class HostDashboardComponent {
     this.destroyRef.onDestroy(() => {
       window.clearInterval(pollId);
       void this.participants.leave();
+      void this.rooms.unwatchRoom();
     });
   }
 
@@ -167,16 +174,60 @@ export class HostDashboardComponent {
   }
 
   protected async leaveRoom(): Promise<void> {
-    const confirmed = await this.confirmService.ask({
-      title: $localize`:@@confirm.leave.title:Sair da sala?`,
-      message: $localize`:@@confirm.leave.message:Você volta para a tela inicial.`,
-      confirmLabel: $localize`:@@common.leave:Sair`,
-      cancelLabel: $localize`:@@common.cancel:Cancelar`,
-      danger: true,
-    });
-    if (!confirmed) return;
+    const room = this.room();
+    const userId = this.auth.user()?.id;
+    if (!room || !userId) return;
+
+    const others = this.people().filter((p) => p.userId !== userId);
+
+    if (others.length === 0) {
+      // Host is alone — leaving closes the room.
+      const confirmed = await this.confirmService.ask({
+        title: $localize`:@@confirm.leave.title:Sair da sala?`,
+        message: $localize`:@@confirm.endRoom.message:Você é a única pessoa na sala. Sair vai encerrá-la.`,
+        confirmLabel: $localize`:@@confirm.endRoom.confirm:Encerrar e sair`,
+        cancelLabel: $localize`:@@common.cancel:Cancelar`,
+        danger: true,
+      });
+      if (!confirmed) return;
+      try {
+        await this.rooms.endRoom(room.id);
+      } catch {
+        this.snackBar.open(
+          $localize`:@@host.leaveFailed:Não foi possível sair da sala.`,
+          undefined,
+          { duration: 4000 },
+        );
+        return;
+      }
+    } else {
+      // Host must hand the role to someone before leaving.
+      const ref = this.dialog.open<
+        SelectHostDialogComponent,
+        SelectHostDialogData,
+        string | null
+      >(SelectHostDialogComponent, {
+        data: { candidates: others },
+        autoFocus: false,
+        restoreFocus: false,
+      });
+      const newHostId = (await ref.afterClosed().toPromise()) ?? null;
+      if (!newHostId) return;
+      try {
+        await this.rooms.transferHost(room.id, newHostId);
+      } catch {
+        this.snackBar.open(
+          $localize`:@@host.transferFailed:Não foi possível transferir o comando.`,
+          undefined,
+          { duration: 4000 },
+        );
+        return;
+      }
+    }
+
     await this.participants.leave();
     await this.queue.unsubscribe();
+    await this.rooms.unwatchRoom();
     this.rooms.clearCurrent();
     await this.router.navigate(['/']);
   }
@@ -229,6 +280,7 @@ export class HostDashboardComponent {
       return;
     }
     await this.queue.subscribe(room.id);
+    await this.rooms.watchRoom(room.id);
     const profile = this.auth.profile();
     await this.participants.join(room.id, {
       userId: user.id,

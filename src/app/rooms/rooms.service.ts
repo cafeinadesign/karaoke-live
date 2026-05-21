@@ -1,4 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import { SupabaseService } from '../supabase.service';
 import { AuthService } from '../auth/auth.service';
 import { Room } from '../types';
@@ -19,6 +20,8 @@ export class RoomsService {
   private readonly auth = inject(AuthService);
 
   readonly currentRoom = signal<Room | null>(null);
+  private roomChannel: RealtimeChannel | null = null;
+  private watchedRoomId: string | null = null;
 
   async createRoom(name: string | null): Promise<Room> {
     const userId = this.auth.user()?.id;
@@ -69,5 +72,52 @@ export class RoomsService {
 
   clearCurrent(): void {
     this.currentRoom.set(null);
+  }
+
+  /** Keeps currentRoom in sync with remote changes (e.g. host transfer). */
+  async watchRoom(roomId: string): Promise<void> {
+    if (this.watchedRoomId === roomId) return;
+    await this.unwatchRoom();
+
+    this.watchedRoomId = roomId;
+    this.roomChannel = this.supabase.client
+      .channel(`room:${roomId}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${roomId}` },
+        (payload) => {
+          this.currentRoom.set(payload.new as Room);
+        },
+      )
+      .subscribe();
+  }
+
+  async unwatchRoom(): Promise<void> {
+    if (this.roomChannel) {
+      await this.supabase.client.removeChannel(this.roomChannel);
+      this.roomChannel = null;
+    }
+    this.watchedRoomId = null;
+  }
+
+  /** Hands the host role to another participant. Only the current host may call this. */
+  async transferHost(roomId: string, newHostId: string): Promise<void> {
+    const { data, error } = await this.supabase.client
+      .from('rooms')
+      .update({ host_id: newHostId })
+      .eq('id', roomId)
+      .select()
+      .single();
+    if (error || !data) throw new Error(error?.message ?? 'transfer_failed');
+    this.currentRoom.set(data);
+  }
+
+  /** Marks the room as ended. */
+  async endRoom(roomId: string): Promise<void> {
+    const { error } = await this.supabase.client
+      .from('rooms')
+      .update({ ended_at: new Date().toISOString() })
+      .eq('id', roomId);
+    if (error) throw new Error(error.message);
   }
 }

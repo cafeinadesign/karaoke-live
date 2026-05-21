@@ -774,6 +774,38 @@
         <source>Você volta para a tela inicial.</source>
         <target state="translated">You'll go back to the home screen.</target>
       </trans-unit>
+      <trans-unit id="confirm.endRoom.message" datatype="html">
+        <source>Você é a única pessoa na sala. Sair vai encerrá-la.</source>
+        <target state="translated">You're the only person in the room. Leaving will close it.</target>
+      </trans-unit>
+      <trans-unit id="confirm.endRoom.confirm" datatype="html">
+        <source>Encerrar e sair</source>
+        <target state="translated">Close and leave</target>
+      </trans-unit>
+      <trans-unit id="selectHost.title" datatype="html">
+        <source>Escolha o novo anfitrião</source>
+        <target state="translated">Choose the new host</target>
+      </trans-unit>
+      <trans-unit id="selectHost.hint" datatype="html">
+        <source>Para sair, passe o comando da sala para outra pessoa.</source>
+        <target state="translated">To leave, hand the room over to someone else.</target>
+      </trans-unit>
+      <trans-unit id="selectHost.confirm" datatype="html">
+        <source>Passar e sair</source>
+        <target state="translated">Hand over &amp; leave</target>
+      </trans-unit>
+      <trans-unit id="host.leaveFailed" datatype="html">
+        <source>Não foi possível sair da sala.</source>
+        <target state="translated">Couldn't leave the room.</target>
+      </trans-unit>
+      <trans-unit id="host.transferFailed" datatype="html">
+        <source>Não foi possível transferir o comando.</source>
+        <target state="translated">Couldn't transfer the host role.</target>
+      </trans-unit>
+      <trans-unit id="mobile.promotedToHost" datatype="html">
+        <source>Você agora é o anfitrião da sala.</source>
+        <target state="translated">You're the host of the room now.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

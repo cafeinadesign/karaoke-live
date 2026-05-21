@@ -98,6 +98,7 @@ export class MobileComponent {
 
   private sheetRef: MatBottomSheetRef<YourTurnSheetComponent, void> | null = null;
   private shownTurnForItemId: string | null = null;
+  private promoted = false;
 
   constructor() {
     const code = this.route.snapshot.paramMap.get('code');
@@ -109,6 +110,24 @@ export class MobileComponent {
     this.destroyRef.onDestroy(() => {
       window.clearInterval(tickId);
       void this.participants.leave();
+      void this.rooms.unwatchRoom();
+    });
+
+    // The host can hand the room over — when that happens, this guest becomes
+    // the host and is moved to the host dashboard.
+    effect(() => {
+      const r = this.room();
+      const uid = this.myUserId();
+      if (!r || !uid || this.promoted) return;
+      if (r.host_id === uid) {
+        this.promoted = true;
+        this.snackBar.open(
+          $localize`:@@mobile.promotedToHost:Você agora é o anfitrião da sala.`,
+          undefined,
+          { duration: 4000 },
+        );
+        void this.router.navigate(['/host-dashboard', r.id]);
+      }
     });
 
     effect(() => {
@@ -179,6 +198,7 @@ export class MobileComponent {
     if (!confirmed) return;
     await this.participants.leave();
     await this.queue.unsubscribe();
+    await this.rooms.unwatchRoom();
     this.rooms.clearCurrent();
     await this.router.navigate(['/']);
   }
@@ -188,6 +208,7 @@ export class MobileComponent {
     try {
       const room = await this.rooms.joinByCode(code);
       await this.queue.subscribe(room.id);
+      await this.rooms.watchRoom(room.id);
       const user = this.auth.user();
       if (user) {
         const profile = this.auth.profile();
