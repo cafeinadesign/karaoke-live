@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<link href="base.css" rel="stylesheet">
+<style>
+  .roombar {
+    display: flex; align-items: center; gap: 14px;
+    background: #212121; border-radius: 14px; padding: 16px 20px;
+  }
+  .roombar .dot { width: 11px; height: 11px; border-radius: 50%; background: #ff0000; }
+  .roombar .code {
+    font-family: 'Roboto Mono', monospace; font-weight: 700;
+    letter-spacing: 5px; font-size: 25px;
+  }
+  .roombar .ms { margin-left: auto; color: #aaaaaa; font-size: 28px; }
+  .nowcard {
+    display: flex; flex-direction: column; gap: 12px;
+    background: #212121; border-radius: 16px; padding: 22px 24px;
+    border-left: 4px solid #ff0000;
+  }
+  .nowcard .nl { font-size: 16px; text-transform: uppercase; letter-spacing: 1px; color: #ff3535; }
+  .nowcard .ns { font-size: 23px; font-weight: 500; }
+  .search {
+    display: flex; align-items: center; gap: 14px;
+    background: #212121; border: 2px solid #3a3a3a; border-radius: 14px;
+    padding: 20px 22px; color: #aaaaaa; font-size: 23px;
+  }
+  .search .ms { font-size: 28px; }
+  .qrow { display: flex; align-items: center; gap: 16px; padding: 15px 0; }
+  .qrow + .qrow { border-top: 1px solid #2a2a2a; }
+  .qrow .qt { flex: 1; }
+  .qrow .qt .ttl { font-size: 22px; }
+  .qrow .qt .meta { font-size: 18px; color: #aaaaaa; margin-top: 3px; font-family: 'Roboto Mono', monospace; }
+  .qrow.mine .ttl { color: #ffb511; }
+  .mine-tag { color: #ffb511; font-weight: 500; }
+  .listbox { background: #212121; border-radius: 16px; padding: 6px 22px; }
+</style>
+</head>
+<body>
+  <div class="poster">
+    <header class="cap">
+      <div class="brand"><span class="ms">graphic_eq</span> Karaokê Live</div>
+      <h1>Convidados entram <span class="accent">pelo QR Code</span></h1>
+    </header>
+    <div class="phone">
+      <div class="screen">
+        <div class="app">
+          <div class="roombar">
+            <span class="dot"></span>
+            <span class="code">K3M9P2</span>
+            <span class="ms">logout</span>
+          </div>
+
+          <div class="nowcard">
+            <span class="nl">Cantando agora</span>
+            <span class="ns">Evidências — Chitãozinho &amp; Xororó</span>
+            <div class="bar"><span style="width:38%"></span></div>
+            <div class="times"><span class="e">1:24</span><span>3:45</span></div>
+          </div>
+
+          <div class="search"><span class="ms">search</span> Buscar música</div>
+
+          <div>
+            <div class="sec-title">Fila <span class="count">(4)</span></div>
+            <div class="listbox" style="margin-top:10px">
+              <div class="qrow mine">
+                <div class="qt"><div class="ttl">Garota de Ipanema</div>
+                  <div class="meta">#3 · 3:12 · <span class="mine-tag">sua</span></div></div>
+              </div>
+              <div class="qrow">
+                <div class="qt"><div class="ttl">Telefone Mudo</div>
+                  <div class="meta">#4 · 2:58</div></div>
+              </div>
+              <div class="qrow">
+                <div class="qt"><div class="ttl">Anunciação</div>
+                  <div class="meta">#5 · 4:11</div></div>
+              </div>
+              <div class="qrow">
+                <div class="qt"><div class="ttl">País Tropical</div>
+                  <div class="meta">#6 · 2:40</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

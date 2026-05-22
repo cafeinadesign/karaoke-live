@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<link href="base.css" rel="stylesheet">
+<style>
+  .screen { justify-content: flex-end; }
+  /* dimmed app behind */
+  .behind {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; gap: 22px; padding: 34px 30px;
+    filter: brightness(0.4);
+  }
+  .behind .roombar {
+    display: flex; align-items: center; gap: 14px;
+    background: #212121; border-radius: 14px; padding: 16px 20px;
+  }
+  .behind .dot { width: 11px; height: 11px; border-radius: 50%; background: #ff0000; }
+  .behind .code { font-family: 'Roboto Mono', monospace; font-weight: 700; letter-spacing: 5px; font-size: 25px; }
+  .behind .blk { background: #212121; border-radius: 16px; height: 150px; }
+  .scrim { position: absolute; inset: 0; background: rgba(0,0,0,0.45); }
+  .sheet {
+    position: relative;
+    background: #ffb511;
+    color: #0f0f0f;
+    border-radius: 34px 34px 48px 48px;
+    padding: 50px 40px 56px;
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+    text-align: center;
+  }
+  .sheet .mic { font-size: 92px; }
+  .sheet h2 { font-size: 46px; font-weight: 800; letter-spacing: -1px; }
+  .sheet .song { font-size: 26px; font-weight: 600; }
+  .sheet .roast {
+    font-size: 24px; font-style: italic; line-height: 1.42;
+    max-width: 440px; margin: 6px 0 14px;
+  }
+  .sheet .btn-gold {
+    background: #0f0f0f; color: #ffb511; min-width: 280px; font-weight: 700;
+  }
+</style>
+</head>
+<body>
+  <div class="poster">
+    <header class="cap">
+      <div class="brand"><span class="ms">graphic_eq</span> Karaokê Live</div>
+      <h1>Sua vez — com a <span class="gold">zoeira do Gemini</span></h1>
+    </header>
+    <div class="phone">
+      <div class="screen">
+        <div class="behind">
+          <div class="roombar"><span class="dot"></span><span class="code">K3M9P2</span></div>
+          <div class="blk"></div>
+          <div class="blk" style="height:90px"></div>
+          <div class="blk" style="height:240px"></div>
+        </div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <span class="ms mic">mic</span>
+          <h2>É a sua vez!</h2>
+          <div class="song">Garota de Ipanema</div>
+          <div class="roast">Marina, ninguém aqui esperava a Bethânia — mas sobe nesse palco e canta como se esperasse. Vai com tudo.</div>
+          <button class="btn btn-gold">Estou pronto</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

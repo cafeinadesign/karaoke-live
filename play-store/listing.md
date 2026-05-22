@@ -5,7 +5,7 @@
 - **Default language:** Português (Brasil)
 - **Category:** Music & Audio
 - **Contact email:** grupocafeinadesign@gmail.com
-- **Privacy policy URL:** https://karaoke-live.app.br/privacy (ou https://karaoke-live-cafeina.netlify.app/pt-BR/privacy enquanto DNS propaga)
+- **Privacy policy URL:** https://karaoke-live.app.br/pt-BR/privacy
 
 ## Short description (até 80)
 Karaokê multi-sala. QR pra entrar, fila colaborativa, mic aberto, modo "sua vez".
@@ -55,10 +55,12 @@ Feito por Cafeína Design.
 
 ## Assets (em play-store/)
 - `play-icon-512.png` — 512×512 ícone Play Store
-- `feature-graphic-1024x500.png` — banner de destaque
-- `screenshots/01-landing.png` — 1080×1920
-- `screenshots/02-login.png` — 1080×1920
-- `screenshots/03-privacy.png` — 1080×1920
+- `feature-graphic-1024x500.png` — banner de destaque (1024×500)
+- `screenshots/01-landing.png` — 1080×1920 — "Crie uma sala em segundos"
+- `screenshots/02-host.png` — 1080×1920 — "Controle o palco em tempo real"
+- `screenshots/03-guest.png` — 1080×1920 — "Convidados entram pelo QR Code"
+- `screenshots/04-yourturn.png` — 1080×1920 — "Sua vez, com a zoeira do Gemini"
+- `screenshots/05-share.png` — 1080×1920 — "Compartilhe e a galera entra"
 
 ## Release notes (pt-BR)
 Lançamento inicial. QR pra entrar, fila colaborativa, modo "sua vez".

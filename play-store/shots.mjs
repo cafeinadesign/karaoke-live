@@ -1,49 +1,50 @@
 import { chromium } from 'playwright';
+import QRCode from 'qrcode';
 import { promises as fs } from 'node:fs';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
-const OUT = '/Users/thiago/web/karaoke-live/play-store/screenshots';
-const BASE = 'http://localhost:4200';
-const VIEWPORT = { width: 1080, height: 1920 };
+const ROOT = '/Users/thiago/web/karaoke-live/play-store';
+const MOCKUPS = `${ROOT}/mockups`;
+const OUT = `${ROOT}/screenshots`;
 
+const SHOTS = [
+  ['01-landing', '01-landing.html'],
+  ['02-host', '02-host.html'],
+  ['03-guest', '03-guest.html'],
+  ['04-yourturn', '04-yourturn.html'],
+  ['05-share', '05-share.html'],
+];
+
+// Fresh screenshots dir.
+if (existsSync(OUT)) await fs.rm(OUT, { recursive: true });
 await fs.mkdir(OUT, { recursive: true });
+
+// Real QR for the share-sheet mockup.
+await QRCode.toFile(`${MOCKUPS}/qr.png`, 'https://karaoke-live.app.br/mobile/K3M9P2', {
+  margin: 1,
+  width: 600,
+  color: { dark: '#0f0f0fff', light: '#ffffffff' },
+  errorCorrectionLevel: 'M',
+});
+console.log('✓ qr.png');
 
 const browser = await chromium.launch();
 const ctx = await browser.newContext({
-  viewport: VIEWPORT,
+  viewport: { width: 1080, height: 1920 },
   deviceScaleFactor: 1,
-  locale: 'pt-BR',
-  userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Mobile Safari/537.36',
-  permissions: ['camera'],
 });
-
 const page = await ctx.newPage();
 
-async function shot(name, url, waitFor) {
-  await page.goto(`${BASE}${url}`, { waitUntil: 'networkidle' });
-  if (waitFor) await page.waitForSelector(waitFor, { timeout: 5000 }).catch(() => {});
-  await page.waitForTimeout(800);
-  await page.screenshot({ path: path.join(OUT, `${name}.png`), fullPage: false });
-  console.log('✓', name);
+for (const [name, file] of SHOTS) {
+  const url = pathToFileURL(path.join(MOCKUPS, file)).href;
+  await page.goto(url, { waitUntil: 'networkidle' });
+  await page.evaluate(() => document.fonts.ready);
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: path.join(OUT, `${name}.png`) });
+  console.log('✓', `${name}.png`);
 }
 
-// 1. Landing (logged out)
-await shot('01-landing', '/', 'main.landing');
-
-// 2. Login
-await shot('02-login', '/login', 'main.login');
-
-// 3. /mobile join screen (logged out lands here; the auth guard redirects to /login,
-//    so we render an isolated fake by hitting a `?ssr=mock-join` if the route would normally guard.
-//    Workaround: navigate to /mobile and capture the login screen with a different URL.)
-// Skipping — already have login.
-
-// 4. Privacy
-await shot('03-privacy', '/privacy', 'main.privacy');
-
-// 5. QR scanner (mobile component opens scanner via state — bypass with a mock UI screenshot)
-// Build a static HTML preview that mirrors the production styles? Not worth the maintenance.
-// We'll let the user capture authenticated screens manually.
-
 await browser.close();
-console.log('Done.');
+console.log('Done — 5 screenshots in play-store/screenshots/');

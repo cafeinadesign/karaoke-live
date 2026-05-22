@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<link href="base.css" rel="stylesheet">
+<style>
+  .app { gap: 20px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; }
+  .topbar .brand { display: flex; align-items: center; gap: 9px; font-weight: 600; font-size: 22px; }
+  .topbar .brand .ms { color: #ff0000; font-size: 27px; }
+  .topbar .actions { display: flex; align-items: center; gap: 8px; }
+  .code-chip {
+    display: flex; align-items: center; gap: 8px;
+    background: #2f2424; color: #ffd2d2;
+    font-family: 'Roboto Mono', monospace; font-weight: 700; letter-spacing: 3px;
+    font-size: 21px; padding: 12px 18px; border-radius: 999px;
+  }
+  .code-chip .ms { font-size: 23px; }
+  .icon-btn { color: #aaaaaa; font-size: 28px; }
+  .player {
+    position: relative; width: 100%; aspect-ratio: 16/9;
+    border-radius: 16px; overflow: hidden;
+    background: linear-gradient(135deg, #3a1010, #150505);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .player .play { font-size: 96px; color: rgba(255,255,255,0.92); }
+  .player .badge {
+    position: absolute; bottom: 12px; right: 12px;
+    background: rgba(0,0,0,0.7); color: #fff; font-size: 16px;
+    padding: 4px 10px; border-radius: 6px; font-family: 'Roboto Mono', monospace;
+  }
+  .nowlabel { font-size: 17px; text-transform: uppercase; letter-spacing: 1px; color: #ff3535; }
+  .nowsong { font-size: 25px; font-weight: 500; margin-top: 2px; }
+  .qrow { display: flex; align-items: center; gap: 16px; padding: 14px 0; }
+  .qrow + .qrow { border-top: 1px solid #2a2a2a; }
+  .qrow .qtitle { flex: 1; font-size: 22px; }
+  .qrow .qmeta { font-family: 'Roboto Mono', monospace; font-size: 18px; color: #aaaaaa; }
+  .people { display: flex; flex-direction: column; gap: 0; }
+  .prow { display: flex; align-items: center; gap: 14px; padding: 12px 0; }
+  .prow + .prow { border-top: 1px solid #2a2a2a; }
+  .avatar { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 19px; }
+  .a1 { background: #c2410c; } .a2 { background: #1d4ed8; } .a3 { background: #15803d; }
+  .prow .pname { flex: 1; font-size: 22px; }
+  .host-badge {
+    font-size: 15px; text-transform: uppercase; letter-spacing: .5px;
+    color: #ff3535; border: 1px solid #ff3535; border-radius: 999px; padding: 3px 12px;
+  }
+</style>
+</head>
+<body>
+  <div class="poster">
+    <header class="cap">
+      <div class="brand"><span class="ms">graphic_eq</span> Karaokê Live</div>
+      <h1>Controle o palco <span class="accent">em tempo real</span></h1>
+    </header>
+    <div class="phone">
+      <div class="screen">
+        <div class="app">
+          <div class="topbar">
+            <div class="brand"><span class="ms">graphic_eq</span> Karaokê Live</div>
+            <div class="actions">
+              <div class="code-chip"><span class="ms">qr_code_2</span> K3M9P2</div>
+              <span class="ms icon-btn">logout</span>
+            </div>
+          </div>
+
+          <div class="player">
+            <span class="ms play">play_circle</span>
+            <span class="badge">3:45</span>
+          </div>
+
+          <div>
+            <div class="nowlabel">Agora</div>
+            <div class="nowsong">Evidências — Chitãozinho &amp; Xororó (Karaoke)</div>
+            <div class="bar" style="margin-top:14px"><span style="width:38%"></span></div>
+            <div class="times"><span class="e">1:24</span><span>3:45</span></div>
+          </div>
+
+          <button class="btn btn-filled"><span class="ms">skip_next</span> Próxima música</button>
+
+          <div>
+            <div class="sec-title">Próximas <span class="count">(3)</span></div>
+            <div style="margin-top:10px">
+              <div class="qrow">
+                <img class="thumb" src="https://i.ytimg.com/vi/1k8craCGpgs/mqdefault.jpg">
+                <div class="qtitle">Telefone Mudo</div>
+                <div class="qmeta">2:58</div>
+              </div>
+              <div class="qrow">
+                <img class="thumb" src="https://i.ytimg.com/vi/kPBzlxc3wjk/mqdefault.jpg">
+                <div class="qtitle">Anunciação</div>
+                <div class="qmeta">4:11</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="sec-title">Participantes <span class="count">(3)</span></div>
+            <div class="people" style="margin-top:8px">
+              <div class="prow">
+                <span class="avatar a1">T</span>
+                <span class="pname">Thiago</span>
+                <span class="host-badge">anfitrião</span>
+              </div>
+              <div class="prow">
+                <span class="avatar a2">M</span>
+                <span class="pname">Marina</span>
+              </div>
+              <div class="prow">
+                <span class="avatar a3">B</span>
+                <span class="pname">Bruno</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

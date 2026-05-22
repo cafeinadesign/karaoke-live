@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<link href="base.css" rel="stylesheet">
+<style>
+  .screen { justify-content: flex-end; }
+  .behind {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; gap: 22px; padding: 34px 30px;
+    filter: brightness(0.4);
+  }
+  .behind .topbar { display: flex; align-items: center; justify-content: space-between; }
+  .behind .brand { display: flex; align-items: center; gap: 9px; font-weight: 600; font-size: 22px; }
+  .behind .brand .ms { color: #ff0000; font-size: 27px; }
+  .behind .blk { background: #212121; border-radius: 16px; }
+  .scrim { position: absolute; inset: 0; background: rgba(0,0,0,0.55); }
+  .sheet {
+    position: relative;
+    background: #212121;
+    border-radius: 34px 34px 48px 48px;
+    padding: 44px 40px 52px;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+    text-align: center;
+  }
+  .sheet h2 { font-size: 32px; font-weight: 700; }
+  .qrbox { background: #fff; padding: 20px; border-radius: 18px; line-height: 0; }
+  .qrbox img { width: 296px; height: 296px; display: block; }
+  .codechips { display: flex; gap: 12px; }
+  .codechips span {
+    background: #303030; color: #ff3535;
+    font-family: 'Roboto Mono', monospace; font-weight: 700;
+    font-size: 36px; min-width: 52px; padding: 10px 0; border-radius: 12px;
+  }
+  .url { color: #aaaaaa; font-size: 19px; word-break: break-all; }
+  .sheet .row { display: flex; gap: 14px; width: 100%; }
+  .sheet .row .btn { flex: 1; font-size: 22px; }
+</style>
+</head>
+<body>
+  <div class="poster">
+    <header class="cap">
+      <div class="brand"><span class="ms">graphic_eq</span> Karaokê Live</div>
+      <h1>Compartilhe e <span class="accent">a galera entra</span></h1>
+    </header>
+    <div class="phone">
+      <div class="screen">
+        <div class="behind">
+          <div class="topbar">
+            <div class="brand"><span class="ms">graphic_eq</span> Karaokê Live</div>
+          </div>
+          <div class="blk" style="aspect-ratio:16/9"></div>
+          <div class="blk" style="height:96px"></div>
+          <div class="blk" style="height:200px"></div>
+        </div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <h2>Compartilhe a sala</h2>
+          <div class="qrbox"><img src="qr.png" alt=""></div>
+          <div class="codechips">
+            <span>K</span><span>3</span><span>M</span><span>9</span><span>P</span><span>2</span>
+          </div>
+          <div class="url">karaoke-live.app.br/mobile/K3M9P2</div>
+          <div class="row">
+            <button class="btn btn-filled"><span class="ms">content_copy</span> Código</button>
+            <button class="btn btn-tonal"><span class="ms">link</span> Link</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
