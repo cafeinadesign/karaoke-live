@@ -8,6 +8,8 @@ export class QueueService {
   private readonly supabase = inject(SupabaseService);
 
   readonly items = signal<ReadonlyArray<QueueItem>>([]);
+  readonly profileNames = signal<ReadonlyMap<string, string>>(new Map());
+
   private channel: RealtimeChannel | null = null;
   private subscribedRoomId: string | null = null;
 
@@ -65,12 +67,82 @@ export class QueueService {
     if (error) throw new Error(error.message);
   }
 
+  /** Host-only: reordena os itens pending da sala. */
+  async reorderPending(roomId: string, pendingItemIds: ReadonlyArray<string>): Promise<void> {
+    const { error } = await this.supabase.client.rpc('reorder_queue', {
+      p_room_id: roomId,
+      p_item_ids: [...pendingItemIds],
+    });
+    if (error) throw new Error(error.message);
+  }
+
+  /**
+   * Otimista: aplica a nova ordem dos pending no signal local antes da
+   * confirmação do servidor. Reatribui as positions atuais (sorted asc) na
+   * nova ordem dos IDs — espelha o que o RPC faz no DB.
+   * Retorna um snapshot do estado anterior para revert em caso de erro.
+   */
+  applyPendingReorder(newPendingIdsOrder: ReadonlyArray<string>): ReadonlyArray<QueueItem> {
+    const snapshot = this.items();
+
+    const pendingPositions = snapshot
+      .filter((i) => i.status === 'pending')
+      .map((i) => i.position)
+      .sort((a, b) => a - b);
+
+    const idToNewPos = new Map<string, number>();
+    newPendingIdsOrder.forEach((id, idx) => {
+      const pos = pendingPositions[idx];
+      if (pos !== undefined) idToNewPos.set(id, pos);
+    });
+
+    const next = snapshot
+      .map((item) => {
+        const newPos = idToNewPos.get(item.id);
+        return newPos !== undefined ? { ...item, position: newPos } : item;
+      })
+      .sort((a, b) => a.position - b.position);
+
+    this.items.set(next);
+    return snapshot;
+  }
+
+  /** Restaura um snapshot retornado por applyPendingReorder. */
+  restoreSnapshot(snapshot: ReadonlyArray<QueueItem>): void {
+    this.items.set(snapshot);
+  }
+
+  /** Nome de exibição (cacheado) de quem adicionou a música. */
+  displayNameFor(userId: string): string {
+    return this.profileNames().get(userId) ?? '…';
+  }
+
   private async refresh(roomId: string): Promise<void> {
     const { data } = await this.supabase.client
       .from('queue_items')
       .select('*')
       .eq('room_id', roomId)
       .order('position', { ascending: true });
-    this.items.set(data ?? []);
+    const items = data ?? [];
+    this.items.set(items);
+    await this.ensureProfileNames(items.map((i) => i.user_id));
+  }
+
+  private async ensureProfileNames(userIds: ReadonlyArray<string>): Promise<void> {
+    const current = this.profileNames();
+    const missing = [...new Set(userIds)].filter((id) => !current.has(id));
+    if (missing.length === 0) return;
+
+    const { data } = await this.supabase.client
+      .from('profiles')
+      .select('id, display_name')
+      .in('id', missing);
+    if (!data || data.length === 0) return;
+
+    const next = new Map(current);
+    for (const p of data) {
+      if (p.display_name) next.set(p.id, p.display_name);
+    }
+    this.profileNames.set(next);
   }
 }

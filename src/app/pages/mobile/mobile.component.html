@@ -80,6 +80,7 @@
               <span matListItemTitle>{{ item.video_title }}</span>
               <span matListItemLine>
                 #{{ item.position }} · {{ formatDuration(item.video_duration_seconds) }}
+                · <span class="by">{{ queue.displayNameFor(item.user_id) }}</span>
                 @if (isMine(item)) {
                   · <span class="mine-tag" i18n="@@mobile.mineTag">sua</span>
                 }

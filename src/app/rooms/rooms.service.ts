@@ -23,7 +23,7 @@ export class RoomsService {
   private roomChannel: RealtimeChannel | null = null;
   private watchedRoomId: string | null = null;
 
-  async createRoom(name: string | null): Promise<Room> {
+  async createRoom(name: string, latitude: number, longitude: number): Promise<Room> {
     const userId = this.auth.user()?.id;
     if (!userId) throw new Error('not_authenticated');
 
@@ -31,7 +31,7 @@ export class RoomsService {
       const code = generateCode();
       const { data, error } = await this.supabase.client
         .from('rooms')
-        .insert({ code, host_id: userId, name })
+        .insert({ code, host_id: userId, name, latitude, longitude })
         .select()
         .single();
 

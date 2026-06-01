@@ -3,7 +3,7 @@
     <header class="bar">
       <div class="title">
         <mat-icon class="logo" aria-hidden="true">graphic_eq</mat-icon>
-        <h1>Karaokê Live</h1>
+        <h1>{{ room()!.name }}</h1>
       </div>
       <div class="bar-actions">
         <button
@@ -85,16 +85,30 @@
           </button>
         </p>
       } @else {
-        <mat-list>
+        <div class="queue-list" cdkDropList (cdkDropListDropped)="onDrop($event)">
           @for (item of pendingItems(); track item.id) {
-            <mat-list-item lines="2">
-              <span matListItemTitle>{{ item.video_title }}</span>
-              <span matListItemLine>
-                #{{ item.position }} · {{ formatDuration(item.video_duration_seconds) }}
-              </span>
+            <div class="queue-row" cdkDrag>
+              <button
+                class="drag-handle"
+                type="button"
+                cdkDragHandle
+                i18n-aria-label="@@host.dragHandle"
+                aria-label="Arrastar para reordenar"
+              >
+                <mat-icon>drag_indicator</mat-icon>
+              </button>
+              <div class="row-main">
+                <div class="title">{{ item.video_title }}</div>
+                <div class="meta">
+                  <span>#{{ item.position }}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{{ formatDuration(item.video_duration_seconds) }}</span>
+                  <span aria-hidden="true">·</span>
+                  <span class="by">{{ queue.displayNameFor(item.user_id) }}</span>
+                </div>
+              </div>
               <button
                 matIconButton
-                matListItemMeta
                 type="button"
                 i18n-aria-label="@@host.removeFromQueue"
                 aria-label="Remover da fila"
@@ -102,9 +116,9 @@
               >
                 <mat-icon>delete</mat-icon>
               </button>
-            </mat-list-item>
+            </div>
           }
-        </mat-list>
+        </div>
       }
     </section>
   } @else {

@@ -123,10 +123,80 @@
       font-weight: 400
       font-size: 14px
 
-  mat-list
+  .queue-list
     background: var(--mat-sys-surface-container)
     border-radius: 12px
     overflow: hidden
+    display: flex
+    flex-direction: column
+
+  .queue-row
+    display: flex
+    align-items: center
+    gap: 8px
+    padding: 6px 8px 6px 0
+    border-top: 1px solid var(--mat-sys-surface-container-high)
+    background: var(--mat-sys-surface-container)
+
+    &:first-child
+      border-top: none
+
+  .queue-row.cdk-drag-preview
+    border-radius: 8px
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5)
+    border: none
+
+  .queue-row.cdk-drag-placeholder
+    opacity: 0.35
+
+  .queue-row.cdk-drag-animating
+    transition: transform 220ms cubic-bezier(0, 0, 0.2, 1)
+
+  .queue-list.cdk-drop-list-dragging .queue-row:not(.cdk-drag-placeholder)
+    transition: transform 220ms cubic-bezier(0, 0, 0.2, 1)
+
+  .drag-handle
+    display: flex
+    align-items: center
+    justify-content: center
+    padding: 6px
+    background: none
+    border: 0
+    color: var(--mat-sys-on-surface-variant)
+    cursor: grab
+    touch-action: none
+
+    &:active
+      cursor: grabbing
+
+    mat-icon
+      font-size: 22px
+      width: 22px
+      height: 22px
+
+  .row-main
+    flex: 1
+    min-width: 0
+    display: flex
+    flex-direction: column
+    gap: 2px
+
+    .title
+      font-size: 14px
+      font-weight: 500
+      overflow: hidden
+      text-overflow: ellipsis
+      white-space: nowrap
+
+    .meta
+      font-size: 12px
+      color: var(--mat-sys-on-surface-variant)
+      display: flex
+      gap: 6px
+      flex-wrap: wrap
+
+    .by
+      color: var(--mat-sys-on-surface)
 
 .empty
   color: var(--mat-sys-on-surface-variant)

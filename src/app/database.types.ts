@@ -106,7 +106,9 @@ export type Database = {
           ended_at: string | null
           host_id: string
           id: string
-          name: string | null
+          latitude: number
+          longitude: number
+          name: string
         }
         Insert: {
           code: string
@@ -115,7 +117,9 @@ export type Database = {
           ended_at?: string | null
           host_id: string
           id?: string
-          name?: string | null
+          latitude: number
+          longitude: number
+          name: string
         }
         Update: {
           code?: string
@@ -124,7 +128,9 @@ export type Database = {
           ended_at?: string | null
           host_id?: string
           id?: string
-          name?: string | null
+          latitude?: number
+          longitude?: number
+          name?: string
         }
         Relationships: [
           {
@@ -194,6 +200,13 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      reorder_queue: {
+        Args: {
+          p_item_ids: string[]
+          p_room_id: string
+        }
+        Returns: undefined
       }
     }
     Enums: {

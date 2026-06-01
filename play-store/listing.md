@@ -8,7 +8,7 @@
 - **Privacy policy URL:** https://karaoke-live.app.br/pt-BR/privacy
 
 ## Short description (até 80)
-Karaokê multi-sala. QR pra entrar, fila colaborativa, mic aberto, modo "sua vez".
+Karaokê multi-sala. QR pra entrar, fila colaborativa, mic aberto, modo "sua vez"
 
 ## Full description (até 4000)
 

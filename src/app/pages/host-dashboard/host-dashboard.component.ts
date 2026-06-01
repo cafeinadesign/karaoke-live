@@ -9,9 +9,9 @@ import {
   viewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
@@ -31,6 +31,7 @@ import {
 import { SongSearchComponent } from '../../song-search/song-search.component';
 import { VersionFooterComponent } from '../../version-footer/version-footer.component';
 import { PlaybackBarComponent } from '../../playback-bar/playback-bar.component';
+import { QueueItem } from '../../types';
 import { formatDuration } from '../../utils/format';
 import { ShareSheetComponent, ShareSheetData } from './share-sheet.component';
 
@@ -39,9 +40,9 @@ const YT_STATE_ENDED = 0;
 @Component({
   selector: 'app-host-dashboard',
   imports: [
+    DragDropModule,
     MatButtonModule,
     MatIconModule,
-    MatListModule,
     MatProgressBarModule,
     YouTubePlayer,
     SongSearchComponent,
@@ -239,6 +240,31 @@ export class HostDashboardComponent {
       const message = err instanceof Error ? err.message : $localize`:@@common.unknownError:erro desconhecido`;
       this.snackBar.open(
         $localize`:@@host.removeFailed:Falha ao remover: ${message}:error:`,
+        undefined,
+        { duration: 4000 },
+      );
+    }
+  }
+
+  protected async onDrop(event: CdkDragDrop<ReadonlyArray<QueueItem>>): Promise<void> {
+    if (event.previousIndex === event.currentIndex) return;
+    const room = this.room();
+    if (!room) return;
+
+    const pending = [...this.pendingItems()];
+    moveItemInArray(pending, event.previousIndex, event.currentIndex);
+    const newIds = pending.map((p) => p.id);
+
+    // Otimismo: aplica a nova ordem local antes de confirmar com o servidor.
+    const snapshot = this.queue.applyPendingReorder(newIds);
+
+    try {
+      await this.queue.reorderPending(room.id, newIds);
+    } catch (err) {
+      this.queue.restoreSnapshot(snapshot);
+      const message = err instanceof Error ? err.message : $localize`:@@common.unknownError:erro desconhecido`;
+      this.snackBar.open(
+        $localize`:@@host.reorderFailed:Falha ao reordenar: ${message}:error:`,
         undefined,
         { duration: 4000 },
       );

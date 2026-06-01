@@ -27,6 +27,6 @@
       </button>
     }
   </mat-action-list>
-} @else if (searchControl.value.length >= 2 && !searching()) {
-  <p class="empty" i18n="@@mobile.noResults">Sem resultados para "{{ searchControl.value }}".</p>
+} @else if (query().trim().length >= 2 && !searching()) {
+  <p class="empty" i18n="@@mobile.noResults">Sem resultados para "{{ query().trim() }}".</p>
 }
