@@ -4,6 +4,7 @@ import {
   computed,
   inject,
   input,
+  output,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -56,6 +57,10 @@ const SEARCHING_STATE: SearchState = { results: [], searching: true };
 })
 export class SongSearchComponent {
   readonly roomId = input.required<string>();
+  /** 'enqueue' (default) adiciona à fila; 'pick' apenas emite (picked) sem persistir. */
+  readonly mode = input<'enqueue' | 'pick'>('enqueue');
+  /** Emitido quando o usuário escolhe um vídeo no modo 'pick'. */
+  readonly picked = output<VideoResult>();
 
   private readonly queue = inject(QueueService);
   private readonly youtube = inject(YoutubeService);
@@ -92,7 +97,13 @@ export class SongSearchComponent {
     return formatDuration(seconds ?? 0);
   }
 
-  protected async enqueue(video: VideoResult): Promise<void> {
+  protected async select(video: VideoResult): Promise<void> {
+    if (this.mode() === 'pick') {
+      this.picked.emit(video);
+      this.searchControl.setValue('');
+      return;
+    }
+
     try {
       await this.queue.enqueue(this.roomId(), video);
       this.snackBar.open(

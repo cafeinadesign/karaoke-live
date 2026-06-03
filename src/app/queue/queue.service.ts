@@ -67,6 +67,19 @@ export class QueueService {
     if (error) throw new Error(error.message);
   }
 
+  /** Dono do item troca a música escolhida sem perder a vez. */
+  async replaceItemVideo(itemId: string, video: VideoResult): Promise<QueueItem> {
+    const { data, error } = await this.supabase.client.rpc('replace_queue_item_video', {
+      p_item_id: itemId,
+      p_video_id: video.videoId,
+      p_video_title: video.title,
+      p_video_thumbnail: video.thumbnail,
+      p_video_duration_seconds: video.durationSeconds,
+    });
+    if (error || !data) throw new Error(error?.message ?? 'replace_failed');
+    return data;
+  }
+
   /** Host-only: reordena os itens pending da sala. */
   async reorderPending(roomId: string, pendingItemIds: ReadonlyArray<string>): Promise<void> {
     const { error } = await this.supabase.client.rpc('reorder_queue', {

@@ -24,6 +24,10 @@ import { QueueService } from '../../queue/queue.service';
 import { ParticipantsService } from '../../participants/participants.service';
 import { ParticipantsListComponent } from '../../participants/participants-list.component';
 import { ConfirmService } from '../../shared/confirm.service';
+import {
+  ReplaceVideoDialogComponent,
+  ReplaceVideoDialogData,
+} from '../../shared/replace-video-dialog.component';
 import { SongSearchComponent } from '../../song-search/song-search.component';
 import { PlaybackBarComponent } from '../../playback-bar/playback-bar.component';
 import { QueueItem } from '../../types';
@@ -167,6 +171,19 @@ export class MobileComponent {
       this.codeControl.setValue(code);
       await this.tryJoin(code);
     }
+  }
+
+  protected openReplace(item: QueueItem): void {
+    const room = this.room();
+    if (!room) return;
+    this.dialog.open<ReplaceVideoDialogComponent, ReplaceVideoDialogData, void>(
+      ReplaceVideoDialogComponent,
+      {
+        data: { itemId: item.id, roomId: room.id, currentTitle: item.video_title },
+        autoFocus: 'first-tabbable',
+        restoreFocus: false,
+      },
+    );
   }
 
   protected statusLabel(status: string): string {

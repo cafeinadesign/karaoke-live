@@ -85,6 +85,18 @@
                   · <span class="mine-tag" i18n="@@mobile.mineTag">sua</span>
                 }
               </span>
+              @if (isMine(item)) {
+                <button
+                  matIconButton
+                  matListItemMeta
+                  type="button"
+                  (click)="openReplace(item)"
+                  i18n-aria-label="@@mobile.swapSong"
+                  aria-label="Trocar essa música"
+                >
+                  <mat-icon>swap_horiz</mat-icon>
+                </button>
+              }
             </mat-list-item>
           }
         </mat-list>

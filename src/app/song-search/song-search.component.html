@@ -17,7 +17,7 @@
 @if (results().length > 0) {
   <mat-action-list class="results">
     @for (video of results(); track video.videoId) {
-      <button mat-list-item type="button" (click)="enqueue(video)" lines="2">
+      <button mat-list-item type="button" (click)="select(video)" lines="2">
         <img matListItemAvatar [src]="video.thumbnail" [alt]="''" />
         <span matListItemTitle>{{ video.title }}</span>
         <span matListItemLine>

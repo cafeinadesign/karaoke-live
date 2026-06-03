@@ -208,6 +208,36 @@ export type Database = {
         }
         Returns: undefined
       }
+      replace_queue_item_video: {
+        Args: {
+          p_item_id: string
+          p_video_duration_seconds: number
+          p_video_id: string
+          p_video_thumbnail: string
+          p_video_title: string
+        }
+        Returns: {
+          created_at: string
+          finished_at: string | null
+          gemini_message: string | null
+          id: string
+          position: number
+          room_id: string
+          started_at: string | null
+          status: string
+          user_id: string
+          video_duration_seconds: number | null
+          video_id: string
+          video_thumbnail: string | null
+          video_title: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "queue_items"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       [_ in never]: never
