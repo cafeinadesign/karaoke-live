@@ -1,5 +1,6 @@
 import '@supabase/functions-js/edge-runtime.d.ts';
-import { corsHeaders } from '../_shared/cors.ts';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { corsHeadersFor } from '../_shared/cors.ts';
 
 interface YouTubeSearchItem {
   readonly id: { readonly videoId: string };
@@ -35,15 +36,32 @@ function parseIsoDuration(iso: string): number {
 }
 
 Deno.serve(async (req: Request): Promise<Response> => {
+  const cors = corsHeadersFor(req);
+
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response('ok', { headers: cors });
   }
 
+  const supabaseUrl = Deno.env.get('SUPABASE_URL');
+  const anonKey = Deno.env.get('SUPABASE_ANON_KEY');
   const apiKey = Deno.env.get('YOUTUBE_API_KEY');
-  if (!apiKey) {
+  if (!supabaseUrl || !anonKey || !apiKey) {
     return new Response(
-      JSON.stringify({ error: 'YOUTUBE_API_KEY not configured' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      JSON.stringify({ error: 'env_missing' }),
+      { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } },
+    );
+  }
+
+  // Exige um usuário REAL (não só a anon key). verify_jwt já barra requests
+  // sem qualquer JWT; este check barra requests autenticadas apenas como anon.
+  const supabase = createClient(supabaseUrl, anonKey, {
+    global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } },
+  });
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return new Response(
+      JSON.stringify({ error: 'unauthorized' }),
+      { status: 401, headers: { ...cors, 'Content-Type': 'application/json' } },
     );
   }
 
@@ -52,16 +70,19 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (!query) {
     return new Response(
       JSON.stringify({ error: 'missing q parameter' }),
-      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      { status: 400, headers: { ...cors, 'Content-Type': 'application/json' } },
     );
   }
+
+  // Evita "karaoke karaoke" quando o user já digitou a palavra.
+  const augmentedQuery = /\bkaraok[eê]\b/i.test(query) ? query : `${query} karaoke`;
 
   const searchUrl = new URL('https://www.googleapis.com/youtube/v3/search');
   searchUrl.searchParams.set('part', 'snippet');
   searchUrl.searchParams.set('type', 'video');
   searchUrl.searchParams.set('videoEmbeddable', 'true');
   searchUrl.searchParams.set('maxResults', '15');
-  searchUrl.searchParams.set('q', `${query} karaoke`);
+  searchUrl.searchParams.set('q', augmentedQuery);
   searchUrl.searchParams.set('key', apiKey);
 
   const searchRes = await fetch(searchUrl);
@@ -69,7 +90,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     const detail = await searchRes.text();
     return new Response(
       JSON.stringify({ error: 'youtube_search_failed', detail }),
-      { status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      { status: 502, headers: { ...cors, 'Content-Type': 'application/json' } },
     );
   }
 
@@ -78,7 +99,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
   if (videoIds.length === 0) {
     return new Response(JSON.stringify({ results: [] }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...cors, 'Content-Type': 'application/json' },
     });
   }
 
@@ -108,6 +129,6 @@ Deno.serve(async (req: Request): Promise<Response> => {
   });
 
   return new Response(JSON.stringify({ results }), {
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...cors, 'Content-Type': 'application/json' },
   });
 });

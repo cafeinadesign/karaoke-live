@@ -1,6 +1,6 @@
 import '@supabase/functions-js/edge-runtime.d.ts';
 import { createClient } from 'jsr:@supabase/supabase-js@2';
-import { corsHeaders } from '../_shared/cors.ts';
+import { corsHeadersFor } from '../_shared/cors.ts';
 
 interface RequestBody {
   readonly queueItemId: string;
@@ -29,17 +29,33 @@ interface GeminiResponse {
 const PROMPT_SYSTEM = `Você é um locutor de karaokê com humor motivacional irônico, em português do Brasil. Quando alguém vai cantar, você produz UMA frase curta (máximo 25 palavras) que mistura provocação leve com encorajamento. Sem palavrões, sem ofensas pesadas, sem clichês motivacionais batidos. Use o nome da pessoa e da música. Tom: "você não canta tão bem, mas vai com tudo".`;
 
 Deno.serve(async (req: Request): Promise<Response> => {
+  const cors = corsHeadersFor(req);
+
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response('ok', { headers: cors });
   }
 
   const apiKey = Deno.env.get('GEMINI_API_KEY');
   const supabaseUrl = Deno.env.get('SUPABASE_URL');
+  const anonKey = Deno.env.get('SUPABASE_ANON_KEY');
   const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-  if (!apiKey || !supabaseUrl || !serviceRoleKey) {
+  if (!apiKey || !supabaseUrl || !anonKey || !serviceRoleKey) {
     return new Response(
-      JSON.stringify({ error: 'missing_env' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      JSON.stringify({ error: 'env_missing' }),
+      { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } },
+    );
+  }
+
+  // Exige um usuário REAL (não só a anon key). Evita que alguém com a anon
+  // do bundle dispare chamadas Gemini + writes via service-role à toa.
+  const userClient = createClient(supabaseUrl, anonKey, {
+    global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } },
+  });
+  const { data: { user } } = await userClient.auth.getUser();
+  if (!user) {
+    return new Response(
+      JSON.stringify({ error: 'unauthorized' }),
+      { status: 401, headers: { ...cors, 'Content-Type': 'application/json' } },
     );
   }
 
@@ -49,14 +65,14 @@ Deno.serve(async (req: Request): Promise<Response> => {
   } catch {
     return new Response(
       JSON.stringify({ error: 'invalid_json' }),
-      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      { status: 400, headers: { ...cors, 'Content-Type': 'application/json' } },
     );
   }
 
   if (!body.queueItemId) {
     return new Response(
       JSON.stringify({ error: 'missing_queueItemId' }),
-      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      { status: 400, headers: { ...cors, 'Content-Type': 'application/json' } },
     );
   }
 
@@ -71,7 +87,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (itemErr || !item) {
     return new Response(
       JSON.stringify({ error: 'queue_item_not_found', detail: itemErr?.message }),
-      { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      { status: 404, headers: { ...cors, 'Content-Type': 'application/json' } },
     );
   }
 
@@ -99,7 +115,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     const detail = await geminiRes.text();
     return new Response(
       JSON.stringify({ error: 'gemini_failed', detail }),
-      { status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      { status: 502, headers: { ...cors, 'Content-Type': 'application/json' } },
     );
   }
 
@@ -115,11 +131,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (updateErr) {
     return new Response(
       JSON.stringify({ error: 'update_failed', detail: updateErr.message }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } },
     );
   }
 
   return new Response(JSON.stringify({ message }), {
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...cors, 'Content-Type': 'application/json' },
   });
 });
