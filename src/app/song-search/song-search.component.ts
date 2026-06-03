@@ -25,6 +25,7 @@ import {
   switchMap,
   timer,
 } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 import { QueueService } from '../queue/queue.service';
 import { YoutubeService } from '../youtube/youtube.service';
 import { VideoResult } from '../types';
@@ -65,8 +66,20 @@ export class SongSearchComponent {
   private readonly queue = inject(QueueService);
   private readonly youtube = inject(YoutubeService);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly auth = inject(AuthService);
 
   protected readonly searchControl = new FormControl<string>('', { nonNullable: true });
+
+  /** Item ativo (pending ou now_playing) do usuário corrente nesta sala — null se livre. */
+  protected readonly myActiveItem = computed(() => {
+    const uid = this.auth.user()?.id;
+    if (!uid) return null;
+    return (
+      this.queue.items().find(
+        (i) => i.user_id === uid && (i.status === 'pending' || i.status === 'now_playing'),
+      ) ?? null
+    );
+  });
 
   /** Valor cru do input (sem trim/debounce) — usado pra UI imediata ("Sem resultados…"). */
   private readonly value$ = this.searchControl.valueChanges.pipe(
@@ -114,6 +127,14 @@ export class SongSearchComponent {
       // Resetar o input dispara o pipeline → state volta a IDLE_STATE na hora.
       this.searchControl.setValue('');
     } catch (err) {
+      if (err instanceof Error && err.message === 'user_already_has_active_item') {
+        this.snackBar.open(
+          $localize`:@@search.alreadyEnqueuedSnack:Você já tem uma música na fila — espere sua vez.`,
+          undefined,
+          { duration: 4000 },
+        );
+        return;
+      }
       const message =
         err instanceof Error
           ? err.message
