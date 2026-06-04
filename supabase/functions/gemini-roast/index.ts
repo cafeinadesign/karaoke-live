@@ -1,19 +1,13 @@
 import '@supabase/functions-js/edge-runtime.d.ts';
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import { eq } from 'drizzle-orm';
+import postgres from 'postgres';
 import { corsHeadersFor } from '../_shared/cors.ts';
+import { profiles, queueItems } from '../../../src/db/schema.ts';
 
 interface RequestBody {
   readonly queueItemId: string;
-}
-
-interface QueueItemRow {
-  readonly id: string;
-  readonly video_title: string;
-  readonly user_id: string;
-}
-
-interface ProfileRow {
-  readonly display_name: string | null;
 }
 
 interface GeminiPart {
@@ -28,6 +22,18 @@ interface GeminiResponse {
 
 const PROMPT_SYSTEM = `Você é um locutor de karaokê com humor motivacional irônico, em português do Brasil. Quando alguém vai cantar, você produz UMA frase curta (máximo 25 palavras) que mistura provocação leve com encorajamento. Sem palavrões, sem ofensas pesadas, sem clichês motivacionais batidos. Use o nome da pessoa e da música. Tom: "você não canta tão bem, mas vai com tudo".`;
 
+// Connection per cold start. postgres.js handles pooling internally; we use
+// the Supabase transaction pooler (port 6543) for short-lived edge calls,
+// which requires prepare: false because PREPARE doesn't survive across
+// transactions in transaction-mode pooling.
+let cachedDb: ReturnType<typeof drizzle> | null = null;
+function getDb(databaseUrl: string) {
+  if (cachedDb) return cachedDb;
+  const sql = postgres(databaseUrl, { prepare: false });
+  cachedDb = drizzle(sql);
+  return cachedDb;
+}
+
 Deno.serve(async (req: Request): Promise<Response> => {
   const cors = corsHeadersFor(req);
 
@@ -38,16 +44,15 @@ Deno.serve(async (req: Request): Promise<Response> => {
   const apiKey = Deno.env.get('GEMINI_API_KEY');
   const supabaseUrl = Deno.env.get('SUPABASE_URL');
   const anonKey = Deno.env.get('SUPABASE_ANON_KEY');
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-  if (!apiKey || !supabaseUrl || !anonKey || !serviceRoleKey) {
+  const databaseUrl = Deno.env.get('DATABASE_URL');
+  if (!apiKey || !supabaseUrl || !anonKey || !databaseUrl) {
     return new Response(
       JSON.stringify({ error: 'env_missing' }),
       { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } },
     );
   }
 
-  // Exige um usuário REAL (não só a anon key). Evita que alguém com a anon
-  // do bundle dispare chamadas Gemini + writes via service-role à toa.
+  // Exige um usuário REAL (não só a anon key).
   const userClient = createClient(supabaseUrl, anonKey, {
     global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } },
   });
@@ -76,29 +81,33 @@ Deno.serve(async (req: Request): Promise<Response> => {
     );
   }
 
-  const supabase = createClient(supabaseUrl, serviceRoleKey);
+  const db = getDb(databaseUrl);
 
-  const { data: item, error: itemErr } = await supabase
-    .from('queue_items')
-    .select('id, video_title, user_id')
-    .eq('id', body.queueItemId)
-    .single<QueueItemRow>();
+  const [item] = await db
+    .select({
+      id: queueItems.id,
+      videoTitle: queueItems.videoTitle,
+      userId: queueItems.userId,
+    })
+    .from(queueItems)
+    .where(eq(queueItems.id, body.queueItemId))
+    .limit(1);
 
-  if (itemErr || !item) {
+  if (!item) {
     return new Response(
-      JSON.stringify({ error: 'queue_item_not_found', detail: itemErr?.message }),
+      JSON.stringify({ error: 'queue_item_not_found' }),
       { status: 404, headers: { ...cors, 'Content-Type': 'application/json' } },
     );
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('display_name')
-    .eq('id', item.user_id)
-    .single<ProfileRow>();
+  const [profile] = await db
+    .select({ displayName: profiles.displayName })
+    .from(profiles)
+    .where(eq(profiles.id, item.userId))
+    .limit(1);
 
-  const singer = profile?.display_name ?? 'a próxima vítima do microfone';
-  const userPrompt = `Cantor(a): ${singer}\nMúsica: ${item.video_title}\nGere a frase única.`;
+  const singer = profile?.displayName ?? 'a próxima vítima do microfone';
+  const userPrompt = `Cantor(a): ${singer}\nMúsica: ${item.videoTitle}\nGere a frase única.`;
 
   const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
   const geminiRes = await fetch(geminiUrl, {
@@ -121,19 +130,12 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
   const geminiJson = await geminiRes.json() as GeminiResponse;
   const message = geminiJson.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
-    ?? `${singer}, sobe no palco. ${item.video_title} não vai cantar sozinha.`;
+    ?? `${singer}, sobe no palco. ${item.videoTitle} não vai cantar sozinha.`;
 
-  const { error: updateErr } = await supabase
-    .from('queue_items')
-    .update({ gemini_message: message })
-    .eq('id', item.id);
-
-  if (updateErr) {
-    return new Response(
-      JSON.stringify({ error: 'update_failed', detail: updateErr.message }),
-      { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } },
-    );
-  }
+  await db
+    .update(queueItems)
+    .set({ geminiMessage: message })
+    .where(eq(queueItems.id, item.id));
 
   return new Response(JSON.stringify({ message }), {
     headers: { ...cors, 'Content-Type': 'application/json' },
