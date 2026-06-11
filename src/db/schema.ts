@@ -1,10 +1,12 @@
 import { sql } from 'drizzle-orm';
 import {
+  boolean,
   check,
   doublePrecision,
   index,
   integer,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uniqueIndex,
@@ -100,8 +102,35 @@ export const queueItems = pgTable(
   ],
 );
 
+// =========================================================
+// room_participants — substitui Supabase Realtime Presence
+// Tabela como source of truth: UPSERT no join + heartbeat 30s atualizando
+// last_seen_at. Leitura filtra zumbis (last_seen_at < now() - 90s). Sub via
+// postgres_changes em vez de presence — mesmo motor confiável da queue.
+// =========================================================
+export const roomParticipants = pgTable(
+  'room_participants',
+  {
+    roomId: uuid('room_id')
+      .notNull()
+      .references(() => rooms.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => profiles.id, { onDelete: 'cascade' }),
+    displayName: text('display_name').notNull(),
+    avatarUrl: text('avatar_url'),
+    joinedAt: timestamp('joined_at', { withTimezone: true }).notNull().defaultNow(),
+    lastSeenAt: timestamp('last_seen_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.roomId, t.userId] }),
+    index('room_participants_last_seen_idx').on(t.roomId, t.lastSeenAt),
+  ],
+);
+
 export type Profile = typeof profiles.$inferSelect;
 export type Room = typeof rooms.$inferSelect;
 export type RoomInsert = typeof rooms.$inferInsert;
 export type QueueItem = typeof queueItems.$inferSelect;
 export type QueueItemInsert = typeof queueItems.$inferInsert;
+export type RoomParticipantRow = typeof roomParticipants.$inferSelect;
