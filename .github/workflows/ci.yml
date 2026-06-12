@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  web:
+    name: Build + unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # @sentry/angular's peer range tops out at Angular 22 stable;
+      # we're on the 22 pre-release, hence legacy-peer-deps.
+      - name: Install
+        run: npm ci --legacy-peer-deps
+
+      - name: Unit tests (vitest)
+        run: npx ng test --watch=false
+
+      - name: Build (pt-BR + en-US, SSR)
+        run: npm run build
+
+  db:
+    name: Database tests (pgTAP)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      # Sobe o Postgres local com TODAS as migrations aplicadas — também
+      # funciona como teste de que as migrations rodam limpas do zero.
+      - name: Start local database
+        run: supabase db start
+
+      - name: Run pgTAP tests
+        run: supabase test db
