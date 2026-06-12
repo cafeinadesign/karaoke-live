@@ -58,6 +58,7 @@ export class ParticipantsService {
   private subscribedRoomId: string | null = null;
   private currentUserId: string | null = null;
   private heartbeatId: number | null = null;
+  private onVisibility: (() => void) | null = null;
 
   constructor() {
     this.destroyRef.onDestroy(() => { void this.leave(); });
@@ -92,15 +93,27 @@ export class ParticipantsService {
 
     await this.refresh(roomId);
 
-    this.heartbeatId = window.setInterval(() => {
-      void this.beat(roomId);
-    }, HEARTBEAT_MS);
+    this.startHeartbeat(roomId);
+
+    // Aba em background não deve fingir presença: browsers já estrangulam
+    // timers ocultos, então pausamos o heartbeat e, ao voltar, batemos na
+    // hora — quem reabre reaparece imediato em vez de esperar o próximo tick.
+    this.onVisibility = () => {
+      if (document.hidden) {
+        this.stopHeartbeat();
+      } else {
+        void this.beat(roomId);
+        this.startHeartbeat(roomId);
+      }
+    };
+    document.addEventListener('visibilitychange', this.onVisibility);
   }
 
   async leave(): Promise<void> {
-    if (this.heartbeatId !== null) {
-      window.clearInterval(this.heartbeatId);
-      this.heartbeatId = null;
+    this.stopHeartbeat();
+    if (this.onVisibility) {
+      document.removeEventListener('visibilitychange', this.onVisibility);
+      this.onVisibility = null;
     }
     if (this.channel) {
       await this.supabase.client.removeChannel(this.channel);
@@ -116,6 +129,20 @@ export class ParticipantsService {
     this.subscribedRoomId = null;
     this.currentUserId = null;
     this.rows.set([]);
+  }
+
+  private startHeartbeat(roomId: string): void {
+    this.stopHeartbeat();
+    this.heartbeatId = window.setInterval(() => {
+      void this.beat(roomId);
+    }, HEARTBEAT_MS);
+  }
+
+  private stopHeartbeat(): void {
+    if (this.heartbeatId !== null) {
+      window.clearInterval(this.heartbeatId);
+      this.heartbeatId = null;
+    }
   }
 
   private async upsertSelf(roomId: string, me: JoinMeta): Promise<void> {

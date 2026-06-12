@@ -1,7 +1,12 @@
 import { Injectable, inject, signal } from '@angular/core';
-import type { RealtimeChannel } from '@supabase/supabase-js';
+import type {
+  RealtimeChannel,
+  RealtimePostgresChangesPayload,
+} from '@supabase/supabase-js';
 import { SupabaseService } from '../supabase.service';
 import { QueueItem, VideoResult } from '../types';
+
+type QueueChange = RealtimePostgresChangesPayload<QueueItem>;
 
 @Injectable({ providedIn: 'root' })
 export class QueueService {
@@ -17,17 +22,19 @@ export class QueueService {
     if (this.subscribedRoomId === roomId) return;
     await this.unsubscribe();
 
-    await this.refresh(roomId);
-
     this.subscribedRoomId = roomId;
     this.channel = this.supabase.client
       .channel(`queue:${roomId}`)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'queue_items', filter: `room_id=eq.${roomId}` },
-        () => { void this.refresh(roomId); },
+        (payload) => { this.applyChange(payload as QueueChange); },
       )
-      .subscribe();
+      // O callback roda em TODO join bem-sucedido (incluindo rejoins após
+      // queda de rede) — o refetch cobre os eventos perdidos no gap.
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') void this.refresh(roomId);
+      });
   }
 
   async unsubscribe(): Promise<void> {
@@ -37,6 +44,8 @@ export class QueueService {
     }
     this.subscribedRoomId = null;
     this.items.set([]);
+    // Sala nova = elenco novo; sem isso o cache cresceria sem limite.
+    this.profileNames.set(new Map());
   }
 
   async enqueue(roomId: string, video: VideoResult): Promise<QueueItem> {
@@ -48,7 +57,7 @@ export class QueueService {
       p_video_duration_seconds: video.durationSeconds,
     });
     if (error || !data) throw new Error(error?.message ?? 'enqueue_failed');
-    return data;
+    return data as QueueItem;
   }
 
   async advanceNext(roomId: string): Promise<QueueItem | null> {
@@ -56,7 +65,7 @@ export class QueueService {
       p_room_id: roomId,
     });
     if (error) throw new Error(error.message);
-    return data;
+    return data as QueueItem | null;
   }
 
   async removeItem(id: string): Promise<void> {
@@ -77,7 +86,7 @@ export class QueueService {
       p_video_duration_seconds: video.durationSeconds,
     });
     if (error || !data) throw new Error(error?.message ?? 'replace_failed');
-    return data;
+    return data as QueueItem;
   }
 
   /** Host-only: reordena os itens pending da sala. */
@@ -130,13 +139,50 @@ export class QueueService {
     return this.profileNames().get(userId) ?? '…';
   }
 
+  /**
+   * Aplica o evento do Realtime direto no signal, sem refetch — um UPDATE de
+   * heartbeat alheio não custa mais um round-trip da fila inteira. Gaps de
+   * reconexão são cobertos pelo refetch no SUBSCRIBED.
+   */
+  private applyChange(payload: QueueChange): void {
+    switch (payload.eventType) {
+      case 'INSERT': {
+        const item = payload.new;
+        this.items.update((curr) =>
+          [...curr.filter((i) => i.id !== item.id), item].sort(
+            (a, b) => a.position - b.position,
+          ),
+        );
+        void this.ensureProfileNames([item.user_id]);
+        break;
+      }
+      case 'UPDATE': {
+        const item = payload.new;
+        this.items.update((curr) =>
+          curr
+            .map((i) => (i.id === item.id ? item : i))
+            .sort((a, b) => a.position - b.position),
+        );
+        break;
+      }
+      case 'DELETE': {
+        // Com REPLICA IDENTITY default, o old traz só a PK.
+        const oldId = (payload.old as Partial<QueueItem>).id;
+        if (oldId) {
+          this.items.update((curr) => curr.filter((i) => i.id !== oldId));
+        }
+        break;
+      }
+    }
+  }
+
   private async refresh(roomId: string): Promise<void> {
     const { data } = await this.supabase.client
       .from('queue_items')
       .select('*')
       .eq('room_id', roomId)
       .order('position', { ascending: true });
-    const items = data ?? [];
+    const items = (data ?? []) as QueueItem[];
     this.items.set(items);
     await this.ensureProfileNames(items.map((i) => i.user_id));
   }

@@ -806,6 +806,294 @@
         <source>Você agora é o anfitrião da sala.</source>
         <target state="translated">You're the host of the room now.</target>
       </trans-unit>
+      <trans-unit id="confirm.removeSong.confirm" datatype="html">
+        <source>Remover</source>
+        <target state="translated">Remove</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="confirm.removeSong.message" datatype="html">
+        <source>&quot;<x id="title" equiv-text="item.video_title"/>&quot; sai da fila e você perde a vez.</source>
+        <target state="translated">&quot;<x id="title" equiv-text="item.video_title"/>&quot; leaves the queue and you lose your turn.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="confirm.removeSong.title" datatype="html">
+        <source>Sair da fila?</source>
+        <target state="translated">Leave the queue?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="createRoom.geoDenied" datatype="html">
+        <source>Permissão de localização negada. Libere no navegador e tente de novo.</source>
+        <target state="translated">Location permission denied. Allow it in your browser and try again.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/create-room-dialog.component.ts</context>
+          <context context-type="linenumber">227</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="createRoom.geoLabel" datatype="html">
+        <source>Localização</source>
+        <target state="translated">Location</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/create-room-dialog.component.ts</context>
+          <context context-type="linenumber">54,56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="createRoom.geoLoading" datatype="html">
+        <source>Obtendo sua localização…</source>
+        <target state="translated">Getting your location…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/create-room-dialog.component.ts</context>
+          <context context-type="linenumber">69,71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="createRoom.geoRefresh" datatype="html">
+        <source>Atualizar localização</source>
+        <target state="translated">Refresh location</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/create-room-dialog.component.ts</context>
+          <context context-type="linenumber">83,85</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="createRoom.geoRequest" datatype="html">
+        <source>Usar minha localização</source>
+        <target state="translated">Use my location</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/create-room-dialog.component.ts</context>
+          <context context-type="linenumber">60,62</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="createRoom.geoRetry" datatype="html">
+        <source>Tentar de novo</source>
+        <target state="translated">Try again</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/create-room-dialog.component.ts</context>
+          <context context-type="linenumber">97,99</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="createRoom.geoTimeout" datatype="html">
+        <source>Tempo esgotado ao obter sua localização.</source>
+        <target state="translated">Timed out getting your location.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/create-room-dialog.component.ts</context>
+          <context context-type="linenumber">231</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="createRoom.geoUnavailable" datatype="html">
+        <source>Não foi possível obter sua localização agora.</source>
+        <target state="translated">Couldn't get your location right now.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/create-room-dialog.component.ts</context>
+          <context context-type="linenumber">229</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="createRoom.geoUnknown" datatype="html">
+        <source>Erro ao obter sua localização.</source>
+        <target state="translated">Error getting your location.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/create-room-dialog.component.ts</context>
+          <context context-type="linenumber">233</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="createRoom.geoUnsupported" datatype="html">
+        <source>Geolocalização não está disponível neste dispositivo.</source>
+        <target state="translated">Geolocation isn't available on this device.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/create-room-dialog.component.ts</context>
+          <context context-type="linenumber">188</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="createRoom.geoWhy" datatype="html">
+        <source> A gente usa pra mapear onde as noites de karaokê estão rolando. </source>
+        <target state="translated"> We use it to map where the karaoke nights are happening. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/create-room-dialog.component.ts</context>
+          <context context-type="linenumber">63,65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="createRoom.nameLabel" datatype="html">
+        <source>Nome da sala</source>
+        <target state="translated">Room name</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/create-room-dialog.component.ts</context>
+          <context context-type="linenumber">40,42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="createRoom.namePlaceholder" datatype="html">
+        <source>Aniversário da Lu, terça no bar…</source>
+        <target state="translated">Lu's birthday, Tuesday at the bar…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/create-room-dialog.component.ts</context>
+          <context context-type="linenumber">48,50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="createRoom.submit" datatype="html">
+        <source>Criar sala</source>
+        <target state="translated">Create room</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/create-room-dialog.component.ts</context>
+          <context context-type="linenumber">110,112</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="createRoom.title" datatype="html">
+        <source>Criar sala</source>
+        <target state="translated">Create room</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/create-room-dialog.component.ts</context>
+          <context context-type="linenumber">37,39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.dragHandle" datatype="html">
+        <source>Arrastar para reordenar</source>
+        <target state="translated">Drag to reorder</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
+          <context context-type="linenumber">96,98</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.reorderFailed" datatype="html">
+        <source>Falha ao reordenar: <x id="error" equiv-text="message"/></source>
+        <target state="translated">Reorder failed: <x id="error" equiv-text="message"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
+          <context context-type="linenumber">267</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="landing.createRoomFailed" datatype="html">
+        <source>Não foi possível criar a sala: <x id="error" equiv-text="message"/></source>
+        <target state="translated">Couldn't create the room: <x id="error" equiv-text="message"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/landing/landing.component.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.removeFailed" datatype="html">
+        <source>Não foi possível remover a música.</source>
+        <target state="translated">Couldn't remove the song.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
+          <context context-type="linenumber">189</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.removeSong" datatype="html">
+        <source>Sair da fila</source>
+        <target state="translated">Leave the queue</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.html</context>
+          <context context-type="linenumber">104,106</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mobile.swapSong" datatype="html">
+        <source>Trocar essa música</source>
+        <target state="translated">Swap this song</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/mobile/mobile.component.html</context>
+          <context context-type="linenumber">95,97</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="notFound.goHome" datatype="html">
+        <source>Voltar pro início</source>
+        <target state="translated">Back to home</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/not-found/not-found.component.ts</context>
+          <context context-type="linenumber">16,18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="notFound.message" datatype="html">
+        <source>Essa página não existe — talvez a sala tenha acabado.</source>
+        <target state="translated">This page doesn't exist — maybe the room has ended.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/not-found/not-found.component.ts</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="replaceVideo.currentLabel" datatype="html">
+        <source>Atual:</source>
+        <target state="translated">Current:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/replace-video-dialog.component.ts</context>
+          <context context-type="linenumber">26,27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="replaceVideo.failed" datatype="html">
+        <source>Falha ao trocar: <x id="error" equiv-text="message"/></source>
+        <target state="translated">Swap failed: <x id="error" equiv-text="message"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/replace-video-dialog.component.ts</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="replaceVideo.hint" datatype="html">
+        <source> Escolha a nova. Sua posição na fila é mantida. </source>
+        <target state="translated"> Pick the new one. Your spot in the queue is kept. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/replace-video-dialog.component.ts</context>
+          <context context-type="linenumber">30,32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="replaceVideo.success" datatype="html">
+        <source>Música trocada para &quot;<x id="title" equiv-text="video.title"/>&quot;.</source>
+        <target state="translated">Swapped to &quot;<x id="title" equiv-text="video.title"/>&quot;.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/replace-video-dialog.component.ts</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="replaceVideo.title" datatype="html">
+        <source>Trocar música</source>
+        <target state="translated">Swap song</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/replace-video-dialog.component.ts</context>
+          <context context-type="linenumber">23,25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="search.alreadyEnqueuedHint" datatype="html">
+        <source> Espere sua vez pra adicionar outra (ou troque pela atual). </source>
+        <target state="translated"> Wait for your turn to add another (or swap the current one). </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/song-search/song-search.component.html</context>
+          <context context-type="linenumber">10,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="search.alreadyEnqueuedSnack" datatype="html">
+        <source>Você já tem uma música na fila — espere sua vez.</source>
+        <target state="translated">You already have a song in the queue — wait for your turn.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/song-search/song-search.component.ts</context>
+          <context context-type="linenumber">133</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="search.alreadyEnqueuedTitle" datatype="html">
+        <source> Você já tem uma música na fila. </source>
+        <target state="translated"> You already have a song in the queue. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/song-search/song-search.component.html</context>
+          <context context-type="linenumber">6,8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="update.available" datatype="html">
+        <source>Nova versão disponível.</source>
+        <target state="translated">New version available.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/update.service.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="update.reload" datatype="html">
+        <source>Atualizar</source>
+        <target state="translated">Update</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/update.service.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>

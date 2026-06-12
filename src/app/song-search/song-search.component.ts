@@ -21,6 +21,7 @@ import {
   from,
   map,
   of,
+  retry,
   startWith,
   switchMap,
   timer,
@@ -152,6 +153,9 @@ export class SongSearchComponent {
     return timer(SEARCH_DEBOUNCE_MS).pipe(
       switchMap(() =>
         from(this.youtube.search(query)).pipe(
+          // Blips de rede/rate-limit do YouTube: 2 retries com backoff
+          // exponencial (500ms, 1s) antes de mostrar erro pro usuário.
+          retry({ count: 2, delay: (_err, n) => timer(500 * 2 ** (n - 1)) }),
           map((results): SearchState => ({ results, searching: false })),
           catchError((err: unknown) => {
             const message =

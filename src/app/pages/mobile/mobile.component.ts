@@ -173,6 +173,26 @@ export class MobileComponent {
     }
   }
 
+  protected async removeMine(item: QueueItem): Promise<void> {
+    const confirmed = await this.confirmService.ask({
+      title: $localize`:@@confirm.removeSong.title:Sair da fila?`,
+      message: $localize`:@@confirm.removeSong.message:"${item.video_title}:title:" sai da fila e você perde a vez.`,
+      confirmLabel: $localize`:@@confirm.removeSong.confirm:Remover`,
+      cancelLabel: $localize`:@@common.cancel:Cancelar`,
+      danger: true,
+    });
+    if (!confirmed) return;
+    try {
+      await this.queue.removeItem(item.id);
+    } catch {
+      this.snackBar.open(
+        $localize`:@@mobile.removeFailed:Não foi possível remover a música.`,
+        undefined,
+        { duration: 4000 },
+      );
+    }
+  }
+
   protected openReplace(item: QueueItem): void {
     const room = this.room();
     if (!room) return;

@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { UpdateService } from './shared/update.service';
 
 @Component({
   selector: 'app-root',
@@ -8,4 +9,8 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class App {}
+export class App {
+  constructor() {
+    inject(UpdateService).init();
+  }
+}

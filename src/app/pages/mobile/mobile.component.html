@@ -86,16 +86,26 @@
                 }
               </span>
               @if (isMine(item)) {
-                <button
-                  matIconButton
-                  matListItemMeta
-                  type="button"
-                  (click)="openReplace(item)"
-                  i18n-aria-label="@@mobile.swapSong"
-                  aria-label="Trocar essa música"
-                >
-                  <mat-icon>swap_horiz</mat-icon>
-                </button>
+                <span matListItemMeta class="mine-actions">
+                  <button
+                    matIconButton
+                    type="button"
+                    (click)="openReplace(item)"
+                    i18n-aria-label="@@mobile.swapSong"
+                    aria-label="Trocar essa música"
+                  >
+                    <mat-icon>swap_horiz</mat-icon>
+                  </button>
+                  <button
+                    matIconButton
+                    type="button"
+                    (click)="removeMine(item)"
+                    i18n-aria-label="@@mobile.removeSong"
+                    aria-label="Sair da fila"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </span>
               }
             </mat-list-item>
           }
