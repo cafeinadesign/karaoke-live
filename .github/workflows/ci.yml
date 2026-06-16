@@ -36,7 +36,9 @@ jobs:
 
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          # Pinado pra casar com o ambiente onde os pgTAP foram validados
+          # localmente — evita surpresas de grant/imagem da tag `latest`.
+          version: 2.104.0
 
       # Sobe o Postgres local com TODAS as migrations aplicadas — também
       # funciona como teste de que as migrations rodam limpas do zero.
