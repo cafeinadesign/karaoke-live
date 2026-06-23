@@ -1094,6 +1094,54 @@
           <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="selectHost.transferTitle" datatype="html">
+        <source>Passar o comando</source>
+        <target state="translated">Hand over control</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/select-host-dialog.component.ts</context>
+          <context context-type="linenumber">19,21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selectHost.transferHint" datatype="html">
+        <source>Quem você quer que assuma a sala? Você continua como convidado.</source>
+        <target state="translated">Who should take over the room? You stay on as a guest.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/select-host-dialog.component.ts</context>
+          <context context-type="linenumber">28,31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selectHost.transferConfirm" datatype="html">
+        <source>Passar o comando</source>
+        <target state="translated">Hand over control</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/select-host-dialog.component.ts</context>
+          <context context-type="linenumber">53,55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.demoted" datatype="html">
+        <source>Você passou o comando da sala.</source>
+        <target state="translated">You handed over the room.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.noOneToTransfer" datatype="html">
+        <source>Ninguém na sala pra receber o comando.</source>
+        <target state="translated">Nobody in the room to take over.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
+          <context context-type="linenumber">206</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.transferAdmin" datatype="html">
+        <source>Passar o comando da sala</source>
+        <target state="translated">Hand over the room</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
+          <context context-type="linenumber">25,27</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>

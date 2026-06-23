@@ -20,6 +20,15 @@
         <button
           matIconButton
           type="button"
+          (click)="transferHost()"
+          i18n-aria-label="@@host.transferAdmin"
+          aria-label="Passar o comando da sala"
+        >
+          <mat-icon>manage_accounts</mat-icon>
+        </button>
+        <button
+          matIconButton
+          type="button"
           (click)="leaveRoom()"
           i18n-aria-label="@@common.leaveRoom"
           aria-label="Sair da sala"

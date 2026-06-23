@@ -6,16 +6,32 @@ import { Participant } from '../types';
 
 export interface SelectHostDialogData {
   readonly candidates: ReadonlyArray<Participant>;
+  /** 'leave' (padrão): host sai depois. 'transfer': host vira convidado e fica. */
+  readonly mode?: 'leave' | 'transfer';
 }
 
 @Component({
   selector: 'app-select-host-dialog',
   imports: [MatButtonModule, MatDialogModule, MatRadioModule],
   template: `
-    <h2 mat-dialog-title i18n="@@selectHost.title">Escolha o novo anfitrião</h2>
+    <h2 mat-dialog-title>
+      @if (data.mode === 'transfer') {
+        <span i18n="@@selectHost.transferTitle">Passar o comando</span>
+      } @else {
+        <span i18n="@@selectHost.title">Escolha o novo anfitrião</span>
+      }
+    </h2>
     <mat-dialog-content>
-      <p class="hint" i18n="@@selectHost.hint">
-        Para sair, passe o comando da sala para outra pessoa.
+      <p class="hint">
+        @if (data.mode === 'transfer') {
+          <span i18n="@@selectHost.transferHint"
+            >Quem você quer que assuma a sala? Você continua como convidado.</span
+          >
+        } @else {
+          <span i18n="@@selectHost.hint"
+            >Para sair, passe o comando da sala para outra pessoa.</span
+          >
+        }
       </p>
       <mat-radio-group [value]="selected()" (change)="selected.set($event.value)">
         @for (p of data.candidates; track p.userId) {
@@ -32,9 +48,12 @@ export interface SelectHostDialogData {
         type="button"
         [disabled]="!selected()"
         [mat-dialog-close]="selected()"
-        i18n="@@selectHost.confirm"
       >
-        Passar e sair
+        @if (data.mode === 'transfer') {
+          <span i18n="@@selectHost.transferConfirm">Passar o comando</span>
+        } @else {
+          <span i18n="@@selectHost.confirm">Passar e sair</span>
+        }
       </button>
     </mat-dialog-actions>
   `,

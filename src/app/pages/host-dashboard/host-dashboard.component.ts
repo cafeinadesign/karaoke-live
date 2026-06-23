@@ -91,12 +91,32 @@ export class HostDashboardComponent {
 
   private lastRoastedItemId: string | null = null;
   private autoAdvancedItemId: string | null = null;
+  private demoted = false;
+  private leaving = false;
 
   constructor() {
     const roomId = this.route.snapshot.paramMap.get('roomId');
     if (roomId) {
       void this.loadRoom(roomId);
     }
+
+    // Se eu deixar de ser host enquanto estou no painel — passei o comando, ou
+    // outro host o transferiu — viro convidado e vou pro /mobile. O `leaving`
+    // evita que isso atropele a saída explícita (leaveRoom já navega).
+    effect(() => {
+      const r = this.room();
+      const u = this.auth.user();
+      if (!r || !u || this.demoted || this.leaving) return;
+      if (r.host_id !== u.id) {
+        this.demoted = true;
+        this.snackBar.open(
+          $localize`:@@host.demoted:Você passou o comando da sala.`,
+          undefined,
+          { duration: 3000 },
+        );
+        void this.router.navigate(['/mobile', r.code], { replaceUrl: true });
+      }
+    });
 
     effect(() => {
       const current = this.currentItem();
@@ -174,11 +194,52 @@ export class HostDashboardComponent {
     }
   }
 
+  /** Passa o comando sem sair — o host vira convidado e continua na sala. */
+  protected async transferHost(): Promise<void> {
+    const room = this.room();
+    const userId = this.auth.user()?.id;
+    if (!room || !userId) return;
+
+    const others = this.people().filter((p) => p.userId !== userId);
+    if (others.length === 0) {
+      this.snackBar.open(
+        $localize`:@@host.noOneToTransfer:Ninguém na sala pra receber o comando.`,
+        undefined,
+        { duration: 3000 },
+      );
+      return;
+    }
+
+    const ref = this.dialog.open<
+      SelectHostDialogComponent,
+      SelectHostDialogData,
+      string | null
+    >(SelectHostDialogComponent, {
+      data: { candidates: others, mode: 'transfer' },
+      autoFocus: false,
+      restoreFocus: false,
+    });
+    const newHostId = (await ref.afterClosed().toPromise()) ?? null;
+    if (!newHostId) return;
+
+    try {
+      // O effect de demotion percebe o host_id mudar e me leva pro /mobile.
+      await this.rooms.transferHost(room.id, newHostId);
+    } catch {
+      this.snackBar.open(
+        $localize`:@@host.transferFailed:Não foi possível transferir o comando.`,
+        undefined,
+        { duration: 4000 },
+      );
+    }
+  }
+
   protected async leaveRoom(): Promise<void> {
     const room = this.room();
     const userId = this.auth.user()?.id;
     if (!room || !userId) return;
 
+    this.leaving = true;
     const others = this.people().filter((p) => p.userId !== userId);
 
     if (others.length === 0) {
@@ -190,10 +251,11 @@ export class HostDashboardComponent {
         cancelLabel: $localize`:@@common.cancel:Cancelar`,
         danger: true,
       });
-      if (!confirmed) return;
+      if (!confirmed) { this.leaving = false; return; }
       try {
         await this.rooms.endRoom(room.id);
       } catch {
+        this.leaving = false;
         this.snackBar.open(
           $localize`:@@host.leaveFailed:Não foi possível sair da sala.`,
           undefined,
@@ -213,10 +275,11 @@ export class HostDashboardComponent {
         restoreFocus: false,
       });
       const newHostId = (await ref.afterClosed().toPromise()) ?? null;
-      if (!newHostId) return;
+      if (!newHostId) { this.leaving = false; return; }
       try {
         await this.rooms.transferHost(room.id, newHostId);
       } catch {
+        this.leaving = false;
         this.snackBar.open(
           $localize`:@@host.transferFailed:Não foi possível transferir o comando.`,
           undefined,

@@ -10,14 +10,21 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
-          <context context-type="linenumber">84,86</context>
+          <context context-type="linenumber">93,95</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.transferAdmin" datatype="html">
+        <source>Passar o comando da sala</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
+          <context context-type="linenumber">25,27</context>
         </context-group>
       </trans-unit>
       <trans-unit id="common.leaveRoom" datatype="html">
         <source>Sair da sala</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
-          <context context-type="linenumber">25,27</context>
+          <context context-type="linenumber">34,36</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/mobile/mobile.component.html</context>
@@ -28,95 +35,102 @@
         <source>Nenhuma música tocando. Clique em &quot;Próxima música&quot; para começar.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
-          <context context-type="linenumber">42,45</context>
+          <context context-type="linenumber">51,54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="host.nowLabel" datatype="html">
         <source>Agora</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
-          <context context-type="linenumber">47,48</context>
+          <context context-type="linenumber">56,57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="host.nextSong" datatype="html">
         <source>Próxima música</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
-          <context context-type="linenumber">63,65</context>
+          <context context-type="linenumber">72,74</context>
         </context-group>
       </trans-unit>
       <trans-unit id="host.addSongTitle" datatype="html">
         <source>Adicionar música</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
-          <context context-type="linenumber">68,69</context>
+          <context context-type="linenumber">77,78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="host.upcoming" datatype="html">
         <source>Próximas</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
-          <context context-type="linenumber">76,77</context>
+          <context context-type="linenumber">85,86</context>
         </context-group>
       </trans-unit>
       <trans-unit id="host.queueEmpty" datatype="html">
         <source>Sem músicas na fila.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
-          <context context-type="linenumber">81,82</context>
+          <context context-type="linenumber">90,91</context>
         </context-group>
       </trans-unit>
       <trans-unit id="host.dragHandle" datatype="html">
         <source>Arrastar para reordenar</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
-          <context context-type="linenumber">96,98</context>
+          <context context-type="linenumber">105,107</context>
         </context-group>
       </trans-unit>
       <trans-unit id="host.removeFromQueue" datatype="html">
         <source>Remover da fila</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
-          <context context-type="linenumber">114,115</context>
+          <context context-type="linenumber">123,124</context>
         </context-group>
       </trans-unit>
       <trans-unit id="host.loadingRoom" datatype="html">
         <source>Carregando sala...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.html</context>
-          <context context-type="linenumber">127,131</context>
+          <context context-type="linenumber">136,140</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.demoted" datatype="html">
+        <source>Você passou o comando da sala.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
+          <context context-type="linenumber">113</context>
         </context-group>
       </trans-unit>
       <trans-unit id="confirm.nextSong.title" datatype="html">
         <source>Próxima música?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">170</context>
         </context-group>
       </trans-unit>
       <trans-unit id="confirm.nextSong.message" datatype="html">
         <source>A música atual será marcada como feita e a próxima da fila começa.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">151</context>
+          <context context-type="linenumber">171</context>
         </context-group>
       </trans-unit>
       <trans-unit id="confirm.nextSong.confirm" datatype="html">
         <source>Avançar</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">172</context>
         </context-group>
       </trans-unit>
       <trans-unit id="common.cancel" datatype="html">
         <source>Cancelar</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">153</context>
+          <context context-type="linenumber">173</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">190</context>
+          <context context-type="linenumber">251</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
@@ -136,22 +150,22 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/select-host-dialog.component.ts</context>
-          <context context-type="linenumber">28,30</context>
+          <context context-type="linenumber">44,46</context>
         </context-group>
       </trans-unit>
       <trans-unit id="common.unknownError" datatype="html">
         <source>erro desconhecido</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">186</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">240</context>
+          <context context-type="linenumber">303</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">265</context>
+          <context context-type="linenumber">328</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/landing/landing.component.ts</context>
@@ -178,14 +192,32 @@
         <source>Falha ao avançar: <x id="error" equiv-text="message"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">168</context>
+          <context context-type="linenumber">188</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.noOneToTransfer" datatype="html">
+        <source>Ninguém na sala pra receber o comando.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
+          <context context-type="linenumber">206</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host.transferFailed" datatype="html">
+        <source>Não foi possível transferir o comando.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
+          <context context-type="linenumber">230</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
+          <context context-type="linenumber">284</context>
         </context-group>
       </trans-unit>
       <trans-unit id="confirm.leave.title" datatype="html">
         <source>Sair da sala?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">187</context>
+          <context context-type="linenumber">248</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
@@ -196,49 +228,42 @@
         <source>Você é a única pessoa na sala. Sair vai encerrá-la.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">188</context>
+          <context context-type="linenumber">249</context>
         </context-group>
       </trans-unit>
       <trans-unit id="confirm.endRoom.confirm" datatype="html">
         <source>Encerrar e sair</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">189</context>
+          <context context-type="linenumber">250</context>
         </context-group>
       </trans-unit>
       <trans-unit id="host.leaveFailed" datatype="html">
         <source>Não foi possível sair da sala.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">198</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="host.transferFailed" datatype="html">
-        <source>Não foi possível transferir o comando.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">221</context>
+          <context context-type="linenumber">260</context>
         </context-group>
       </trans-unit>
       <trans-unit id="host.removeFailed" datatype="html">
         <source>Falha ao remover: <x id="error" equiv-text="message"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">242</context>
+          <context context-type="linenumber">305</context>
         </context-group>
       </trans-unit>
       <trans-unit id="host.reorderFailed" datatype="html">
         <source>Falha ao reordenar: <x id="error" equiv-text="message"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">267</context>
+          <context context-type="linenumber">330</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mobile.roomNotFound" datatype="html">
         <source>Sala não encontrada.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">291</context>
+          <context context-type="linenumber">354</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
@@ -249,14 +274,14 @@
         <source>Você não é host desta sala.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">301</context>
+          <context context-type="linenumber">364</context>
         </context-group>
       </trans-unit>
       <trans-unit id="participants.anonymous" datatype="html">
         <source>Convidado</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/host-dashboard/host-dashboard.component.ts</context>
-          <context context-type="linenumber">313</context>
+          <context context-type="linenumber">376</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/mobile/mobile.component.ts</context>
@@ -978,39 +1003,60 @@
           <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="selectHost.transferTitle" datatype="html">
+        <source>Passar o comando</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/select-host-dialog.component.ts</context>
+          <context context-type="linenumber">19,21</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="selectHost.title" datatype="html">
         <source>Escolha o novo anfitrião</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/select-host-dialog.component.ts</context>
-          <context context-type="linenumber">15,17</context>
+          <context context-type="linenumber">21,24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selectHost.transferHint" datatype="html">
+        <source>Quem você quer que assuma a sala? Você continua como convidado.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/select-host-dialog.component.ts</context>
+          <context context-type="linenumber">28,31</context>
         </context-group>
       </trans-unit>
       <trans-unit id="selectHost.hint" datatype="html">
-        <source> Para sair, passe o comando da sala para outra pessoa. </source>
+        <source>Para sair, passe o comando da sala para outra pessoa.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/select-host-dialog.component.ts</context>
-          <context context-type="linenumber">18,20</context>
+          <context context-type="linenumber">32,35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selectHost.transferConfirm" datatype="html">
+        <source>Passar o comando</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/select-host-dialog.component.ts</context>
+          <context context-type="linenumber">53,55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="selectHost.confirm" datatype="html">
-        <source> Passar e sair </source>
+        <source>Passar e sair</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/select-host-dialog.component.ts</context>
-          <context context-type="linenumber">37,39</context>
+          <context context-type="linenumber">55,57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="update.available" datatype="html">
         <source>Nova versão disponível.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/update.service.ts</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit>
       <trans-unit id="update.reload" datatype="html">
         <source>Atualizar</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/update.service.ts</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.alreadyEnqueuedTitle" datatype="html">
