@@ -28,6 +28,7 @@ import {
 } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { QueueService } from '../queue/queue.service';
+import { RoomsService } from '../rooms/rooms.service';
 import { YoutubeService } from '../youtube/youtube.service';
 import { VideoResult } from '../types';
 import { formatDuration } from '../utils/format';
@@ -68,11 +69,19 @@ export class SongSearchComponent {
   private readonly youtube = inject(YoutubeService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly auth = inject(AuthService);
+  private readonly rooms = inject(RoomsService);
 
   protected readonly searchControl = new FormControl<string>('', { nonNullable: true });
 
-  /** Item ativo (pending ou now_playing) do usuário corrente nesta sala — null se livre. */
+  /** Host da sala atual pode enfileirar quantas músicas quiser. */
+  protected readonly isHost = computed(() => {
+    const uid = this.auth.user()?.id;
+    return Boolean(uid && this.rooms.currentRoom()?.host_id === uid);
+  });
+
+  /** Item ativo (pending ou now_playing) do usuário corrente nesta sala — null se livre ou se for o host. */
   protected readonly myActiveItem = computed(() => {
+    if (this.isHost()) return null;
     const uid = this.auth.user()?.id;
     if (!uid) return null;
     return (
