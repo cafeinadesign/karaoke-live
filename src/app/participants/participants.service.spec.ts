@@ -16,6 +16,8 @@ const room: Room = {
   ended_at: null,
   latitude: 0,
   longitude: 0,
+  venue_name: null,
+  google_place_id: null,
 };
 
 function row(userId: string, lastSeenAt: string) {

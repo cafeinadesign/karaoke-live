@@ -76,11 +76,7 @@ export class LandingComponent {
     if (!result) return;
 
     try {
-      const room = await this.rooms.createRoom(
-        result.name,
-        result.latitude,
-        result.longitude,
-      );
+      const room = await this.rooms.createRoom(result);
       await this.router.navigate(['/host-dashboard', room.id]);
     } catch (err) {
       const message =

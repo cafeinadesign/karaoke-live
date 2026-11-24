@@ -2,6 +2,10 @@ import { Database } from './database.types';
 
 export type Profile = Database['public']['Tables']['profiles']['Row'];
 export type Room = Database['public']['Tables']['rooms']['Row'];
+export type NewRoom = Pick<
+  Room,
+  'name' | 'latitude' | 'longitude' | 'venue_name' | 'google_place_id'
+>;
 export type QueueStatus = 'pending' | 'now_playing' | 'done' | 'skipped';
 
 type QueueItemRow = Database['public']['Tables']['queue_items']['Row'];

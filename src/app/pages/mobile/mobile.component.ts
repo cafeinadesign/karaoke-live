@@ -19,6 +19,7 @@ import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-shee
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../auth/auth.service';
+import { RoomVenueComponent } from '../../places/room-venue.component';
 import { RoomsService } from '../../rooms/rooms.service';
 import { QueueService } from '../../queue/queue.service';
 import { ParticipantsService } from '../../participants/participants.service';
@@ -50,6 +51,7 @@ import { QrScannerDialogComponent } from './qr-scanner-dialog.component';
     SongSearchComponent,
     PlaybackBarComponent,
     ParticipantsListComponent,
+    RoomVenueComponent,
   ],
   templateUrl: './mobile.component.html',
   styleUrl: './mobile.component.sass',

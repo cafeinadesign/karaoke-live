@@ -66,6 +66,10 @@
         <mat-icon>logout</mat-icon>
       </button>
     </header>
+    @if (room()!.google_place_id || room()!.venue_name) {
+      <app-room-venue [room]="room()!" />
+    }
+
 
     @if (room()!.ended_at) {
       <p role="status" i18n="@@rooms.closed">Esta sala foi encerrada.</p>

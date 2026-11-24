@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   computed,
   inject,
   signal,
@@ -14,11 +15,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-export interface CreateRoomDialogResult {
-  readonly name: string;
-  readonly latitude: number;
-  readonly longitude: number;
-}
+import { NewRoom } from '../types';
+import { Coordinates, GooglePlaceSelection, GooglePlacesService } from '../places/google-places.service';
+import { PlacesPickerComponent } from '../places/places-picker.component';
+
+export type CreateRoomDialogResult = NewRoom;
 
 type GeoState = 'idle' | 'loading' | 'granted' | 'error';
 
@@ -32,6 +33,7 @@ type GeoState = 'idle' | 'loading' | 'granted' | 'error';
     MatIconModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    PlacesPickerComponent,
   ],
   template: `
     <h2 mat-dialog-title i18n="@@createRoom.title">Criar sala</h2>
@@ -50,8 +52,36 @@ type GeoState = 'idle' | 'loading' | 'granted' | 'error';
         <mat-hint align="end">{{ nameValue().length }} / 80</mat-hint>
       </mat-form-field>
 
+      <section class="venue" aria-labelledby="venue-label">
+        <span id="venue-label" class="geo-label" i18n="@@venue.label">Local da sala</span>
+        @if (selectedPlace(); as place) {
+          <div class="geo-row">
+            <mat-icon class="ok" aria-hidden="true">place</mat-icon>
+            <span>{{ place.label }}</span>
+            <button matButton type="button" (click)="selectedPlace.set(null)" i18n="@@venue.change">
+              Trocar local
+            </button>
+          </div>
+        } @else {
+          @if (placesConfigured) {
+            @if (searching()) {
+              <app-places-picker [coordinates]="geo()" (selected)="selectedPlace.set($event)" />
+            } @else {
+              <button matButton="tonal" type="button" (click)="searching.set(true)">
+                <mat-icon>search</mat-icon>
+                <span i18n="@@venue.search">Buscar no Google Maps</span>
+              </button>
+            }
+          }
+          <mat-form-field appearance="outline" class="name-field">
+            <mat-label i18n="@@venue.manual">Nome ou endereço do local</mat-label>
+            <input matInput type="text" maxlength="160" [formControl]="venueControl" />
+          </mat-form-field>
+        }
+      </section>
+
       <div class="geo">
-        <span class="geo-label" i18n="@@createRoom.geoLabel">Localização</span>
+        <span class="geo-label" i18n="@@venue.geoLabel">Sua localização (opcional)</span>
 
         @switch (geoState()) {
           @case ('idle') {
@@ -59,8 +89,8 @@ type GeoState = 'idle' | 'loading' | 'granted' | 'error';
               <mat-icon>my_location</mat-icon>
               <span i18n="@@createRoom.geoRequest">Usar minha localização</span>
             </button>
-            <p class="hint" i18n="@@createRoom.geoWhy">
-              A gente usa pra mapear onde as noites de karaokê estão rolando.
+            <p class="hint" i18n="@@venue.geoHint">
+              Se você compartilhar a localização, ela prioriza resultados próximos e é salva com a sala.
             </p>
           }
           @case ('loading') {
@@ -72,9 +102,7 @@ type GeoState = 'idle' | 'loading' | 'granted' | 'error';
           @case ('granted') {
             <div class="geo-row">
               <mat-icon class="ok" aria-hidden="true">check_circle</mat-icon>
-              <span class="coords"
-                >{{ formatCoord(geo()!.latitude) }}, {{ formatCoord(geo()!.longitude) }}</span
-              >
+              <span i18n="@@venue.geoReady">Localização obtida</span>
               <button
                 matIconButton
                 type="button"
@@ -83,6 +111,9 @@ type GeoState = 'idle' | 'loading' | 'granted' | 'error';
                 aria-label="Atualizar localização"
               >
                 <mat-icon>refresh</mat-icon>
+              </button>
+              <button matButton type="button" (click)="clearGeo()" i18n="@@venue.clearGeo">
+                Remover
               </button>
             </div>
           }
@@ -115,11 +146,18 @@ type GeoState = 'idle' | 'loading' | 'granted' | 'error';
 .name-field
   width: 100%
 
-.geo
+.venue, .geo
   display: flex
   flex-direction: column
   gap: 8px
   margin-top: 4px
+
+.venue
+  align-items: stretch
+  margin-bottom: 12px
+
+  > button
+    align-self: flex-start
 
 .geo-label
   font-size: 12px
@@ -149,9 +187,6 @@ type GeoState = 'idle' | 'loading' | 'granted' | 'error';
 .err
   color: #d32f2f
 
-.coords
-  font-family: 'Roboto Mono', monospace
-  font-weight: 500
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -160,6 +195,19 @@ export class CreateRoomDialogComponent {
     CreateRoomDialogComponent,
     CreateRoomDialogResult | null
   >;
+
+  private readonly destroyRef = inject(DestroyRef);
+  protected readonly placesConfigured = inject(GooglePlacesService).configured;
+  protected readonly searching = signal(false);
+  protected readonly selectedPlace = signal<GooglePlaceSelection | null>(null);
+
+  protected readonly venueControl = new FormControl('', {
+    nonNullable: true,
+    validators: [Validators.maxLength(160)],
+  });
+  protected readonly venueValue = toSignal(this.venueControl.valueChanges, {
+    initialValue: this.venueControl.value,
+  });
 
   protected readonly nameControl = new FormControl<string>('', {
     nonNullable: true,
@@ -171,17 +219,18 @@ export class CreateRoomDialogComponent {
   });
 
   protected readonly geoState = signal<GeoState>('idle');
-  protected readonly geo = signal<{ latitude: number; longitude: number } | null>(null);
+  protected readonly geo = signal<Coordinates | null>(null);
   protected readonly geoError = signal<string>('');
 
   protected readonly canSubmit = computed(
     () =>
       this.nameValue().trim().length > 0 &&
-      this.geoState() === 'granted' &&
-      this.geo() !== null,
+      this.nameControl.valid &&
+      (Boolean(this.selectedPlace()) || (this.venueControl.valid && this.venueValue().trim().length > 0)),
   );
 
   protected requestGeo(): void {
+    this.geo.set(null);
     if (typeof navigator === 'undefined' || !navigator.geolocation) {
       this.geoState.set('error');
       this.geoError.set(
@@ -192,6 +241,7 @@ export class CreateRoomDialogComponent {
     this.geoState.set('loading');
     navigator.geolocation.getCurrentPosition(
       (pos) => {
+        if (this.destroyRef.destroyed) return;
         this.geo.set({
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude,
@@ -199,6 +249,7 @@ export class CreateRoomDialogComponent {
         this.geoState.set('granted');
       },
       (err) => {
+        if (this.destroyRef.destroyed) return;
         this.geoState.set('error');
         this.geoError.set(this.mapGeoError(err));
       },
@@ -208,17 +259,20 @@ export class CreateRoomDialogComponent {
 
   protected submit(): void {
     if (!this.canSubmit()) return;
-    const g = this.geo();
-    if (!g) return;
+    const geo = this.geo();
+    const place = this.selectedPlace();
     this.ref.close({
       name: this.nameControl.value.trim(),
-      latitude: g.latitude,
-      longitude: g.longitude,
+      latitude: geo?.latitude ?? null,
+      longitude: geo?.longitude ?? null,
+      venue_name: place ? null : this.venueControl.value.trim(),
+      google_place_id: place?.id ?? null,
     });
   }
 
-  protected formatCoord(n: number): string {
-    return n.toFixed(5);
+  protected clearGeo(): void {
+    this.geo.set(null);
+    this.geoState.set('idle');
   }
 
   private mapGeoError(err: GeolocationPositionError): string {

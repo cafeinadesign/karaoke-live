@@ -182,33 +182,39 @@ export type Database = {
           created_at: string
           current_item_id: string | null
           ended_at: string | null
+          google_place_id: string | null
           host_id: string
           id: string
-          latitude: number
-          longitude: number
+          latitude: number | null
+          longitude: number | null
           name: string
+          venue_name: string | null
         }
         Insert: {
           code: string
           created_at?: string
           current_item_id?: string | null
           ended_at?: string | null
+          google_place_id?: string | null
           host_id: string
           id?: string
-          latitude: number
-          longitude: number
+          latitude?: number | null
+          longitude?: number | null
           name: string
+          venue_name?: string | null
         }
         Update: {
           code?: string
           created_at?: string
           current_item_id?: string | null
           ended_at?: string | null
+          google_place_id?: string | null
           host_id?: string
           id?: string
-          latitude?: number
-          longitude?: number
+          latitude?: number | null
+          longitude?: number | null
           name?: string
+          venue_name?: string | null
         }
         Relationships: [
           {

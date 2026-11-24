@@ -2,7 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { SupabaseService } from '../supabase.service';
 import { AuthService } from '../auth/auth.service';
-import { Room } from '../types';
+import { NewRoom, Room } from '../types';
 
 export interface RoomMembership {
   readonly left_at: string | null;
@@ -46,7 +46,7 @@ export class RoomsService {
     if (error) throw new Error(error.message);
   }
 
-  async createRoom(name: string, latitude: number, longitude: number): Promise<Room> {
+  async createRoom(room: NewRoom): Promise<Room> {
     const userId = this.auth.user()?.id;
     if (!userId) throw new Error('not_authenticated');
 
@@ -54,7 +54,7 @@ export class RoomsService {
       const code = generateCode();
       const { data, error } = await this.supabase.client
         .from('rooms')
-        .insert({ code, host_id: userId, name, latitude, longitude })
+        .insert({ ...room, code, host_id: userId })
         .select()
         .single();
 
