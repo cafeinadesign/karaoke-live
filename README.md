@@ -13,7 +13,7 @@ App de karaokê multi-sala onde convidados entram via código/QR, enfileiram mú
 | Frontend | Angular 22 (zoneless, standalone, signals, SSR/prerender) |
 | UI | Angular Material MD3 + SASS indentado, tema YouTube Dark |
 | i18n | `@angular/localize` — `pt-BR` (default) + `en-US` |
-| Auth + DB + Realtime | Supabase (`kfyubxcnouhtgqtfejoh`, sa-east-1) |
+| Auth + DB + Realtime | Supabase (`nqjzhjosjhlknxpneopd`, sa-east-1) |
 | Edge functions | Deno — `youtube-search`, `gemini-roast` |
 | Modelo Gemini | `gemini-2.5-flash` |
 | Hospedagem | Netlify (PWA + SPA fallback + redirect por Accept-Language) |
@@ -83,7 +83,7 @@ supabase db push --linked
 ### Tipos do banco
 
 ```bash
-supabase gen types typescript --project-id kfyubxcnouhtgqtfejoh > src/app/database.types.ts
+supabase gen types typescript --project-id nqjzhjosjhlknxpneopd > src/app/database.types.ts
 ```
 
 ## Build
@@ -133,7 +133,8 @@ Push em `main` dispara auto-deploy no Netlify. Workflow:
 1. `gen-version.mjs` → escreve `src/version.generated.ts`
 2. `ng build` (localize=true) → `dist/karaoke-live/browser/{pt-BR,en-US}/`
 3. `post-build.mjs` → copia `.well-known/` pro root do dist
-4. Netlify edge serve: `/` redireciona por idioma, `/pt-BR/*` e `/en-US/*` fazem SPA fallback dentro do locale
+4. `npm run db:deploy` aplica as migrations antes da publicação. Configure `KARAOKE_SUPABASE_DB_URL` como secret no Netlify, apenas no contexto **Production** e escopo **Builds**, com a URL do Session pooler do Supabase.
+5. Netlify edge serve: `/` redireciona por idioma, `/pt-BR/*` e `/en-US/*` fazem SPA fallback dentro do locale
 
 ## Acessibilidade
 
