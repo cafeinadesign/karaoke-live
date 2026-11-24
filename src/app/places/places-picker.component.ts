@@ -58,7 +58,7 @@ export class PlacesPickerComponent {
         widget.locationBias = coordinates ? {
           center: { lat: coordinates.latitude, lng: coordinates.longitude },
           radius: 5000,
-        } : null;
+        } : undefined;
       }
     });
 

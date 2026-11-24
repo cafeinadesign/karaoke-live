@@ -13,7 +13,7 @@ export interface GooglePlaceSelection {
 }
 
 export interface PlaceAutocompleteElement extends HTMLElement {
-  locationBias: { center: { lat: number; lng: number }; radius: number } | null;
+  locationBias?: { center: { lat: number; lng: number }; radius: number };
 }
 
 interface PlacesLibrary {

@@ -45,7 +45,7 @@ describe('CreateRoomDialogComponent', () => {
 
   it('saves the Google place ID and keeps the suggestion text out of storage', async () => {
     class FakeAutocomplete extends HTMLElement implements PlaceAutocompleteElement {
-      locationBias: PlaceAutocompleteElement['locationBias'] = null;
+      locationBias?: PlaceAutocompleteElement['locationBias'];
     }
 
     customElements.define('karaoke-test-autocomplete', FakeAutocomplete);
