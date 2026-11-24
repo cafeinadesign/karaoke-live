@@ -6,6 +6,9 @@
         <h1>{{ room()!.name }}</h1>
       </div>
       <div class="bar-actions">
+        <a matIconButton routerLink="/" i18n-aria-label="@@rooms.mine" aria-label="Minhas salas">
+          <mat-icon>meeting_room</mat-icon>
+        </a>
         <button
           matButton="tonal"
           type="button"

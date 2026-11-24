@@ -6,6 +6,54 @@
   </header>
 
   @if (auth.isAuthenticated()) {
+    <section class="my-rooms" aria-labelledby="my-rooms-title">
+      <h2 id="my-rooms-title" i18n="@@rooms.mine">Minhas salas</h2>
+      @if (membershipsFailed()) {
+        <p role="status" i18n="@@rooms.loadFailed">Não foi possível carregar suas salas.</p>
+        <button matButton="outlined" type="button" (click)="retryMemberships()" i18n="@@rooms.retry">
+          Tentar novamente
+        </button>
+      } @else if (memberships(); as list) {
+        @if (list.length === 0) {
+          <p i18n="@@rooms.empty">Você ainda não participou de nenhuma sala.</p>
+        } @else {
+          <ul>
+            @for (membership of list; track membership.rooms.id) {
+              @let room = membership.rooms;
+              <li>
+                <div>
+                  <strong>{{ room.name }}</strong>
+                  <span class="room-status">
+                    @if (room.ended_at) {
+                      <ng-container i18n="@@rooms.ended">Encerrada</ng-container>
+                    } @else if (room.host_id === auth.user()?.id) {
+                      <ng-container i18n="@@rooms.hosting">Você é anfitrião</ng-container>
+                    } @else if (membership.left_at) {
+                      <ng-container i18n="@@rooms.visited">Você já participou</ng-container>
+                    } @else {
+                      <ng-container i18n="@@rooms.joined">Você está nesta sala</ng-container>
+                    }
+                  </span>
+                </div>
+                @if (!room.ended_at) {
+                  @if (room.host_id === auth.user()?.id) {
+                    <a matButton="tonal" [routerLink]="['/host-dashboard', room.id]" i18n="@@rooms.openDashboard">
+                      Abrir painel
+                    </a>
+                  } @else {
+                    <a matButton="tonal" [routerLink]="['/mobile', room.code]" i18n="@@rooms.return">
+                      Voltar à sala
+                    </a>
+                  }
+                }
+              </li>
+            }
+          </ul>
+        }
+      } @else {
+        <p role="status" i18n="@@rooms.loading">Carregando suas salas…</p>
+      }
+    </section>
     <section class="actions">
       <button matButton="filled" type="button" (click)="hostNewRoom()">
         <mat-icon>add_circle</mat-icon>

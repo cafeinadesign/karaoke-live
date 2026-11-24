@@ -7,7 +7,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -37,7 +37,9 @@ import { QrScannerDialogComponent } from './qr-scanner-dialog.component';
 
 @Component({
   selector: 'app-mobile',
+  providers: [RoomsService, QueueService, ParticipantsService],
   imports: [
+    RouterLink,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -113,7 +115,7 @@ export class MobileComponent {
     const tickId = window.setInterval(() => this.nowTick.set(Date.now()), 1000);
     this.destroyRef.onDestroy(() => {
       window.clearInterval(tickId);
-      void this.participants.leave();
+      void this.queue.unsubscribe();
       void this.rooms.unwatchRoom();
     });
 
@@ -158,7 +160,7 @@ export class MobileComponent {
 
   protected async submitCode(): Promise<void> {
     if (this.codeControl.invalid) return;
-    await this.tryJoin(this.codeControl.value);
+    await this.openRoom(this.codeControl.value);
   }
 
   protected async openScanner(): Promise<void> {
@@ -169,7 +171,7 @@ export class MobileComponent {
     const code = await ref.afterClosed().toPromise();
     if (code) {
       this.codeControl.setValue(code);
-      await this.tryJoin(code);
+      await this.openRoom(code);
     }
   }
 
@@ -225,6 +227,8 @@ export class MobileComponent {
   }
 
   protected async leaveRoom(): Promise<void> {
+    const room = this.room();
+    if (!room) return;
     const confirmed = await this.confirmService.ask({
       title: $localize`:@@confirm.leave.title:Sair da sala?`,
       message: $localize`:@@confirm.leave.message:Você volta para a tela inicial.`,
@@ -233,20 +237,29 @@ export class MobileComponent {
       danger: true,
     });
     if (!confirmed) return;
-    await this.participants.leave();
-    await this.queue.unsubscribe();
-    await this.rooms.unwatchRoom();
-    this.rooms.clearCurrent();
-    await this.router.navigate(['/']);
+    try {
+      await this.rooms.leaveMembership(room.id);
+      await this.router.navigate(['/'], { replaceUrl: true });
+    } catch {
+      this.snackBar.open(
+        $localize`:@@host.leaveFailed:Não foi possível sair da sala.`,
+        undefined,
+        { duration: 4000 },
+      );
+    }
+  }
+
+  private async openRoom(code: string): Promise<void> {
+    await this.router.navigate(['/mobile', code.trim().toUpperCase()]);
   }
 
   private async tryJoin(code: string): Promise<void> {
     this.joining.set(true);
     try {
       const room = await this.rooms.joinByCode(code);
-      await this.queue.subscribe(room.id);
-      await this.rooms.watchRoom(room.id);
+      if (this.destroyRef.destroyed) return;
       const user = this.auth.user();
+      if (user?.id === room.host_id) return;
       if (user) {
         const profile = this.auth.profile();
         await this.participants.join(room.id, {
@@ -257,13 +270,18 @@ export class MobileComponent {
           onlineAt: new Date().toISOString(),
         });
       }
-      await this.router.navigate(['/mobile', room.code], { replaceUrl: true });
+      if (this.destroyRef.destroyed) return;
+      await this.queue.subscribe(room.id);
+      if (this.destroyRef.destroyed) return;
+      await this.rooms.watchRoom(room.id);
     } catch {
+      if (this.destroyRef.destroyed) return;
       this.snackBar.open(
         $localize`:@@mobile.roomNotFound:Sala não encontrada.`,
         undefined,
         { duration: 3000 },
       );
+      await this.router.navigate(['/mobile'], { replaceUrl: true });
     } finally {
       this.joining.set(false);
     }

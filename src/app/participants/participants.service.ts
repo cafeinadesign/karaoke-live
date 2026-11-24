@@ -24,7 +24,7 @@ interface JoinMeta {
 
 /**
  * Source of truth: tabela room_participants.
- * - UPSERT no join, heartbeat de 30s atualiza last_seen_at, DELETE no leave.
+ * - UPSERT no join e heartbeat de 30s atualizando last_seen_at.
  * - Sub via postgres_changes na própria tabela (mesmo motor confiável da queue).
  * - Filtro de zumbis na leitura (last_seen_at > now() - 90s).
  * - isHost é derivado do rooms.currentRoom().host_id em runtime — atualiza
@@ -61,24 +61,31 @@ export class ParticipantsService {
   private onVisibility: (() => void) | null = null;
 
   constructor() {
-    this.destroyRef.onDestroy(() => { void this.leave(); });
+    this.destroyRef.onDestroy(() => { void this.disconnect(); });
   }
 
   async join(roomId: string, me: Participant): Promise<void> {
     if (this.subscribedRoomId === roomId && this.currentUserId === me.userId) return;
-    await this.leave();
+    await this.disconnect();
 
+    if (this.destroyRef.destroyed) return;
     this.subscribedRoomId = roomId;
     this.currentUserId = me.userId;
 
-    await this.upsertSelf(roomId, {
-      userId: me.userId,
-      displayName: me.displayName,
-      avatarUrl: me.avatarUrl,
-    });
+    try {
+      await this.upsertSelf(roomId, {
+        userId: me.userId,
+        displayName: me.displayName,
+        avatarUrl: me.avatarUrl,
+      });
+    } catch (error) {
+      await this.disconnect();
+      throw error;
+    }
+    if (this.destroyRef.destroyed) return;
 
     this.channel = this.supabase.client
-      .channel(`room-participants:${roomId}`)
+      .channel(`room-participants:${roomId}:${crypto.randomUUID()}`)
       .on(
         'postgres_changes',
         {
@@ -92,6 +99,7 @@ export class ParticipantsService {
       .subscribe();
 
     await this.refresh(roomId);
+    if (this.destroyRef.destroyed) return;
 
     this.startHeartbeat(roomId);
 
@@ -109,26 +117,18 @@ export class ParticipantsService {
     document.addEventListener('visibilitychange', this.onVisibility);
   }
 
-  async leave(): Promise<void> {
+  async disconnect(): Promise<void> {
     this.stopHeartbeat();
     if (this.onVisibility) {
       document.removeEventListener('visibilitychange', this.onVisibility);
       this.onVisibility = null;
     }
-    if (this.channel) {
-      await this.supabase.client.removeChannel(this.channel);
-      this.channel = null;
-    }
-    if (this.subscribedRoomId && this.currentUserId) {
-      await this.supabase.client
-        .from('room_participants')
-        .delete()
-        .eq('room_id', this.subscribedRoomId)
-        .eq('user_id', this.currentUserId);
-    }
+    const channel = this.channel;
+    this.channel = null;
     this.subscribedRoomId = null;
     this.currentUserId = null;
     this.rows.set([]);
+    if (channel) await this.supabase.client.removeChannel(channel);
   }
 
   private startHeartbeat(roomId: string): void {
@@ -147,7 +147,7 @@ export class ParticipantsService {
 
   private async upsertSelf(roomId: string, me: JoinMeta): Promise<void> {
     const now = new Date().toISOString();
-    await this.supabase.client.from('room_participants').upsert(
+    const { error } = await this.supabase.client.from('room_participants').upsert(
       {
         room_id: roomId,
         user_id: me.userId,
@@ -157,6 +157,7 @@ export class ParticipantsService {
       },
       { onConflict: 'room_id,user_id' },
     );
+    if (error) throw new Error(error.message);
   }
 
   private async beat(roomId: string): Promise<void> {

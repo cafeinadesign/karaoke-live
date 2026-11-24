@@ -128,6 +128,24 @@ export const roomParticipants = pgTable(
   ],
 );
 
+export const roomMemberships = pgTable(
+  'room_memberships',
+  {
+    roomId: uuid('room_id')
+      .notNull()
+      .references(() => rooms.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => profiles.id, { onDelete: 'cascade' }),
+    lastJoinedAt: timestamp('last_joined_at', { withTimezone: true }).notNull().defaultNow(),
+    leftAt: timestamp('left_at', { withTimezone: true }),
+  },
+  (t) => [
+    primaryKey({ columns: [t.roomId, t.userId] }),
+    index('room_memberships_user_last_joined_idx').on(t.userId, t.lastJoinedAt.desc()),
+  ],
+);
+
 export type Profile = typeof profiles.$inferSelect;
 export type Room = typeof rooms.$inferSelect;
 export type RoomInsert = typeof rooms.$inferInsert;

@@ -4,6 +4,11 @@ import { SupabaseService } from '../supabase.service';
 import { AuthService } from '../auth/auth.service';
 import { Room } from '../types';
 
+export interface RoomMembership {
+  readonly left_at: string | null;
+  readonly rooms: Pick<Room, 'id' | 'code' | 'ended_at' | 'host_id' | 'name'>;
+}
+
 const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
 function generateCode(): string {
@@ -22,6 +27,24 @@ export class RoomsService {
   readonly currentRoom = signal<Room | null>(null);
   private roomChannel: RealtimeChannel | null = null;
   private watchedRoomId: string | null = null;
+
+  async listMemberships(userId: string): Promise<RoomMembership[]> {
+    const { data, error } = await this.supabase.client
+      .from('room_memberships')
+      .select('left_at, rooms!inner(id, code, ended_at, host_id, name)')
+      .eq('user_id', userId)
+      .order('last_joined_at', { ascending: false });
+
+    if (error) throw new Error(error.message);
+    return data;
+  }
+
+  async leaveMembership(roomId: string): Promise<void> {
+    const { error } = await this.supabase.client.rpc('leave_room_membership', {
+      p_room_id: roomId,
+    });
+    if (error) throw new Error(error.message);
+  }
 
   async createRoom(name: string, latitude: number, longitude: number): Promise<Room> {
     const userId = this.auth.user()?.id;
@@ -70,18 +93,14 @@ export class RoomsService {
     return data;
   }
 
-  clearCurrent(): void {
-    this.currentRoom.set(null);
-  }
-
   /** Keeps currentRoom in sync with remote changes (e.g. host transfer). */
   async watchRoom(roomId: string): Promise<void> {
     if (this.watchedRoomId === roomId) return;
-    await this.unwatchRoom();
+    if (this.roomChannel) await this.unwatchRoom();
 
     this.watchedRoomId = roomId;
     this.roomChannel = this.supabase.client
-      .channel(`room:${roomId}`)
+      .channel(`room:${roomId}:${crypto.randomUUID()}`)
       .on(
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${roomId}` },
@@ -101,13 +120,12 @@ export class RoomsService {
   }
 
   /** Hands the host role to another participant. Only the current host may call this. */
-  async transferHost(roomId: string, newHostId: string): Promise<void> {
-    const { data, error } = await this.supabase.client
-      .from('rooms')
-      .update({ host_id: newHostId })
-      .eq('id', roomId)
-      .select()
-      .single();
+  async transferHost(roomId: string, newHostId: string, leave = false): Promise<void> {
+    const { data, error } = await this.supabase.client.rpc('transfer_room_host', {
+      p_room_id: roomId,
+      p_new_host_id: newHostId,
+      p_leave: leave,
+    });
     if (error || !data) throw new Error(error?.message ?? 'transfer_failed');
     this.currentRoom.set(data);
   }
