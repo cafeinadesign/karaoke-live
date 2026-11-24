@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { describe, expect, it, vi } from 'vitest';
-import { GooglePlacesService, PlaceAutocompleteElement } from '../places/google-places.service';
+import { GooglePlacesService, MapsLoadError, PlaceAutocompleteElement } from '../places/google-places.service';
 import { CreateRoomDialogComponent } from './create-room-dialog.component';
 
 describe('CreateRoomDialogComponent', () => {
@@ -43,7 +43,7 @@ describe('CreateRoomDialogComponent', () => {
     });
   });
 
-  it('saves the Google place ID and keeps the suggestion text out of storage', async () => {
+  it('shows the load failure, retries, and saves only the Google place ID', async () => {
     class FakeAutocomplete extends HTMLElement implements PlaceAutocompleteElement {
       locationBias?: PlaceAutocompleteElement['locationBias'];
     }
@@ -51,10 +51,13 @@ describe('CreateRoomDialogComponent', () => {
     customElements.define('karaoke-test-autocomplete', FakeAutocomplete);
     const close = vi.fn();
     const library = Promise.resolve({ PlaceAutocompleteElement: FakeAutocomplete });
+    const load = vi.fn()
+      .mockRejectedValueOnce(new MapsLoadError('MAPS_TIMEOUT'))
+      .mockReturnValue(library);
     TestBed.configureTestingModule({
       providers: [
         { provide: MatDialogRef, useValue: { close } },
-        { provide: GooglePlacesService, useValue: { configured: true, load: () => library } },
+        { provide: GooglePlacesService, useValue: { configured: true, load } },
       ],
     });
 
@@ -65,6 +68,12 @@ describe('CreateRoomDialogComponent', () => {
     name.value = 'Karaokê da sexta';
     name.dispatchEvent(new Event('input'));
     view.querySelector<HTMLButtonElement>('.venue button')!.click();
+    fixture.detectChanges();
+    await load.mock.results[0].value.catch(() => {});
+    fixture.detectChanges();
+    expect(view.querySelector('app-places-picker [role="status"]')?.textContent).toContain('MAPS_TIMEOUT');
+
+    view.querySelector<HTMLButtonElement>('app-places-picker button')!.click();
     fixture.detectChanges();
     await library;
 
