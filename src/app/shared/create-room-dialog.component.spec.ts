@@ -1,16 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { describe, expect, it, vi } from 'vitest';
-import { GooglePlacesService, MapsLoadError, PlaceAutocompleteElement } from '../places/google-places.service';
 import { CreateRoomDialogComponent } from './create-room-dialog.component';
 
 describe('CreateRoomDialogComponent', () => {
-  it('requires a venue and saves manual entry without asking for device coordinates', () => {
+  it('requires a venue and saves manual entry when device coordinates are unavailable', () => {
     const close = vi.fn();
     TestBed.configureTestingModule({
       providers: [
         { provide: MatDialogRef, useValue: { close } },
-        { provide: GooglePlacesService, useValue: { configured: false } },
       ],
     });
 
@@ -43,56 +41,67 @@ describe('CreateRoomDialogComponent', () => {
     });
   });
 
-  it('shows the load failure, retries, and saves only the Google place ID', async () => {
-    class FakeAutocomplete extends HTMLElement implements PlaceAutocompleteElement {
-      locationBias?: PlaceAutocompleteElement['locationBias'];
-    }
-
-    customElements.define('karaoke-test-autocomplete', FakeAutocomplete);
+  it('requests location on opening and saves the GPS pin with the typed address', async () => {
     const close = vi.fn();
-    const library = Promise.resolve({ PlaceAutocompleteElement: FakeAutocomplete });
-    const load = vi.fn()
-      .mockRejectedValueOnce(new MapsLoadError('MAPS_TIMEOUT'))
-      .mockReturnValue(library);
-    TestBed.configureTestingModule({
-      providers: [
-        { provide: MatDialogRef, useValue: { close } },
-        { provide: GooglePlacesService, useValue: { configured: true, load } },
-      ],
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ address: 'Rua do Sol, 8' })));
+    const getCurrentPosition = vi.fn((success: PositionCallback) => {
+      success({ coords: { latitude: -8, longitude: -35 } } as GeolocationPosition);
     });
+    vi.stubGlobal('navigator', { platform: navigator.platform, userAgent: navigator.userAgent, geolocation: { getCurrentPosition } });
+    try {
+      TestBed.configureTestingModule({
+        providers: [
+          { provide: MatDialogRef, useValue: { close } },
+        ],
+      });
+      const fixture = TestBed.createComponent(CreateRoomDialogComponent);
+      fixture.detectChanges();
+      const view: HTMLElement = fixture.nativeElement;
+      expect(getCurrentPosition).toHaveBeenCalledTimes(1);
+      const name = view.querySelector<HTMLInputElement>('input')!;
+      name.value = 'Sexta';
+      name.dispatchEvent(new Event('input'));
+      await fixture.whenStable();
+      const address = view.querySelector<HTMLInputElement>('.venue input')!;
+      await vi.waitFor(() => expect(address.value).toBe('Rua do Sol, 8'));
+      address.value = 'Rua do Sol, 10';
+      address.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      view.querySelector<HTMLButtonElement>('mat-dialog-actions button:last-child')!.click();
+      expect(close).toHaveBeenCalledWith({
+        name: 'Sexta', latitude: -8, longitude: -35, venue_name: 'Rua do Sol, 10', google_place_id: null,
+      });
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
 
-    const fixture = TestBed.createComponent(CreateRoomDialogComponent);
-    fixture.detectChanges();
-    const view: HTMLElement = fixture.nativeElement;
-    const name = view.querySelector<HTMLInputElement>('input')!;
-    name.value = 'Karaokê da sexta';
-    name.dispatchEvent(new Event('input'));
-    view.querySelector<HTMLButtonElement>('.venue button')!.click();
-    fixture.detectChanges();
-    await load.mock.results[0].value.catch(() => {});
-    fixture.detectChanges();
-    expect(view.querySelector('app-places-picker [role="status"]')?.textContent).toContain('MAPS_TIMEOUT');
-
-    view.querySelector<HTMLButtonElement>('app-places-picker button')!.click();
-    fixture.detectChanges();
-    await library;
-
-    const widget = view.querySelector('karaoke-test-autocomplete')!;
-    const selection = Object.assign(new Event('gmp-select'), {
-      placePrediction: { placeId: 'place-id-example', text: 'Bar do Recife, Recife' },
-    });
-    widget.dispatchEvent(selection);
-    fixture.detectChanges();
-
-    expect(view.querySelector('.venue')?.textContent).toContain('Bar do Recife, Recife');
-    view.querySelector<HTMLButtonElement>('mat-dialog-actions button:last-child')!.click();
-    expect(close).toHaveBeenCalledWith({
-      name: 'Karaokê da sexta',
-      latitude: null,
-      longitude: null,
-      venue_name: null,
-      google_place_id: 'place-id-example',
-    });
+  it('offers to enable location after denial and keeps a typed address on retry', async () => {
+    const getCurrentPosition = vi.fn()
+      .mockImplementationOnce((_success, deny) => deny({ code: 1, PERMISSION_DENIED: 1 }))
+      .mockImplementationOnce((success) => success({ coords: { latitude: -8, longitude: -35 } }));
+    vi.stubGlobal('navigator', { platform: navigator.platform, userAgent: navigator.userAgent, geolocation: { getCurrentPosition } });
+    try {
+      TestBed.configureTestingModule({
+        providers: [
+          { provide: MatDialogRef, useValue: { close: vi.fn() } },
+        ],
+      });
+      const fixture = TestBed.createComponent(CreateRoomDialogComponent);
+      fixture.detectChanges();
+      const view: HTMLElement = fixture.nativeElement;
+      const field = view.querySelector<HTMLInputElement>('.venue input')!;
+      field.value = 'Rua B';
+      field.dispatchEvent(new Event('input'));
+      const retry = view.querySelector<HTMLButtonElement>('.venue button')!;
+      expect(retry.textContent).toContain('Habilitar localização');
+      retry.click();
+      await fixture.whenStable();
+      expect(field.value).toBe('Rua B');
+      expect(view.querySelector('.venue button')).toBeNull();
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 
 });

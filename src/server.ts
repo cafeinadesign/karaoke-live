@@ -6,6 +6,7 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+import { reverseGeocode } from './server/reverse-geocode';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -15,17 +16,25 @@ const angularApp = new AngularNodeAppEngine({
   trustProxyHeaders: ['x-forwarded-host', 'x-forwarded-proto'],
 });
 
-/**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
- */
+const addressCache = new Map<string, string>();
+let nextGeocode = 0;
+app.post('/api/reverse-geocode', express.json({ limit: '1kb' }), async (request, response) => {
+  const result = await reverseGeocode(new Request('http://localhost/api/reverse-geocode', {
+    method: 'POST',
+    body: JSON.stringify(request.body ?? {}),
+  }), {
+    get: async (key) => addressCache.get(key) ?? null,
+    async reserve() {
+      if (Date.now() < nextGeocode) return false;
+      nextGeocode = Date.now() + 1100;
+      return true;
+    },
+    async save(key, address) {
+      addressCache.set(key, address);
+    },
+  });
+  await writeResponseToNodeResponse(result, response);
+});
 
 /**
  * Serve static files from /browser

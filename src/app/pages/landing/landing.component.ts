@@ -70,7 +70,7 @@ export class LandingComponent {
       CreateRoomDialogResult | null
     >(CreateRoomDialogComponent, {
       autoFocus: 'first-tabbable',
-      restoreFocus: false,
+      restoreFocus: true,
     });
     const result = (await ref.afterClosed().toPromise()) ?? null;
     if (!result) return;

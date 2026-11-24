@@ -40,7 +40,7 @@
         </button>
       </div>
     </header>
-    @if (room()!.google_place_id || room()!.venue_name) {
+    @if (room()!.google_place_id || room()!.venue_name || room()!.latitude !== null) {
       <app-room-venue [room]="room()!" />
     }
 

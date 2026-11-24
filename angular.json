@@ -39,7 +39,7 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.sass"],
+            "styles": ["leaflet/dist/leaflet.css", "src/styles.sass"],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {

@@ -1219,6 +1219,30 @@
       <trans-unit id="venue.searchRetry" datatype="html">
         <source>Tentar de novo</source>
       </trans-unit>
+      <trans-unit id="venue.enterManually" datatype="html">
+        <source>Digitar endereço manualmente</source>
+      </trans-unit>
+      <trans-unit id="venue.useAsVenue" datatype="html">
+        <source>Usar localização atual como local da sala</source>
+      </trans-unit>
+      <trans-unit id="venue.currentLocation" datatype="html">
+        <source>Localização atual</source>
+      </trans-unit>
+      <trans-unit id="venue.enableLocation" datatype="html">
+        <source>Habilitar localização</source>
+      </trans-unit>
+      <trans-unit id="venue.addressUnavailable" datatype="html">
+        <source>Não foi possível identificar o endereço. Digite o local da sala.</source>
+      </trans-unit>
+      <trans-unit id="venue.mapLabel" datatype="html">
+        <source>Mapa do local da sala</source>
+      </trans-unit>
+      <trans-unit id="venue.pinHelp" datatype="html">
+        <source>Toque no mapa para marcar o local. Com o teclado, use as setas e pressione Enter para marcar o centro.</source>
+      </trans-unit>
+      <trans-unit id="venue.findingAddress" datatype="html">
+        <source>Buscando endereço do pin…</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

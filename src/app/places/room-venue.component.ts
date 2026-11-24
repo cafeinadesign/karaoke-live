@@ -7,16 +7,14 @@ import { Room } from '../types';
   selector: 'app-room-venue',
   imports: [MatButtonModule, MatIconModule],
   template: `
+    @if (room().venue_name; as name) {
+      <p>{{ name }}</p>
+    }
     @if (mapsUrl(); as url) {
       <a matButton="tonal" [href]="url" target="_blank" rel="noopener noreferrer">
         <mat-icon>place</mat-icon>
         <span i18n="@@venue.openMaps">Ver local no Google Maps</span>
       </a>
-    } @else if (room().venue_name; as name) {
-      <p>
-        <mat-icon aria-hidden="true">place</mat-icon>
-        <span>{{ name }}</span>
-      </p>
     }
   `,
   styles: `
@@ -34,17 +32,25 @@ mat-icon
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RoomVenueComponent {
-  readonly room = input.required<Pick<Room, 'google_place_id' | 'venue_name'>>();
+  readonly room = input.required<Pick<Room, 'google_place_id' | 'venue_name' | 'latitude' | 'longitude'>>();
 
   protected readonly mapsUrl = computed(() => {
-    const id = this.room().google_place_id;
-    if (!id) return null;
+    const { google_place_id: id, venue_name: name, latitude, longitude } = this.room();
+    const coordinates = latitude != null && longitude != null ? `${latitude},${longitude}` : '';
+    const address = name?.trim();
+    if (address && coordinates && !id) {
+      const place = encodeURIComponent(address).replaceAll('%20', '+');
+      return `https://www.google.com/maps/place/${place}/@${coordinates},17z`;
+    }
+
+    const query = address || coordinates;
+    if (!query && !id) return null;
 
     const url = new URL('https://www.google.com/maps/search/');
     url.search = new URLSearchParams({
       api: '1',
-      query: this.room().venue_name ?? $localize`:@@venue.label:Local da sala`,
-      query_place_id: id,
+      query: query || $localize`:@@venue.label:Local da sala`,
+      ...(id && { query_place_id: id }),
     }).toString();
     return url.href;
   });

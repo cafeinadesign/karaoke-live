@@ -13,15 +13,13 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { NewRoom } from '../types';
-import { Coordinates, GooglePlaceSelection, GooglePlacesService } from '../places/google-places.service';
-import { PlacesPickerComponent } from '../places/places-picker.component';
+import { Coordinates, VenueMapComponent } from '../places/venue-map.component';
 
 export type CreateRoomDialogResult = NewRoom;
 
-type GeoState = 'idle' | 'loading' | 'granted' | 'error';
+type GeoState = 'idle' | 'loading' | 'granted' | 'denied' | 'error';
 
 @Component({
   selector: 'app-create-room-dialog',
@@ -32,8 +30,7 @@ type GeoState = 'idle' | 'loading' | 'granted' | 'error';
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    MatProgressSpinnerModule,
-    PlacesPickerComponent,
+    VenueMapComponent,
   ],
   template: `
     <h2 mat-dialog-title i18n="@@createRoom.title">Criar sala</h2>
@@ -54,83 +51,26 @@ type GeoState = 'idle' | 'loading' | 'granted' | 'error';
 
       <section class="venue" aria-labelledby="venue-label">
         <span id="venue-label" class="geo-label" i18n="@@venue.label">Local da sala</span>
-        @if (selectedPlace(); as place) {
-          <div class="geo-row">
-            <mat-icon class="ok" aria-hidden="true">place</mat-icon>
-            <span>{{ place.label }}</span>
-            <button matButton type="button" (click)="selectedPlace.set(null)" i18n="@@venue.change">
-              Trocar local
-            </button>
-          </div>
-        } @else {
-          @if (placesConfigured) {
-            @if (searching()) {
-              <app-places-picker [coordinates]="geo()" (selected)="selectedPlace.set($event)" />
-            } @else {
-              <button matButton="tonal" type="button" (click)="searching.set(true)">
-                <mat-icon>search</mat-icon>
-                <span i18n="@@venue.search">Buscar no Google Maps</span>
-              </button>
-            }
+        <mat-form-field appearance="outline" class="name-field">
+          <mat-label i18n="@@venue.manual">Nome ou endereço do local</mat-label>
+          <input matInput type="text" required maxlength="160" [formControl]="venueControl" />
+        </mat-form-field>
+        <app-venue-map [point]="geo()" (picked)="markVenue($event)" />
+        <div role="status" class="hint">
+          @if (lookingUpAddress()) {
+            <span i18n="@@venue.findingAddress">Buscando endereço do pin…</span>
+          } @else if (geoState() === 'loading') {
+            <span i18n="@@createRoom.geoLoading">Obtendo sua localização…</span>
+          } @else if (geoState() === 'error' || geoState() === 'denied') {
+            {{ geoError() }}
           }
-          <mat-form-field appearance="outline" class="name-field">
-            <mat-label i18n="@@venue.manual">Nome ou endereço do local</mat-label>
-            <input matInput type="text" maxlength="160" [formControl]="venueControl" />
-          </mat-form-field>
+        </div>
+        @if (geoState() === 'denied') {
+          <button matButton type="button" (click)="requestGeo()" i18n="@@venue.enableLocation">Habilitar localização</button>
+        } @else if (geoState() === 'error') {
+          <button matButton type="button" (click)="requestGeo()" i18n="@@createRoom.geoRetry">Tentar de novo</button>
         }
       </section>
-
-      <div class="geo">
-        <span class="geo-label" i18n="@@venue.geoLabel">Sua localização (opcional)</span>
-
-        @switch (geoState()) {
-          @case ('idle') {
-            <button matButton="tonal" type="button" (click)="requestGeo()">
-              <mat-icon>my_location</mat-icon>
-              <span i18n="@@createRoom.geoRequest">Usar minha localização</span>
-            </button>
-            <p class="hint" i18n="@@venue.geoHint">
-              Se você compartilhar a localização, ela prioriza resultados próximos e é salva com a sala.
-            </p>
-          }
-          @case ('loading') {
-            <div class="geo-row">
-              <mat-progress-spinner mode="indeterminate" diameter="20" />
-              <span i18n="@@createRoom.geoLoading">Obtendo sua localização…</span>
-            </div>
-          }
-          @case ('granted') {
-            <div class="geo-row">
-              <mat-icon class="ok" aria-hidden="true">check_circle</mat-icon>
-              <span i18n="@@venue.geoReady">Localização obtida</span>
-              <button
-                matIconButton
-                type="button"
-                (click)="requestGeo()"
-                i18n-aria-label="@@createRoom.geoRefresh"
-                aria-label="Atualizar localização"
-              >
-                <mat-icon>refresh</mat-icon>
-              </button>
-              <button matButton type="button" (click)="clearGeo()" i18n="@@venue.clearGeo">
-                Remover
-              </button>
-            </div>
-          }
-          @case ('error') {
-            <div class="geo-error">
-              <div class="geo-row">
-                <mat-icon class="err" aria-hidden="true">error</mat-icon>
-                <span>{{ geoError() }}</span>
-              </div>
-              <button matButton="tonal" type="button" (click)="requestGeo()">
-                <mat-icon>refresh</mat-icon>
-                <span i18n="@@createRoom.geoRetry">Tentar de novo</span>
-              </button>
-            </div>
-          }
-        }
-      </div>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button matButton type="button" [mat-dialog-close]="null" i18n="@@common.cancel">
@@ -146,7 +86,7 @@ type GeoState = 'idle' | 'loading' | 'granted' | 'error';
 .name-field
   width: 100%
 
-.venue, .geo
+.venue
   display: flex
   flex-direction: column
   gap: 8px
@@ -171,21 +111,10 @@ type GeoState = 'idle' | 'loading' | 'granted' | 'error';
   gap: 10px
   font-size: 14px
 
-.geo-error
-  display: flex
-  flex-direction: column
-  gap: 8px
-
 .hint
   margin: 0
   font-size: 12px
   color: var(--mat-sys-on-surface-variant)
-
-.ok
-  color: var(--mat-sys-tertiary, #43a047)
-
-.err
-  color: #d32f2f
 
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -197,10 +126,6 @@ export class CreateRoomDialogComponent {
   >;
 
   private readonly destroyRef = inject(DestroyRef);
-  protected readonly placesConfigured = inject(GooglePlacesService).configured;
-  protected readonly searching = signal(false);
-  protected readonly selectedPlace = signal<GooglePlaceSelection | null>(null);
-
   protected readonly venueControl = new FormControl('', {
     nonNullable: true,
     validators: [Validators.maxLength(160)],
@@ -220,14 +145,19 @@ export class CreateRoomDialogComponent {
 
   protected readonly geoState = signal<GeoState>('idle');
   protected readonly geo = signal<Coordinates | null>(null);
+  protected readonly lookingUpAddress = signal(false);
   protected readonly geoError = signal<string>('');
 
   protected readonly canSubmit = computed(
     () =>
       this.nameValue().trim().length > 0 &&
       this.nameControl.valid &&
-      (Boolean(this.selectedPlace()) || (this.venueControl.valid && this.venueValue().trim().length > 0)),
+      this.venueValue().trim().length > 0 && this.venueControl.valid,
   );
+
+  constructor() {
+    this.requestGeo();
+  }
 
   protected requestGeo(): void {
     this.geo.set(null);
@@ -241,16 +171,16 @@ export class CreateRoomDialogComponent {
     this.geoState.set('loading');
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        if (this.destroyRef.destroyed) return;
-        this.geo.set({
+        if (this.destroyRef.destroyed || this.geo()) return;
+        const coordinates = {
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude,
-        });
-        this.geoState.set('granted');
+        };
+        this.markVenue(coordinates);
       },
       (err) => {
-        if (this.destroyRef.destroyed) return;
-        this.geoState.set('error');
+        if (this.destroyRef.destroyed || this.geo()) return;
+        this.geoState.set(err.code === err.PERMISSION_DENIED ? 'denied' : 'error');
         this.geoError.set(this.mapGeoError(err));
       },
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 },
@@ -260,19 +190,45 @@ export class CreateRoomDialogComponent {
   protected submit(): void {
     if (!this.canSubmit()) return;
     const geo = this.geo();
-    const place = this.selectedPlace();
     this.ref.close({
       name: this.nameControl.value.trim(),
       latitude: geo?.latitude ?? null,
       longitude: geo?.longitude ?? null,
-      venue_name: place ? null : this.venueControl.value.trim(),
-      google_place_id: place?.id ?? null,
+      venue_name: this.venueControl.value.trim(),
+      google_place_id: null,
     });
   }
 
-  protected clearGeo(): void {
-    this.geo.set(null);
-    this.geoState.set('idle');
+  protected markVenue(point: Coordinates): void {
+    this.geo.set(point);
+    this.geoState.set('granted');
+    this.lookingUpAddress.set(false);
+    if (this.venueControl.pristine) {
+      this.venueControl.setValue('');
+      void this.suggestAddress(point);
+    }
+  }
+
+  private async suggestAddress(point: Coordinates): Promise<void> {
+    this.lookingUpAddress.set(true);
+    try {
+      const response = await fetch('/api/reverse-geocode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(point),
+        signal: AbortSignal.timeout(7000),
+      });
+      if (!response.ok) return;
+      const result: { address?: unknown } = await response.json();
+      if (this.destroyRef.destroyed || this.geo() !== point || this.venueControl.dirty) return;
+      if (typeof result.address === 'string' && result.address.trim().length <= 160) {
+        this.venueControl.setValue(result.address.trim());
+      }
+    } catch {
+      // The host can still enter the address manually.
+    } finally {
+      if (!this.destroyRef.destroyed && this.geo() === point) this.lookingUpAddress.set(false);
+    }
   }
 
   private mapGeoError(err: GeolocationPositionError): string {

@@ -67,9 +67,9 @@ npm start          # http://localhost:4200
 
 A primeira execução gera `src/version.generated.ts` com a versão e o SHA do último commit.
 
-### Busca de locais
+### Local da sala
 
-Ative **Maps JavaScript API** e **Places API (New)** no Google Cloud com faturamento. Crie uma chave de navegador restrita a essas APIs e aos hosts que usarão a busca, como `https://karaoke-live.app.br/*`. Configure a variável de build `KARAOKE_GOOGLE_MAPS_BROWSER_KEY` no Netlify. Para teste local, exporte a variável antes de `npm start` e autorize o endereço local na chave. A chave é entregue no bundle do navegador. O cadastro manual também funciona sem ela.
+O host digita o endereço e pode ajustar o pin no OpenStreetMap. A geolocalização do navegador posiciona o pin inicial quando autorizada. O app consulta o Nominatim para sugerir o endereço do pin e deixa o campo editável. Em produção, o Netlify Blobs compartilha o cache e o intervalo mínimo entre consultas. A variável de ambiente do servidor `KARAOKE_REVERSE_GEOCODE_URL` permite apontar a consulta para outra instância compatível. Consulte a [política de uso do Nominatim](https://operations.osmfoundation.org/policies/nominatim/). Esse fluxo dispensa chave e faturamento do Google Maps.
 
 ### Edge functions (local)
 

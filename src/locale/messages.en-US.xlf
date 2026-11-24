@@ -1262,6 +1262,38 @@
         <source>Tentar de novo</source>
         <target state="translated">Try again</target>
       </trans-unit>
+      <trans-unit id="venue.enterManually" datatype="html">
+        <source>Digitar endereço manualmente</source>
+        <target state="translated">Enter address manually</target>
+      </trans-unit>
+      <trans-unit id="venue.useAsVenue" datatype="html">
+        <source>Usar localização atual como local da sala</source>
+        <target state="translated">Use current location as the room venue</target>
+      </trans-unit>
+      <trans-unit id="venue.currentLocation" datatype="html">
+        <source>Localização atual</source>
+        <target state="translated">Current location</target>
+      </trans-unit>
+      <trans-unit id="venue.enableLocation" datatype="html">
+        <source>Habilitar localização</source>
+        <target state="translated">Enable location</target>
+      </trans-unit>
+      <trans-unit id="venue.addressUnavailable" datatype="html">
+        <source>Não foi possível identificar o endereço. Digite o local da sala.</source>
+        <target state="translated">Could not find the address. Enter the room venue.</target>
+      </trans-unit>
+      <trans-unit id="venue.mapLabel" datatype="html">
+        <source>Mapa do local da sala</source>
+        <target state="translated">Room venue map</target>
+      </trans-unit>
+      <trans-unit id="venue.pinHelp" datatype="html">
+        <source>Toque no mapa para marcar o local. Com o teclado, use as setas e pressione Enter para marcar o centro.</source>
+        <target state="translated">Tap the map to place the pin. With the keyboard, use the arrow keys and press Enter to mark the center.</target>
+      </trans-unit>
+      <trans-unit id="venue.findingAddress" datatype="html">
+        <source>Buscando endereço do pin…</source>
+        <target state="translated">Looking up the pin address…</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
