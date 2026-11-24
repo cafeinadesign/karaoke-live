@@ -1213,6 +1213,12 @@
       <trans-unit id="privacy.maps.terms" datatype="html">
         <source>Termos do Google Maps</source>
       </trans-unit>
+      <trans-unit id="venue.searchErrorCode" datatype="html">
+        <source>Código do erro</source>
+      </trans-unit>
+      <trans-unit id="venue.searchRetry" datatype="html">
+        <source>Tentar de novo</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

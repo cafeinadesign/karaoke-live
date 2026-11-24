@@ -1254,6 +1254,14 @@
         <source>Termos do Google Maps</source>
         <target state="translated">Google Maps Terms</target>
       </trans-unit>
+      <trans-unit id="venue.searchErrorCode" datatype="html">
+        <source>Código do erro</source>
+        <target state="translated">Error code</target>
+      </trans-unit>
+      <trans-unit id="venue.searchRetry" datatype="html">
+        <source>Tentar de novo</source>
+        <target state="translated">Try again</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

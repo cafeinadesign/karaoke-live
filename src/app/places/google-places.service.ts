@@ -2,6 +2,12 @@ import { DOCUMENT } from '@angular/common';
 import { Injectable, LOCALE_ID, inject } from '@angular/core';
 import { GOOGLE_MAPS_BROWSER_KEY } from '../../version.generated';
 
+export class MapsLoadError extends Error {
+  constructor(readonly code: 'MAPS_SCRIPT' | 'MAPS_TIMEOUT' | 'PLACES_LIBRARY') {
+    super(code);
+  }
+}
+
 export interface Coordinates {
   readonly latitude: number;
   readonly longitude: number;
@@ -45,7 +51,7 @@ export class GooglePlacesService {
 
   private async loadMaps(): Promise<PlacesLibrary> {
     const window = this.document.defaultView as MapsWindow | null;
-    if (!window || !this.configured) throw new Error('places_unavailable');
+    if (!window || !this.configured) throw new MapsLoadError('MAPS_SCRIPT');
 
     if (!window.google?.maps?.importLibrary) {
       await new Promise<void>((resolve, reject) => {
@@ -59,12 +65,12 @@ export class GooglePlacesService {
           v: 'weekly',
         }).toString();
 
-        const timeout = window.setTimeout(() => fail(), 12000);
-        const fail = () => {
+        const timeout = window.setTimeout(() => fail('MAPS_TIMEOUT'), 12000);
+        const fail = (code: 'MAPS_SCRIPT' | 'MAPS_TIMEOUT') => {
           window.clearTimeout(timeout);
           script.remove();
           delete window.karaokeMapsLoaded;
-          reject(new Error('places_unavailable'));
+          reject(new MapsLoadError(code));
         };
 
         window.karaokeMapsLoaded = () => {
@@ -74,13 +80,17 @@ export class GooglePlacesService {
         };
         script.src = url.href;
         script.async = true;
-        script.onerror = fail;
+        script.onerror = () => fail('MAPS_SCRIPT');
         this.document.head.append(script);
       });
     }
 
-    const maps = window.google?.maps;
-    if (!maps) throw new Error('places_unavailable');
-    return maps.importLibrary('places');
+    try {
+      const maps = window.google?.maps;
+      if (!maps) throw new Error();
+      return await maps.importLibrary('places');
+    } catch {
+      throw new MapsLoadError('PLACES_LIBRARY');
+    }
   }
 }
