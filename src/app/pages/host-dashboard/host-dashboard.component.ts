@@ -18,6 +18,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { YouTubePlayer } from '@angular/youtube-player';
 import { AuthService } from '../../auth/auth.service';
+import { RoomVenueComponent } from '../../places/room-venue.component';
 import { RoomsService } from '../../rooms/rooms.service';
 import { QueueService } from '../../queue/queue.service';
 import { YoutubeService } from '../../youtube/youtube.service';
@@ -51,6 +52,7 @@ const YT_STATE_ENDED = 0;
     VersionFooterComponent,
     PlaybackBarComponent,
     ParticipantsListComponent,
+    RoomVenueComponent,
   ],
   templateUrl: './host-dashboard.component.html',
   styleUrl: './host-dashboard.component.sass',

@@ -67,6 +67,10 @@ npm start          # http://localhost:4200
 
 A primeira execução gera `src/version.generated.ts` com a versão e o SHA do último commit.
 
+### Busca de locais
+
+Ative **Maps JavaScript API** e **Places API (New)** no Google Cloud com faturamento. Crie uma chave de navegador restrita a essas APIs e aos hosts que usarão a busca, como `https://karaoke-live.app.br/*`. Configure a variável de build `KARAOKE_GOOGLE_MAPS_BROWSER_KEY` no Netlify. Para teste local, exporte a variável antes de `npm start` e autorize o endereço local na chave. A chave é entregue no bundle do navegador. O cadastro manual também funciona sem ela.
+
 ### Edge functions (local)
 
 ```bash

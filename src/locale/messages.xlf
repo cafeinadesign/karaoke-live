@@ -1165,6 +1165,54 @@
       <trans-unit id="rooms.closed" datatype="html">
         <source>Esta sala foi encerrada.</source>
       </trans-unit>
+      <trans-unit id="venue.label" datatype="html">
+        <source>Local da sala</source>
+      </trans-unit>
+      <trans-unit id="venue.change" datatype="html">
+        <source>Trocar local</source>
+      </trans-unit>
+      <trans-unit id="venue.search" datatype="html">
+        <source>Buscar no Google Maps</source>
+      </trans-unit>
+      <trans-unit id="venue.manual" datatype="html">
+        <source>Nome ou endereço do local</source>
+      </trans-unit>
+      <trans-unit id="venue.geoLabel" datatype="html">
+        <source>Sua localização (opcional)</source>
+      </trans-unit>
+      <trans-unit id="venue.geoHint" datatype="html">
+        <source>Se você compartilhar a localização, ela prioriza resultados próximos e é salva com a sala.</source>
+      </trans-unit>
+      <trans-unit id="venue.geoReady" datatype="html">
+        <source>Localização obtida</source>
+      </trans-unit>
+      <trans-unit id="venue.clearGeo" datatype="html">
+        <source>Remover</source>
+      </trans-unit>
+      <trans-unit id="venue.searchFailed" datatype="html">
+        <source>Busca indisponível. Preencha o local manualmente.</source>
+      </trans-unit>
+      <trans-unit id="venue.searchLoading" datatype="html">
+        <source>Carregando busca de locais…</source>
+      </trans-unit>
+      <trans-unit id="venue.searchPlaceholder" datatype="html">
+        <source>Busque um local ou endereço</source>
+      </trans-unit>
+      <trans-unit id="venue.openMaps" datatype="html">
+        <source>Ver local no Google Maps</source>
+      </trans-unit>
+      <trans-unit id="privacy.collected.venue" datatype="html">
+        <source>Ao criar uma sala, salvamos o local que você informa ou o identificador do local escolhido no Google Maps. Se você compartilhar a localização do dispositivo, salvamos as coordenadas com a sala.</source>
+      </trans-unit>
+      <trans-unit id="privacy.third.maps" datatype="html">
+        <source>Ao usar a busca de locais, o Google Maps recebe sua consulta e, se você a tiver compartilhado, a localização do dispositivo para sugerir lugares próximos.</source>
+      </trans-unit>
+      <trans-unit id="privacy.maps.policy" datatype="html">
+        <source>Privacidade do Google</source>
+      </trans-unit>
+      <trans-unit id="privacy.maps.terms" datatype="html">
+        <source>Termos do Google Maps</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

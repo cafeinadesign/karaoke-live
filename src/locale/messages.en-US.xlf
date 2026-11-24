@@ -1190,6 +1190,70 @@
         <source>Esta sala foi encerrada.</source>
         <target state="translated">This room has ended.</target>
       </trans-unit>
+      <trans-unit id="venue.label" datatype="html">
+        <source>Local da sala</source>
+        <target state="translated">Room location</target>
+      </trans-unit>
+      <trans-unit id="venue.change" datatype="html">
+        <source>Trocar local</source>
+        <target state="translated">Change location</target>
+      </trans-unit>
+      <trans-unit id="venue.search" datatype="html">
+        <source>Buscar no Google Maps</source>
+        <target state="translated">Search Google Maps</target>
+      </trans-unit>
+      <trans-unit id="venue.manual" datatype="html">
+        <source>Nome ou endereço do local</source>
+        <target state="translated">Place name or address</target>
+      </trans-unit>
+      <trans-unit id="venue.geoLabel" datatype="html">
+        <source>Sua localização (opcional)</source>
+        <target state="translated">Your location (optional)</target>
+      </trans-unit>
+      <trans-unit id="venue.geoHint" datatype="html">
+        <source>Se você compartilhar a localização, ela prioriza resultados próximos e é salva com a sala.</source>
+        <target state="translated">If you share your location, it prioritizes nearby results and is saved with the room.</target>
+      </trans-unit>
+      <trans-unit id="venue.geoReady" datatype="html">
+        <source>Localização obtida</source>
+        <target state="translated">Location available</target>
+      </trans-unit>
+      <trans-unit id="venue.clearGeo" datatype="html">
+        <source>Remover</source>
+        <target state="translated">Remove</target>
+      </trans-unit>
+      <trans-unit id="venue.searchFailed" datatype="html">
+        <source>Busca indisponível. Preencha o local manualmente.</source>
+        <target state="translated">Search is unavailable. Enter the location manually.</target>
+      </trans-unit>
+      <trans-unit id="venue.searchLoading" datatype="html">
+        <source>Carregando busca de locais…</source>
+        <target state="translated">Loading place search…</target>
+      </trans-unit>
+      <trans-unit id="venue.searchPlaceholder" datatype="html">
+        <source>Busque um local ou endereço</source>
+        <target state="translated">Search for a place or address</target>
+      </trans-unit>
+      <trans-unit id="venue.openMaps" datatype="html">
+        <source>Ver local no Google Maps</source>
+        <target state="translated">View location on Google Maps</target>
+      </trans-unit>
+      <trans-unit id="privacy.collected.venue" datatype="html">
+        <source>Ao criar uma sala, salvamos o local que você informa ou o identificador do local escolhido no Google Maps. Se você compartilhar a localização do dispositivo, salvamos as coordenadas com a sala.</source>
+        <target state="translated">When you create a room, we save the location you enter or the identifier of the place selected on Google Maps. If you share your device location, we save its coordinates with the room.</target>
+      </trans-unit>
+      <trans-unit id="privacy.third.maps" datatype="html">
+        <source>Ao usar a busca de locais, o Google Maps recebe sua consulta e, se você a tiver compartilhado, a localização do dispositivo para sugerir lugares próximos.</source>
+        <target state="translated">When you use place search, Google Maps receives your query and, if shared, your device location to suggest nearby places.</target>
+      </trans-unit>
+      <trans-unit id="privacy.maps.policy" datatype="html">
+        <source>Privacidade do Google</source>
+        <target state="translated">Google Privacy Policy</target>
+      </trans-unit>
+      <trans-unit id="privacy.maps.terms" datatype="html">
+        <source>Termos do Google Maps</source>
+        <target state="translated">Google Maps Terms</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

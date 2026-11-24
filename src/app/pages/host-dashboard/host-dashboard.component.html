@@ -40,6 +40,10 @@
         </button>
       </div>
     </header>
+    @if (room()!.google_place_id || room()!.venue_name) {
+      <app-room-venue [room]="room()!" />
+    }
+
 
     <section class="player-wrap">
       @if (currentVideoId()) {
