@@ -20,11 +20,11 @@ export class QueueService {
 
   async subscribe(roomId: string): Promise<void> {
     if (this.subscribedRoomId === roomId) return;
-    await this.unsubscribe();
+    if (this.channel) await this.unsubscribe();
 
     this.subscribedRoomId = roomId;
     this.channel = this.supabase.client
-      .channel(`queue:${roomId}`)
+      .channel(`queue:${roomId}:${crypto.randomUUID()}`)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'queue_items', filter: `room_id=eq.${roomId}` },

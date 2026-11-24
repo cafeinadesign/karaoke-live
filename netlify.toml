@@ -2,6 +2,9 @@
   command = "npm run build"
   publish = "dist/karaoke-live/browser"
 
+[context.production]
+  command = "npm run build && npm run db:deploy"
+
 [build.processing.html]
   pretty_urls = false
 

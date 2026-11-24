@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../auth/auth.service';
-import { RoomsService } from '../../rooms/rooms.service';
+import { RoomMembership, RoomsService } from '../../rooms/rooms.service';
 import {
   CreateRoomDialogComponent,
   CreateRoomDialogResult,
@@ -14,7 +14,7 @@ import { VersionFooterComponent } from '../../version-footer/version-footer.comp
 
 @Component({
   selector: 'app-landing',
-  imports: [MatButtonModule, MatIconModule, VersionFooterComponent],
+  imports: [MatButtonModule, MatIconModule, RouterLink, VersionFooterComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,6 +25,35 @@ export class LandingComponent {
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
+
+  protected readonly memberships = signal<RoomMembership[] | null>(null);
+  protected readonly membershipsFailed = signal(false);
+  private readonly refresh = signal(0);
+
+  constructor() {
+    effect((onCleanup) => {
+      const userId = this.auth.user()?.id;
+      this.refresh();
+      this.memberships.set(null);
+      this.membershipsFailed.set(false);
+      if (!userId) return;
+
+      let current = true;
+      onCleanup(() => { current = false; });
+      void this.rooms.listMemberships(userId).then(
+        (memberships) => {
+          if (current) this.memberships.set(memberships);
+        },
+        () => {
+          if (current) this.membershipsFailed.set(true);
+        },
+      );
+    });
+  }
+
+  protected retryMemberships(): void {
+    this.refresh.update((version) => version + 1);
+  }
 
   async signIn(): Promise<void> {
     await this.auth.signInWithGoogle();

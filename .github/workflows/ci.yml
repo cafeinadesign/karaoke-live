@@ -23,7 +23,7 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Unit tests (vitest)
-        run: npx ng test --watch=false
+        run: npm test -- --watch=false
 
       - name: Build (pt-BR + en-US, SSR)
         run: npm run build

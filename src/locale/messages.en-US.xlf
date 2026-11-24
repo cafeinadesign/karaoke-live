@@ -1142,6 +1142,54 @@
           <context context-type="linenumber">25,27</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="rooms.mine" datatype="html">
+        <source>Minhas salas</source>
+        <target state="translated">My rooms</target>
+      </trans-unit>
+      <trans-unit id="rooms.loadFailed" datatype="html">
+        <source>Não foi possível carregar suas salas.</source>
+        <target state="translated">Could not load your rooms.</target>
+      </trans-unit>
+      <trans-unit id="rooms.retry" datatype="html">
+        <source>Tentar novamente</source>
+        <target state="translated">Try again</target>
+      </trans-unit>
+      <trans-unit id="rooms.empty" datatype="html">
+        <source>Você ainda não participou de nenhuma sala.</source>
+        <target state="translated">You haven’t joined any rooms yet.</target>
+      </trans-unit>
+      <trans-unit id="rooms.ended" datatype="html">
+        <source>Encerrada</source>
+        <target state="translated">Ended</target>
+      </trans-unit>
+      <trans-unit id="rooms.hosting" datatype="html">
+        <source>Você é anfitrião</source>
+        <target state="translated">You’re the host</target>
+      </trans-unit>
+      <trans-unit id="rooms.visited" datatype="html">
+        <source>Você já participou</source>
+        <target state="translated">Previously joined</target>
+      </trans-unit>
+      <trans-unit id="rooms.joined" datatype="html">
+        <source>Você está nesta sala</source>
+        <target state="translated">You’re in this room</target>
+      </trans-unit>
+      <trans-unit id="rooms.openDashboard" datatype="html">
+        <source>Abrir painel</source>
+        <target state="translated">Open dashboard</target>
+      </trans-unit>
+      <trans-unit id="rooms.return" datatype="html">
+        <source>Voltar à sala</source>
+        <target state="translated">Return to room</target>
+      </trans-unit>
+      <trans-unit id="rooms.loading" datatype="html">
+        <source>Carregando suas salas…</source>
+        <target state="translated">Loading your rooms…</target>
+      </trans-unit>
+      <trans-unit id="rooms.closed" datatype="html">
+        <source>Esta sala foi encerrada.</source>
+        <target state="translated">This room has ended.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

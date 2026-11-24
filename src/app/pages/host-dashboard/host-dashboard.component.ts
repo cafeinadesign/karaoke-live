@@ -8,7 +8,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -39,7 +39,9 @@ const YT_STATE_ENDED = 0;
 
 @Component({
   selector: 'app-host-dashboard',
+  providers: [RoomsService, QueueService, ParticipantsService],
   imports: [
+    RouterLink,
     DragDropModule,
     MatButtonModule,
     MatIconModule,
@@ -146,7 +148,7 @@ export class HostDashboardComponent {
     }, 500);
     this.destroyRef.onDestroy(() => {
       window.clearInterval(pollId);
-      void this.participants.leave();
+      void this.queue.unsubscribe();
       void this.rooms.unwatchRoom();
     });
   }
@@ -277,7 +279,7 @@ export class HostDashboardComponent {
       const newHostId = (await ref.afterClosed().toPromise()) ?? null;
       if (!newHostId) { this.leaving = false; return; }
       try {
-        await this.rooms.transferHost(room.id, newHostId);
+        await this.rooms.transferHost(room.id, newHostId, true);
       } catch {
         this.leaving = false;
         this.snackBar.open(
@@ -289,11 +291,7 @@ export class HostDashboardComponent {
       }
     }
 
-    await this.participants.leave();
-    await this.queue.unsubscribe();
-    await this.rooms.unwatchRoom();
-    this.rooms.clearCurrent();
-    await this.router.navigate(['/']);
+    await this.router.navigate(['/'], { replaceUrl: true });
   }
 
   protected async remove(itemId: string): Promise<void> {
@@ -349,7 +347,8 @@ export class HostDashboardComponent {
 
   private async loadRoom(roomId: string): Promise<void> {
     const room = await this.rooms.loadRoomById(roomId);
-    if (!room) {
+    if (this.destroyRef.destroyed) return;
+    if (!room || room.ended_at) {
       this.snackBar.open(
         $localize`:@@mobile.roomNotFound:Sala não encontrada.`,
         undefined,
@@ -368,15 +367,27 @@ export class HostDashboardComponent {
       await this.router.navigate(['/']);
       return;
     }
-    await this.queue.subscribe(room.id);
-    await this.rooms.watchRoom(room.id);
-    const profile = this.auth.profile();
-    await this.participants.join(room.id, {
-      userId: user.id,
-      displayName: profile?.display_name ?? $localize`:@@participants.anonymous:Convidado`,
-      avatarUrl: profile?.avatar_url ?? null,
-      isHost: true,
-      onlineAt: new Date().toISOString(),
-    });
+    try {
+      const profile = this.auth.profile();
+      await this.participants.join(room.id, {
+        userId: user.id,
+        displayName: profile?.display_name ?? $localize`:@@participants.anonymous:Convidado`,
+        avatarUrl: profile?.avatar_url ?? null,
+        isHost: true,
+        onlineAt: new Date().toISOString(),
+      });
+      if (this.destroyRef.destroyed) return;
+      await this.queue.subscribe(room.id);
+      if (this.destroyRef.destroyed) return;
+      await this.rooms.watchRoom(room.id);
+    } catch {
+      if (this.destroyRef.destroyed) return;
+      this.snackBar.open(
+        $localize`:@@mobile.roomNotFound:Sala não encontrada.`,
+        undefined,
+        { duration: 3000 },
+      );
+      await this.router.navigate(['/']);
+    }
   }
 }

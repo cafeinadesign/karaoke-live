@@ -1129,6 +1129,42 @@
           <context context-type="linenumber">10,11</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="rooms.mine" datatype="html">
+        <source>Minhas salas</source>
+      </trans-unit>
+      <trans-unit id="rooms.loadFailed" datatype="html">
+        <source>Não foi possível carregar suas salas.</source>
+      </trans-unit>
+      <trans-unit id="rooms.retry" datatype="html">
+        <source>Tentar novamente</source>
+      </trans-unit>
+      <trans-unit id="rooms.empty" datatype="html">
+        <source>Você ainda não participou de nenhuma sala.</source>
+      </trans-unit>
+      <trans-unit id="rooms.ended" datatype="html">
+        <source>Encerrada</source>
+      </trans-unit>
+      <trans-unit id="rooms.hosting" datatype="html">
+        <source>Você é anfitrião</source>
+      </trans-unit>
+      <trans-unit id="rooms.visited" datatype="html">
+        <source>Você já participou</source>
+      </trans-unit>
+      <trans-unit id="rooms.joined" datatype="html">
+        <source>Você está nesta sala</source>
+      </trans-unit>
+      <trans-unit id="rooms.openDashboard" datatype="html">
+        <source>Abrir painel</source>
+      </trans-unit>
+      <trans-unit id="rooms.return" datatype="html">
+        <source>Voltar à sala</source>
+      </trans-unit>
+      <trans-unit id="rooms.loading" datatype="html">
+        <source>Carregando suas salas…</source>
+      </trans-unit>
+      <trans-unit id="rooms.closed" datatype="html">
+        <source>Esta sala foi encerrada.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

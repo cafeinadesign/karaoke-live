@@ -1,6 +1,10 @@
 <main class="mobile">
   @if (!room()) {
     <section class="join">
+      <a matButton="text" routerLink="/">
+        <mat-icon>arrow_back</mat-icon>
+        <span i18n="@@rooms.mine">Minhas salas</span>
+      </a>
       <h1 i18n="@@mobile.joinTitle">Entre na sala</h1>
       <p i18n="@@mobile.joinHint">Escaneie o QR ou digite o código de 6 caracteres.</p>
 
@@ -42,6 +46,15 @@
       @if (room()!.name) {
         <span class="name">{{ room()!.name }}</span>
       }
+      <a
+        matIconButton
+        routerLink="/"
+        class="my-rooms-link"
+        i18n-aria-label="@@rooms.mine"
+        aria-label="Minhas salas"
+      >
+        <mat-icon>meeting_room</mat-icon>
+      </a>
       <button
         matIconButton
         type="button"
@@ -54,65 +67,69 @@
       </button>
     </header>
 
-    @if (currentItem(); as current) {
-      <section class="now-playing" [class.mine]="isMine(current)">
-        <span class="label" i18n="@@status.nowPlaying">Cantando agora</span>
-        <span class="song">{{ current.video_title }}</span>
-        <app-playback-bar [elapsed]="currentElapsed()" [duration]="currentDuration()" />
-      </section>
-    }
-
-    <section class="search">
-      <app-song-search [roomId]="room()!.id" />
-    </section>
-
-    <section class="queue">
-      <h2>
-        <span i18n="@@mobile.queueTitle">Fila</span>
-        <span class="count">({{ upcomingItems().length }})</span>
-      </h2>
-      @if (upcomingItems().length === 0) {
-        <p class="empty" i18n="@@mobile.queueEmpty">Nenhuma música na fila ainda.</p>
-      } @else {
-        <mat-list>
-          @for (item of upcomingItems(); track item.id) {
-            <mat-list-item lines="2" [class.mine]="isMine(item)">
-              <span matListItemTitle>{{ item.video_title }}</span>
-              <span matListItemLine>
-                #{{ item.position }} · {{ formatDuration(item.video_duration_seconds) }}
-                · <span class="by">{{ queue.displayNameFor(item.user_id) }}</span>
-                @if (isMine(item)) {
-                  · <span class="mine-tag" i18n="@@mobile.mineTag">sua</span>
-                }
-              </span>
-              @if (isMine(item)) {
-                <span matListItemMeta class="mine-actions">
-                  <button
-                    matIconButton
-                    type="button"
-                    (click)="openReplace(item)"
-                    i18n-aria-label="@@mobile.swapSong"
-                    aria-label="Trocar essa música"
-                  >
-                    <mat-icon>swap_horiz</mat-icon>
-                  </button>
-                  <button
-                    matIconButton
-                    type="button"
-                    (click)="removeMine(item)"
-                    i18n-aria-label="@@mobile.removeSong"
-                    aria-label="Sair da fila"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </span>
-              }
-            </mat-list-item>
-          }
-        </mat-list>
+    @if (room()!.ended_at) {
+      <p role="status" i18n="@@rooms.closed">Esta sala foi encerrada.</p>
+    } @else {
+      @if (currentItem(); as current) {
+        <section class="now-playing" [class.mine]="isMine(current)">
+          <span class="label" i18n="@@status.nowPlaying">Cantando agora</span>
+          <span class="song">{{ current.video_title }}</span>
+          <app-playback-bar [elapsed]="currentElapsed()" [duration]="currentDuration()" />
+        </section>
       }
-    </section>
 
-    <app-participants-list [participants]="people()" />
+      <section class="search">
+        <app-song-search [roomId]="room()!.id" />
+      </section>
+
+      <section class="queue">
+        <h2>
+          <span i18n="@@mobile.queueTitle">Fila</span>
+          <span class="count">({{ upcomingItems().length }})</span>
+        </h2>
+        @if (upcomingItems().length === 0) {
+          <p class="empty" i18n="@@mobile.queueEmpty">Nenhuma música na fila ainda.</p>
+        } @else {
+          <mat-list>
+            @for (item of upcomingItems(); track item.id) {
+              <mat-list-item lines="2" [class.mine]="isMine(item)">
+                <span matListItemTitle>{{ item.video_title }}</span>
+                <span matListItemLine>
+                  #{{ item.position }} · {{ formatDuration(item.video_duration_seconds) }}
+                  · <span class="by">{{ queue.displayNameFor(item.user_id) }}</span>
+                  @if (isMine(item)) {
+                    · <span class="mine-tag" i18n="@@mobile.mineTag">sua</span>
+                  }
+                </span>
+                @if (isMine(item)) {
+                  <span matListItemMeta class="mine-actions">
+                    <button
+                      matIconButton
+                      type="button"
+                      (click)="openReplace(item)"
+                      i18n-aria-label="@@mobile.swapSong"
+                      aria-label="Trocar essa música"
+                    >
+                      <mat-icon>swap_horiz</mat-icon>
+                    </button>
+                    <button
+                      matIconButton
+                      type="button"
+                      (click)="removeMine(item)"
+                      i18n-aria-label="@@mobile.removeSong"
+                      aria-label="Sair da fila"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </span>
+                }
+              </mat-list-item>
+            }
+          </mat-list>
+        }
+      </section>
+
+      <app-participants-list [participants]="people()" />
+    }
   }
 </main>

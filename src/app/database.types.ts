@@ -98,6 +98,42 @@ export type Database = {
           },
         ]
       }
+      room_memberships: {
+        Row: {
+          last_joined_at: string
+          left_at: string | null
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          last_joined_at?: string
+          left_at?: string | null
+          room_id: string
+          user_id: string
+        }
+        Update: {
+          last_joined_at?: string
+          left_at?: string | null
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_memberships_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "room_memberships_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       room_participants: {
         Row: {
           avatar_url: string | null
@@ -279,6 +315,14 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      leave_room_membership: {
+        Args: { p_room_id: string }
+        Returns: undefined
+      }
+      transfer_room_host: {
+        Args: { p_room_id: string; p_new_host_id: string; p_leave?: boolean }
+        Returns: Database["public"]["Tables"]["rooms"]["Row"]
       }
     }
     Enums: {
