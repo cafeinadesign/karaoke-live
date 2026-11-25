@@ -25,10 +25,23 @@ import {
 } from '../../shared/create-room-dialog.component';
 import { formatEventDateTime } from '../../utils/calendar';
 import { GeoPoint, distanceKm, formatDistanceKm } from '../../utils/geo';
+import { formatWeeklyScheduleSummary } from '../../utils/venue-schedule';
+import {
+  VenueFormDialogComponent,
+  VenueFormDialogResult,
+} from '../../venues/venue-form-dialog.component';
+import { VenueWithDetails, VenuesService } from '../../venues/venues.service';
 import { VersionFooterComponent } from '../../version-footer/version-footer.component';
 
 export interface PublicEventView {
   readonly room: RoomSummary;
+  readonly distanceLabel: string | null;
+  readonly distanceKm: number | null;
+}
+
+export interface PublicVenueView {
+  readonly venue: VenueWithDetails;
+  readonly scheduleSummary: string;
   readonly distanceLabel: string | null;
   readonly distanceKm: number | null;
 }
@@ -51,6 +64,7 @@ export interface PublicEventView {
 export class LandingComponent {
   protected readonly auth = inject(AuthService);
   private readonly rooms = inject(RoomsService);
+  private readonly venuesService = inject(VenuesService);
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
@@ -60,6 +74,7 @@ export class LandingComponent {
   protected readonly membershipsFailed = signal(false);
   protected readonly publicEvents = signal<RoomSummary[] | null>(null);
   protected readonly publicEventsFailed = signal(false);
+  protected readonly publicVenues = signal<VenueWithDetails[] | null>(null);
   protected readonly userLocation = signal<GeoPoint | null>(null);
   protected readonly nearMeLoading = signal(false);
   protected readonly locationStatus = signal('');
@@ -91,6 +106,43 @@ export class LandingComponent {
         return { room, distanceKm: km, distanceLabel: formatDistanceKm(km) };
       }
       return { room, distanceKm: null, distanceLabel: null };
+    });
+
+    if (loc) {
+      return [...mapped].sort((a, b) => {
+        if (a.distanceKm !== null && b.distanceKm !== null) {
+          return a.distanceKm - b.distanceKm;
+        }
+        if (a.distanceKm !== null) return -1;
+        if (b.distanceKm !== null) return 1;
+        return 0;
+      });
+    }
+
+    return mapped;
+  });
+
+  protected readonly visiblePublicVenues = computed<ReadonlyArray<PublicVenueView>>(() => {
+    const list = this.publicVenues();
+    if (!list) return [];
+    const term = this.searchValue().trim().toLowerCase();
+    const loc = this.userLocation();
+
+    const filtered = term
+      ? list.filter(
+          (v) =>
+            v.name.toLowerCase().includes(term) ||
+            (v.address?.toLowerCase().includes(term) ?? false),
+        )
+      : list;
+
+    const mapped = filtered.map((venue): PublicVenueView => {
+      const scheduleSummary = formatWeeklyScheduleSummary(venue.schedules);
+      if (loc && venue.latitude !== null && venue.longitude !== null) {
+        const km = distanceKm(loc, { latitude: venue.latitude, longitude: venue.longitude });
+        return { venue, scheduleSummary, distanceKm: km, distanceLabel: formatDistanceKm(km) };
+      }
+      return { venue, scheduleSummary, distanceKm: null, distanceLabel: null };
     });
 
     if (loc) {
@@ -141,6 +193,19 @@ export class LandingComponent {
       } else {
         this.publicEvents.set([]);
       }
+
+      if (typeof this.venuesService.listPublicVenues === 'function') {
+        void this.venuesService.listPublicVenues().then(
+          (venues) => {
+            if (current) this.publicVenues.set(venues);
+          },
+          () => {
+            if (current) this.publicVenues.set([]);
+          },
+        );
+      } else {
+        this.publicVenues.set([]);
+      }
     });
   }
 
@@ -167,6 +232,27 @@ export class LandingComponent {
 
   protected enterEventAria(name: string): string {
     return $localize`:@@events.enterAria:Entrar: ${name}:name:`;
+  }
+
+  protected openCreateVenue(): void {
+    const ref = this.dialog.open<VenueFormDialogComponent, undefined, VenueFormDialogResult>(
+      VenueFormDialogComponent,
+      { width: '520px', maxWidth: '95vw' },
+    );
+
+    ref.afterClosed().subscribe(async (result) => {
+      if (!result) return;
+      try {
+        const created = await this.venuesService.createVenue(result.venue, result.schedules);
+        await this.router.navigate(['/local', created.slug]);
+      } catch {
+        this.snackBar.open(
+          $localize`:@@landing.createVenueFailed:Não foi possível cadastrar o estabelecimento.`,
+          undefined,
+          { duration: 4000 },
+        );
+      }
+    });
   }
 
   protected toggleNearMe(): void {

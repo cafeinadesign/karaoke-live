@@ -16,6 +16,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/privacy/privacy.component').then((m) => m.PrivacyComponent),
   },
   {
+    path: 'local/:slug',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/venue-detail/venue-detail.component').then((m) => m.VenueDetailComponent),
+  },
+  {
     path: 'mobile',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/mobile/mobile.component').then((m) => m.MobileComponent),

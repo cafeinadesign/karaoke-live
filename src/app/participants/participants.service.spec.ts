@@ -21,6 +21,7 @@ const room: Room = {
   is_public: false,
   latitude: 0,
   longitude: 0,
+  venue_id: null,
   venue_name: null,
   google_place_id: null,
 };

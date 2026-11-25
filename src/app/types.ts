@@ -2,6 +2,16 @@ import { Database } from './database.types';
 
 export type Profile = Database['public']['Tables']['profiles']['Row'];
 export type Room = Database['public']['Tables']['rooms']['Row'];
+export type Venue = Database['public']['Tables']['venues']['Row'];
+export type VenueSchedule = Database['public']['Tables']['venue_schedules']['Row'];
+export type NewVenue = Omit<
+  Database['public']['Tables']['venues']['Insert'],
+  'id' | 'owner_id' | 'created_at' | 'updated_at'
+>;
+export type NewVenueSchedule = Omit<
+  Database['public']['Tables']['venue_schedules']['Insert'],
+  'id' | 'venue_id'
+>;
 export type NewRoom = Pick<
   Room,
   'name' | 'latitude' | 'longitude' | 'venue_name' | 'google_place_id'
@@ -9,7 +19,7 @@ export type NewRoom = Pick<
   Partial<
     Pick<
       Room,
-      'is_public' | 'scheduled_at' | 'scheduled_end_at' | 'event_timezone' | 'started_at'
+      'is_public' | 'scheduled_at' | 'scheduled_end_at' | 'event_timezone' | 'started_at' | 'venue_id'
     >
   >;
 

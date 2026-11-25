@@ -35,6 +35,73 @@ export const profiles = pgTable('profiles', {
 });
 
 // =========================================================
+// venues (estabelecimentos com karaokê rotineiro)
+// =========================================================
+export const venues = pgTable(
+  'venues',
+  {
+    id: uuid('id').primaryKey().default(sql`uuid_generate_v4()`),
+    ownerId: uuid('owner_id')
+      .notNull()
+      .references(() => profiles.id, { onDelete: 'cascade' }),
+    name: text('name').notNull(),
+    slug: text('slug').notNull().unique(),
+    description: text('description'),
+    address: text('address'),
+    instagramHandle: text('instagram_handle'),
+    latitude: doublePrecision('latitude'),
+    longitude: doublePrecision('longitude'),
+    googlePlaceId: text('google_place_id'),
+    timezone: text('timezone').notNull().default('America/Sao_Paulo'),
+    isPublic: boolean('is_public').notNull().default(true),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index('venues_owner_id_idx').on(t.ownerId),
+    index('venues_public_idx')
+      .on(t.isPublic)
+      .where(sql`${t.isPublic} = true`),
+    check('venues_name_length_check', sql`char_length(trim(${t.name})) between 1 and 160`),
+    check('venues_slug_length_check', sql`char_length(trim(${t.slug})) between 2 and 100`),
+    check('venues_coordinates_pair_check', sql`(${t.latitude} is null) = (${t.longitude} is null)`),
+    check('venues_latitude_range_check', sql`${t.latitude} between -90 and 90`),
+    check('venues_longitude_range_check', sql`${t.longitude} between -180 and 180`),
+    check(
+      'venues_google_place_id_not_blank_check',
+      sql`${t.googlePlaceId} is null or char_length(trim(${t.googlePlaceId})) > 0`,
+    ),
+    check(
+      'venues_timezone_not_blank_check',
+      sql`char_length(trim(${t.timezone})) > 0`,
+    ),
+  ],
+);
+
+// =========================================================
+// venue_schedules (horários semanais do estabelecimento)
+// =========================================================
+export const venueSchedules = pgTable(
+  'venue_schedules',
+  {
+    id: uuid('id').primaryKey().default(sql`uuid_generate_v4()`),
+    venueId: uuid('venue_id')
+      .notNull()
+      .references(() => venues.id, { onDelete: 'cascade' }),
+    dayOfWeek: integer('day_of_week').notNull(),
+    startTime: text('start_time').notNull(),
+    durationMinutes: integer('duration_minutes').notNull().default(240),
+    label: text('label'),
+  },
+  (t) => [
+    index('venue_schedules_venue_id_idx').on(t.venueId),
+    check('venue_schedules_day_check', sql`${t.dayOfWeek} between 0 and 6`),
+    check('venue_schedules_time_check', sql`${t.startTime} ~ '^([01][0-9]|2[0-3]):[0-5][0-9]$'`),
+    check('venue_schedules_duration_check', sql`${t.durationMinutes} between 30 and 720`),
+  ],
+);
+
+// =========================================================
 // rooms
 // =========================================================
 export const rooms = pgTable(
@@ -58,10 +125,14 @@ export const rooms = pgTable(
     longitude: doublePrecision('longitude'),
     venueName: text('venue_name'),
     googlePlaceId: text('google_place_id'),
+    venueId: uuid('venue_id').references(() => venues.id, { onDelete: 'set null' }),
   },
   (t) => [
     index('rooms_host_id_idx').on(t.hostId),
     index('rooms_code_idx').on(t.code),
+    index('rooms_venue_active_idx')
+      .on(t.venueId)
+      .where(sql`${t.endedAt} is null and ${t.venueId} is not null`),
     index('rooms_public_active_idx')
       .on(t.isPublic, t.scheduledAt)
       .where(sql`${t.endedAt} is null and ${t.isPublic} = true`),

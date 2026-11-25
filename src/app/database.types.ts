@@ -193,6 +193,7 @@ export type Database = {
           scheduled_at: string | null
           scheduled_end_at: string | null
           started_at: string | null
+          venue_id: string | null
           venue_name: string | null
         }
         Insert: {
@@ -211,6 +212,7 @@ export type Database = {
           scheduled_at?: string | null
           scheduled_end_at?: string | null
           started_at?: string | null
+          venue_id?: string | null
           venue_name?: string | null
         }
         Update: {
@@ -229,6 +231,7 @@ export type Database = {
           scheduled_at?: string | null
           scheduled_end_at?: string | null
           started_at?: string | null
+          venue_id?: string | null
           venue_name?: string | null
         }
         Relationships: [
@@ -239,6 +242,107 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "rooms_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      venues: {
+        Row: {
+          address: string | null
+          created_at: string
+          description: string | null
+          google_place_id: string | null
+          id: string
+          instagram_handle: string | null
+          is_public: boolean
+          latitude: number | null
+          longitude: number | null
+          name: string
+          owner_id: string
+          slug: string
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          description?: string | null
+          google_place_id?: string | null
+          id?: string
+          instagram_handle?: string | null
+          is_public?: boolean
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          owner_id: string
+          slug: string
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          description?: string | null
+          google_place_id?: string | null
+          id?: string
+          instagram_handle?: string | null
+          is_public?: boolean
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          owner_id?: string
+          slug?: string
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "venues_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      venue_schedules: {
+        Row: {
+          day_of_week: number
+          duration_minutes: number
+          id: string
+          label: string | null
+          start_time: string
+          venue_id: string
+        }
+        Insert: {
+          day_of_week: number
+          duration_minutes?: number
+          id?: string
+          label?: string | null
+          start_time: string
+          venue_id: string
+        }
+        Update: {
+          day_of_week?: number
+          duration_minutes?: number
+          id?: string
+          label?: string | null
+          start_time?: string
+          venue_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "venue_schedules_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
         ]
       }
     }
@@ -246,6 +350,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      open_venue_session: {
+        Args: {
+          p_venue_id: string
+          p_name?: string | null
+          p_is_public?: boolean
+          p_scheduled_at?: string | null
+          p_scheduled_end_at?: string | null
+        }
+        Returns: Database["public"]["Tables"]["rooms"]["Row"]
+      }
       advance_queue: {
         Args: { p_room_id: string }
         Returns: {

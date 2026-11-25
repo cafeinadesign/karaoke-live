@@ -27,6 +27,7 @@ function makeRoom(partial: Partial<Room> = {}): Room {
     is_public: true,
     latitude: -8.0476,
     longitude: -34.877,
+    venue_id: null,
     venue_name: 'Bar do Centro',
     google_place_id: null,
     ...partial,

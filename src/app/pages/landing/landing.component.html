@@ -169,10 +169,60 @@
       }
     </section>
 
+    @if (visiblePublicVenues().length > 0) {
+      <section class="public-events" aria-labelledby="public-venues-title">
+        <div class="section-head">
+          <h2 id="public-venues-title" i18n="@@landing.publicVenuesTitle">
+            Estabelecimentos com karaokê
+          </h2>
+        </div>
+        <ul role="list">
+          @for (entry of visiblePublicVenues(); track entry.venue.id) {
+            @let venue = entry.venue;
+            <li>
+              <div class="event-info">
+                <div class="event-title-row">
+                  <strong>{{ venue.name }}</strong>
+                  @if (venue.activeRoom) {
+                    <span class="badge live" i18n="@@venueDetail.queueOpenBadge">Fila aberta</span>
+                  }
+                </div>
+                @if (entry.scheduleSummary) {
+                  <span class="event-meta">{{ entry.scheduleSummary }}</span>
+                }
+                @if (venue.address || entry.distanceLabel) {
+                  <span class="event-meta">
+                    {{ venue.address }}
+                    @if (entry.distanceLabel) {
+                      @if (venue.address) {
+                        <span aria-hidden="true"> · </span>
+                      }
+                      <span>{{ entry.distanceLabel }}</span>
+                    }
+                  </span>
+                }
+              </div>
+              <a
+                matButton="tonal"
+                [routerLink]="['/local', venue.slug]"
+                i18n="@@landing.viewVenue"
+              >
+                Ver local
+              </a>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
     <section class="actions">
       <button matButton="filled" type="button" (click)="hostNewRoom()">
         <mat-icon>add_circle</mat-icon>
         <span i18n="@@landing.createRoom">Criar sala como host</span>
+      </button>
+      <button matButton="outlined" type="button" (click)="openCreateVenue()">
+        <mat-icon>storefront</mat-icon>
+        <span i18n="@@landing.createVenue">Cadastrar estabelecimento</span>
       </button>
       <button matButton="tonal" type="button" (click)="goToMobile()">
         <mat-icon>mic</mat-icon>
