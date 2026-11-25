@@ -182,12 +182,17 @@ export type Database = {
           created_at: string
           current_item_id: string | null
           ended_at: string | null
+          event_timezone: string | null
           google_place_id: string | null
           host_id: string
           id: string
+          is_public: boolean
           latitude: number | null
           longitude: number | null
           name: string
+          scheduled_at: string | null
+          scheduled_end_at: string | null
+          started_at: string | null
           venue_name: string | null
         }
         Insert: {
@@ -195,12 +200,17 @@ export type Database = {
           created_at?: string
           current_item_id?: string | null
           ended_at?: string | null
+          event_timezone?: string | null
           google_place_id?: string | null
           host_id: string
           id?: string
+          is_public?: boolean
           latitude?: number | null
           longitude?: number | null
           name: string
+          scheduled_at?: string | null
+          scheduled_end_at?: string | null
+          started_at?: string | null
           venue_name?: string | null
         }
         Update: {
@@ -208,12 +218,17 @@ export type Database = {
           created_at?: string
           current_item_id?: string | null
           ended_at?: string | null
+          event_timezone?: string | null
           google_place_id?: string | null
           host_id?: string
           id?: string
+          is_public?: boolean
           latitude?: number | null
           longitude?: number | null
           name?: string
+          scheduled_at?: string | null
+          scheduled_end_at?: string | null
+          started_at?: string | null
           venue_name?: string | null
         }
         Relationships: [
@@ -325,6 +340,10 @@ export type Database = {
       leave_room_membership: {
         Args: { p_room_id: string }
         Returns: undefined
+      }
+      start_room: {
+        Args: { p_room_id: string }
+        Returns: Database["public"]["Tables"]["rooms"]["Row"]
       }
       transfer_room_host: {
         Args: { p_room_id: string; p_new_host_id: string; p_leave?: boolean }

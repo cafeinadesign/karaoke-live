@@ -5,7 +5,17 @@ export type Room = Database['public']['Tables']['rooms']['Row'];
 export type NewRoom = Pick<
   Room,
   'name' | 'latitude' | 'longitude' | 'venue_name' | 'google_place_id'
->;
+> &
+  Partial<
+    Pick<
+      Room,
+      'is_public' | 'scheduled_at' | 'scheduled_end_at' | 'event_timezone' | 'started_at'
+    >
+  >;
+
+export function isRoomScheduled(room: Pick<Room, 'ended_at' | 'started_at'>): boolean {
+  return room.ended_at === null && room.started_at === null;
+}
 export type QueueStatus = 'pending' | 'now_playing' | 'done' | 'skipped';
 
 type QueueItemRow = Database['public']['Tables']['queue_items']['Row'];

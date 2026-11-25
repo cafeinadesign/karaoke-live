@@ -10,18 +10,28 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { toDataURL } from 'qrcode';
+import { EventCalendarActionsComponent } from '../../shared/event-calendar-actions.component';
+import { CalendarRoom, formatEventDateTime } from '../../utils/calendar';
 
 export interface ShareSheetData {
   readonly code: string;
   readonly url: string;
+  readonly room?: CalendarRoom;
 }
 
 @Component({
   selector: 'app-share-sheet',
-  imports: [MatButtonModule, MatIconModule],
+  imports: [MatButtonModule, MatIconModule, EventCalendarActionsComponent],
   template: `
     <div class="sheet">
       <h2 i18n="@@share.title">Compartilhe a sala</h2>
+
+      @if (scheduledLabel(); as when) {
+        <p class="scheduled-when">
+          <mat-icon aria-hidden="true">event</mat-icon>
+          <span>{{ when }}</span>
+        </p>
+      }
 
       <div class="qr-wrap" aria-hidden="true">
         @if (qrSrc()) {
@@ -58,6 +68,10 @@ export interface ShareSheetData {
           </button>
         }
       </div>
+
+      @if (data.room?.scheduled_at) {
+        <app-event-calendar-actions [room]="data.room!" />
+      }
     </div>
   `,
   styles: `
@@ -111,6 +125,15 @@ h2
   font-size: 13px
   word-break: break-all
 
+.scheduled-when
+  margin: 0
+  display: inline-flex
+  align-items: center
+  gap: 6px
+  color: var(--app-accent-gold)
+  font-weight: 500
+  font-size: 14px
+
 .actions
   display: flex
   flex-wrap: wrap
@@ -127,6 +150,10 @@ export class ShareSheetComponent {
 
   protected readonly qrSrc = signal<string | null>(null);
   protected readonly codeChars = computed(() => this.data.code.split(''));
+  protected readonly scheduledLabel = computed(() => {
+    const r = this.data.room;
+    return r?.scheduled_at ? formatEventDateTime(r.scheduled_at, r.event_timezone) : '';
+  });
   protected readonly canNativeShare = typeof navigator !== 'undefined' && 'share' in navigator;
 
   constructor() {

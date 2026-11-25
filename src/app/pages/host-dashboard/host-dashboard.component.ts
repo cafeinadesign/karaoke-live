@@ -32,7 +32,9 @@ import {
 import { SongSearchComponent } from '../../song-search/song-search.component';
 import { VersionFooterComponent } from '../../version-footer/version-footer.component';
 import { PlaybackBarComponent } from '../../playback-bar/playback-bar.component';
-import { QueueItem } from '../../types';
+import { EventCalendarActionsComponent } from '../../shared/event-calendar-actions.component';
+import { QueueItem, isRoomScheduled } from '../../types';
+import { formatEventDateTime } from '../../utils/calendar';
 import { formatDuration } from '../../utils/format';
 import { ShareSheetComponent, ShareSheetData } from './share-sheet.component';
 
@@ -53,6 +55,7 @@ const YT_STATE_ENDED = 0;
     PlaybackBarComponent,
     ParticipantsListComponent,
     RoomVenueComponent,
+    EventCalendarActionsComponent,
   ],
   templateUrl: './host-dashboard.component.html',
   styleUrl: './host-dashboard.component.sass',
@@ -77,8 +80,18 @@ export class HostDashboardComponent {
   protected readonly room = this.rooms.currentRoom;
   protected readonly people = this.participants.participants;
   protected readonly advancing = signal(false);
+  protected readonly starting = signal(false);
   protected readonly elapsed = signal(0);
   protected readonly duration = signal(0);
+
+  protected readonly isScheduled = computed(() => {
+    const r = this.room();
+    return r !== null && isRoomScheduled(r);
+  });
+  protected readonly scheduledLabel = computed(() => {
+    const r = this.room();
+    return r?.scheduled_at ? formatEventDateTime(r.scheduled_at, r.event_timezone) : '';
+  });
 
   protected readonly currentItem = computed(() =>
     this.queue.items().find((i) => i.status === 'now_playing') ?? null,
@@ -168,8 +181,31 @@ export class HostDashboardComponent {
     void this.runAdvance();
   }
 
+  protected async startEvent(): Promise<void> {
+    const room = this.room();
+    if (!room || !this.isScheduled()) return;
+    this.starting.set(true);
+    try {
+      await this.rooms.startRoom(room.id);
+      this.snackBar.open(
+        $localize`:@@host.eventStarted:Evento iniciado! O player está liberado.`,
+        undefined,
+        { duration: 3000 },
+      );
+    } catch {
+      this.snackBar.open(
+        $localize`:@@host.startFailed:Não foi possível iniciar o evento.`,
+        undefined,
+        { duration: 4000 },
+      );
+    } finally {
+      this.starting.set(false);
+    }
+  }
+
   /** Manual "Próxima música" — asks for confirmation first. */
   protected async advance(): Promise<void> {
+    if (this.isScheduled()) return;
     const confirmed = await this.confirmService.ask({
       title: $localize`:@@confirm.nextSong.title:Próxima música?`,
       message: $localize`:@@confirm.nextSong.message:A música atual será marcada como feita e a próxima da fila começa.`,
@@ -248,10 +284,17 @@ export class HostDashboardComponent {
 
     if (others.length === 0) {
       // Host is alone — leaving closes the room.
+      const scheduled = this.isScheduled();
       const confirmed = await this.confirmService.ask({
-        title: $localize`:@@confirm.leave.title:Sair da sala?`,
-        message: $localize`:@@confirm.endRoom.message:Você é a única pessoa na sala. Sair vai encerrá-la.`,
-        confirmLabel: $localize`:@@confirm.endRoom.confirm:Encerrar e sair`,
+        title: scheduled
+          ? $localize`:@@confirm.cancelEvent.title:Cancelar evento?`
+          : $localize`:@@confirm.leave.title:Sair da sala?`,
+        message: scheduled
+          ? $localize`:@@confirm.cancelEvent.message:Você é a única pessoa aqui. Sair por aqui cancela o evento agendado. Para manter o evento ativo, volte por Minhas salas.`
+          : $localize`:@@confirm.endRoom.message:Você é a única pessoa na sala. Sair vai encerrá-la.`,
+        confirmLabel: scheduled
+          ? $localize`:@@confirm.cancelEvent.confirm:Cancelar evento`
+          : $localize`:@@confirm.endRoom.confirm:Encerrar e sair`,
         cancelLabel: $localize`:@@common.cancel:Cancelar`,
         danger: true,
       });
@@ -339,11 +382,11 @@ export class HostDashboardComponent {
   }
 
   protected openShareSheet(): void {
-    const code = this.room()?.code;
-    if (!code) return;
-    const url = `${window.location.origin}/mobile/${code}`;
+    const r = this.room();
+    if (!r) return;
+    const url = `${window.location.origin}/mobile/${r.code}`;
     this.bottomSheet.open<ShareSheetComponent, ShareSheetData>(ShareSheetComponent, {
-      data: { code, url },
+      data: { code: r.code, url, room: r },
     });
   }
 

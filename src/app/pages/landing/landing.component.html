@@ -17,7 +17,7 @@
         @if (list.length === 0) {
           <p i18n="@@rooms.empty">Você ainda não participou de nenhuma sala.</p>
         } @else {
-          <ul>
+          <ul role="list">
             @for (membership of list; track membership.rooms.id) {
               @let room = membership.rooms;
               <li>
@@ -26,6 +26,12 @@
                   <span class="room-status">
                     @if (room.ended_at) {
                       <ng-container i18n="@@rooms.ended">Encerrada</ng-container>
+                    } @else if (isScheduled(room)) {
+                      @if (room.host_id === auth.user()?.id) {
+                        <ng-container i18n="@@rooms.scheduledHost">Você organiza · Agendado para {{ formatSchedule(room) }}</ng-container>
+                      } @else {
+                        <ng-container i18n="@@rooms.scheduledGuest">Agendado para {{ formatSchedule(room) }}</ng-container>
+                      }
                     } @else if (room.host_id === auth.user()?.id) {
                       <ng-container i18n="@@rooms.hosting">Você é anfitrião</ng-container>
                     } @else if (membership.left_at) {
@@ -37,11 +43,21 @@
                 </div>
                 @if (!room.ended_at) {
                   @if (room.host_id === auth.user()?.id) {
-                    <a matButton="tonal" [routerLink]="['/host-dashboard', room.id]" i18n="@@rooms.openDashboard">
+                    <a
+                      matButton="tonal"
+                      [routerLink]="['/host-dashboard', room.id]"
+                      [attr.aria-label]="openDashboardAria(room.name)"
+                      i18n="@@rooms.openDashboard"
+                    >
                       Abrir painel
                     </a>
                   } @else {
-                    <a matButton="tonal" [routerLink]="['/mobile', room.code]" i18n="@@rooms.return">
+                    <a
+                      matButton="tonal"
+                      [routerLink]="['/mobile', room.code]"
+                      [attr.aria-label]="returnRoomAria(room.name)"
+                      i18n="@@rooms.return"
+                    >
                       Voltar à sala
                     </a>
                   }
@@ -54,6 +70,105 @@
         <p role="status" i18n="@@rooms.loading">Carregando suas salas…</p>
       }
     </section>
+
+    <section class="public-events" aria-labelledby="public-events-title">
+      <div class="section-head">
+        <h2 id="public-events-title" i18n="@@landing.publicEventsTitle">Próximos eventos</h2>
+        <button
+          matButton="outlined"
+          type="button"
+          (click)="toggleNearMe()"
+          [disabled]="nearMeLoading()"
+          [attr.aria-pressed]="userLocation() !== null"
+        >
+          <mat-icon>my_location</mat-icon>
+          <span i18n="@@landing.nearMe">Perto de mim</span>
+        </button>
+      </div>
+
+      <search>
+        <mat-form-field appearance="outline" class="search-events-field">
+          <mat-label i18n="@@landing.searchEventsLabel">Buscar evento ou local</mat-label>
+          <input
+            matInput
+            type="search"
+            autocorrect="off"
+            autocapitalize="none"
+            spellcheck="false"
+            [formControl]="searchControl"
+          />
+          <mat-icon matSuffix aria-hidden="true">search</mat-icon>
+        </mat-form-field>
+      </search>
+
+      @if (locationStatus()) {
+        <p role="status" class="status-hint">{{ locationStatus() }}</p>
+      }
+
+      @if (publicEventsFailed()) {
+        <p role="status" i18n="@@landing.publicEventsLoadFailed">
+          Não foi possível carregar os eventos públicos.
+        </p>
+      } @else if (publicEvents() === null) {
+        <p role="status" i18n="@@landing.publicEventsLoading">Carregando eventos públicos…</p>
+      } @else if (visiblePublicEvents().length === 0) {
+        <p class="empty-events" i18n="@@landing.publicEventsEmpty">
+          Nenhum evento público encontrado.
+        </p>
+      } @else {
+        <ul role="list">
+          @for (entry of visiblePublicEvents(); track entry.room.id) {
+            @let event = entry.room;
+            <li>
+              <div class="event-info">
+                <div class="event-title-row">
+                  <strong>{{ event.name }}</strong>
+                  @if (isScheduled(event)) {
+                    <span class="badge scheduled" i18n="@@events.badgeScheduled">Agendado</span>
+                  } @else {
+                    <span class="badge live" i18n="@@events.badgeLive">Ao vivo</span>
+                  }
+                </div>
+                @if (event.scheduled_at) {
+                  <span class="event-meta">{{ formatSchedule(event) }}</span>
+                }
+                @if (event.venue_name || entry.distanceLabel) {
+                  <span class="event-meta">
+                    {{ event.venue_name }}
+                    @if (entry.distanceLabel) {
+                      @if (event.venue_name) {
+                        <span aria-hidden="true"> · </span>
+                      }
+                      <span>{{ entry.distanceLabel }}</span>
+                    }
+                  </span>
+                }
+              </div>
+              @if (event.host_id === auth.user()?.id) {
+                <a
+                  matButton="tonal"
+                  [routerLink]="['/host-dashboard', event.id]"
+                  [attr.aria-label]="openDashboardAria(event.name)"
+                  i18n="@@rooms.openDashboard"
+                >
+                  Abrir painel
+                </a>
+              } @else {
+                <a
+                  matButton="tonal"
+                  [routerLink]="['/mobile', event.code]"
+                  [attr.aria-label]="enterEventAria(event.name)"
+                  i18n="@@events.enter"
+                >
+                  Entrar
+                </a>
+              }
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
     <section class="actions">
       <button matButton="filled" type="button" (click)="hostNewRoom()">
         <mat-icon>add_circle</mat-icon>

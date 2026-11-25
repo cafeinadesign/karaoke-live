@@ -46,24 +46,63 @@
 
 
     <section class="player-wrap">
-      @if (currentVideoId()) {
-        <youtube-player
-          [videoId]="currentVideoId()"
-          [playerVars]="{ autoplay: 1, controls: 1, rel: 0 }"
-          (stateChange)="onPlayerState($event)"
-        />
+      @if (isScheduled()) {
+        <div class="scheduled-card">
+          <div class="scheduled-badges">
+            <span class="badge scheduled" i18n="@@events.badgeScheduled">Agendado</span>
+            @if (room()!.is_public) {
+              <span class="badge visibility" i18n="@@events.badgePublic">Público</span>
+            } @else {
+              <span class="badge visibility" i18n="@@events.badgeInviteOnly">Só por convite</span>
+            }
+          </div>
+          @if (scheduledLabel(); as when) {
+            <p class="scheduled-when">
+              <mat-icon aria-hidden="true">event</mat-icon>
+              <span>{{ when }}</span>
+            </p>
+          }
+          <p class="scheduled-desc" i18n="@@host.scheduledHint">
+            Os convidados já podem entrar e montar a pré-fila. Quando estiver tudo pronto, libere o player.
+          </p>
+          <div class="scheduled-actions">
+            <button
+              matButton="filled"
+              type="button"
+              class="start-event-btn"
+              [disabled]="starting()"
+              (click)="startEvent()"
+            >
+              <mat-icon>play_arrow</mat-icon>
+              <span i18n="@@host.startEvent">Iniciar evento</span>
+            </button>
+            <button matButton="tonal" type="button" (click)="openShareSheet()">
+              <mat-icon>share</mat-icon>
+              <span i18n="@@host.shareInvite">Compartilhar convite</span>
+            </button>
+          </div>
+          <app-event-calendar-actions [room]="room()!" />
+        </div>
       } @else {
-        <div class="player-empty">
-          <mat-icon aria-hidden="true">play_circle</mat-icon>
-          <p i18n="@@host.playerEmpty">Nenhuma música tocando. Clique em "Próxima música" para começar.</p>
-        </div>
-      }
-      @if (currentItem(); as item) {
-        <div class="now-playing">
-          <span class="label" i18n="@@host.nowLabel">Agora</span>
-          <span class="song">{{ item.video_title }}</span>
-        </div>
-        <app-playback-bar [elapsed]="elapsed()" [duration]="duration()" />
+        @if (currentVideoId()) {
+          <youtube-player
+            [videoId]="currentVideoId()"
+            [playerVars]="{ autoplay: 1, controls: 1, rel: 0 }"
+            (stateChange)="onPlayerState($event)"
+          />
+        } @else {
+          <div class="player-empty">
+            <mat-icon aria-hidden="true">play_circle</mat-icon>
+            <p i18n="@@host.playerEmpty">Nenhuma música tocando. Clique em "Próxima música" para começar.</p>
+          </div>
+        }
+        @if (currentItem(); as item) {
+          <div class="now-playing">
+            <span class="label" i18n="@@host.nowLabel">Agora</span>
+            <span class="song">{{ item.video_title }}</span>
+          </div>
+          <app-playback-bar [elapsed]="elapsed()" [duration]="duration()" />
+        }
       }
     </section>
 
@@ -72,7 +111,7 @@
         matButton="filled"
         type="button"
         (click)="advance()"
-        [disabled]="advancing() || (pendingItems().length === 0 && !currentItem())"
+        [disabled]="isScheduled() || advancing() || (pendingItems().length === 0 && !currentItem())"
         class="next-btn"
       >
         <mat-icon>skip_next</mat-icon>

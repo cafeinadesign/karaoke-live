@@ -1294,6 +1294,194 @@
         <source>Buscando endereço do pin…</source>
         <target state="translated">Looking up the pin address…</target>
       </trans-unit>
+      <trans-unit id="events.badgeScheduled" datatype="html">
+        <source>Agendado</source>
+        <target state="translated">Scheduled</target>
+      </trans-unit>
+      <trans-unit id="events.badgePublic" datatype="html">
+        <source>Público</source>
+        <target state="translated">Public</target>
+      </trans-unit>
+      <trans-unit id="events.badgeInviteOnly" datatype="html">
+        <source>Só por convite</source>
+        <target state="translated">Invite only</target>
+      </trans-unit>
+      <trans-unit id="host.scheduledHint" datatype="html">
+        <source> Os convidados já podem entrar e montar a pré-fila. Quando estiver tudo pronto, libere o player. </source>
+        <target state="translated">Guests can already join and pre-queue songs. When you're ready, unlock the player.</target>
+      </trans-unit>
+      <trans-unit id="host.startEvent" datatype="html">
+        <source>Iniciar evento</source>
+        <target state="translated">Start event</target>
+      </trans-unit>
+      <trans-unit id="host.shareInvite" datatype="html">
+        <source>Compartilhar convite</source>
+        <target state="translated">Share invite</target>
+      </trans-unit>
+      <trans-unit id="host.eventStarted" datatype="html">
+        <source>Evento iniciado! O player está liberado.</source>
+        <target state="translated">Event started! The player is live.</target>
+      </trans-unit>
+      <trans-unit id="host.startFailed" datatype="html">
+        <source>Não foi possível iniciar o evento.</source>
+        <target state="translated">Could not start the event.</target>
+      </trans-unit>
+      <trans-unit id="confirm.cancelEvent.title" datatype="html">
+        <source>Cancelar evento?</source>
+        <target state="translated">Cancel event?</target>
+      </trans-unit>
+      <trans-unit id="confirm.cancelEvent.message" datatype="html">
+        <source>Você é a única pessoa aqui. Sair por aqui cancela o evento agendado. Para manter o evento ativo, volte por Minhas salas.</source>
+        <target state="translated">You're the only person here. Leaving from here cancels the scheduled event. To keep the event active, go back via My rooms.</target>
+      </trans-unit>
+      <trans-unit id="confirm.cancelEvent.confirm" datatype="html">
+        <source>Cancelar evento</source>
+        <target state="translated">Cancel event</target>
+      </trans-unit>
+      <trans-unit id="rooms.scheduledHost" datatype="html">
+        <source>Você organiza · Agendado para <x id="INTERPOLATION" equiv-text="{{ formatSchedule(room) }}"/></source>
+        <target state="translated">You're hosting · Scheduled for <x id="INTERPOLATION" equiv-text="{{ formatSchedule(room) }}"/></target>
+      </trans-unit>
+      <trans-unit id="rooms.scheduledGuest" datatype="html">
+        <source>Agendado para <x id="INTERPOLATION" equiv-text="{{ formatSchedule(room) }}"/></source>
+        <target state="translated">Scheduled for <x id="INTERPOLATION" equiv-text="{{ formatSchedule(room) }}"/></target>
+      </trans-unit>
+      <trans-unit id="landing.publicEventsTitle" datatype="html">
+        <source>Próximos eventos</source>
+        <target state="translated">Upcoming events</target>
+      </trans-unit>
+      <trans-unit id="landing.nearMe" datatype="html">
+        <source>Perto de mim</source>
+        <target state="translated">Near me</target>
+      </trans-unit>
+      <trans-unit id="landing.searchEventsLabel" datatype="html">
+        <source>Buscar evento ou local</source>
+        <target state="translated">Search event or venue</target>
+      </trans-unit>
+      <trans-unit id="landing.publicEventsLoadFailed" datatype="html">
+        <source> Não foi possível carregar os eventos públicos. </source>
+        <target state="translated">Could not load public events.</target>
+      </trans-unit>
+      <trans-unit id="landing.publicEventsLoading" datatype="html">
+        <source>Carregando eventos públicos…</source>
+        <target state="translated">Loading public events…</target>
+      </trans-unit>
+      <trans-unit id="landing.publicEventsEmpty" datatype="html">
+        <source> Nenhum evento público encontrado. </source>
+        <target state="translated">No public events found.</target>
+      </trans-unit>
+      <trans-unit id="events.badgeLive" datatype="html">
+        <source>Ao vivo</source>
+        <target state="translated">Live</target>
+      </trans-unit>
+      <trans-unit id="events.enter" datatype="html">
+        <source> Entrar </source>
+        <target state="translated">Join</target>
+      </trans-unit>
+      <trans-unit id="rooms.openDashboardAria" datatype="html">
+        <source>Abrir painel: <x id="name" equiv-text="name"/></source>
+        <target state="translated">Open dashboard: <x id="name" equiv-text="name"/></target>
+      </trans-unit>
+      <trans-unit id="rooms.returnAria" datatype="html">
+        <source>Voltar à sala: <x id="name" equiv-text="name"/></source>
+        <target state="translated">Return to room: <x id="name" equiv-text="name"/></target>
+      </trans-unit>
+      <trans-unit id="events.enterAria" datatype="html">
+        <source>Entrar: <x id="name" equiv-text="name"/></source>
+        <target state="translated">Join: <x id="name" equiv-text="name"/></target>
+      </trans-unit>
+      <trans-unit id="landing.sortedByDistance" datatype="html">
+        <source>Ordenado por proximidade.</source>
+        <target state="translated">Sorted by distance.</target>
+      </trans-unit>
+      <trans-unit id="landing.geoFailed" datatype="html">
+        <source>Não foi possível obter sua localização agora.</source>
+        <target state="translated">Could not get your location right now.</target>
+      </trans-unit>
+      <trans-unit id="mobile.eventDetailsAria" datatype="html">
+        <source>Detalhes do evento</source>
+        <target state="translated">Event details</target>
+      </trans-unit>
+      <trans-unit id="mobile.scheduledHint" datatype="html">
+        <source> O evento ainda não começou. Você já pode adicionar sua música na pré-fila. </source>
+        <target state="translated">The event hasn't started yet. You can already add your song to the pre-queue.</target>
+      </trans-unit>
+      <trans-unit id="createRoom.modeAriaLabel" datatype="html">
+        <source>Tipo de criação</source>
+        <target state="translated">Creation mode</target>
+      </trans-unit>
+      <trans-unit id="createRoom.modeNow" datatype="html">
+        <source>Começar agora</source>
+        <target state="translated">Start now</target>
+      </trans-unit>
+      <trans-unit id="createRoom.modeEvent" datatype="html">
+        <source>Evento</source>
+        <target state="translated">Event</target>
+      </trans-unit>
+      <trans-unit id="createRoom.scheduleLegend" datatype="html">
+        <source> Data e horário (Google Agenda) </source>
+        <target state="translated">Date and time (Google Calendar)</target>
+      </trans-unit>
+      <trans-unit id="createRoom.dateLabel" datatype="html">
+        <source>Data</source>
+        <target state="translated">Date</target>
+      </trans-unit>
+      <trans-unit id="createRoom.timeLabel" datatype="html">
+        <source>Horário</source>
+        <target state="translated">Time</target>
+      </trans-unit>
+      <trans-unit id="createRoom.durationLabel" datatype="html">
+        <source>Duração</source>
+        <target state="translated">Duration</target>
+      </trans-unit>
+      <trans-unit id="createRoom.timezoneHint" datatype="html">
+        <source> Fuso horário: <x id="INTERPOLATION" equiv-text="{{ localTimeZone }}"/>. Os convidados poderão pré-enfileirar músicas antes do início. </source>
+        <target state="translated">Time zone: <x id="INTERPOLATION" equiv-text="{{ localTimeZone }}"/>. Guests can pre-queue songs before it starts.</target>
+      </trans-unit>
+      <trans-unit id="createRoom.dstNotice" datatype="html">
+        <source> Horário próximo à mudança de horário de verão; ajustado automaticamente. </source>
+        <target state="translated">Time falls near a daylight saving transition; adjusted automatically.</target>
+      </trans-unit>
+      <trans-unit id="createRoom.visibilityLegend" datatype="html">
+        <source>Visibilidade</source>
+        <target state="translated">Visibility</target>
+      </trans-unit>
+      <trans-unit id="createRoom.visibilityPrivate" datatype="html">
+        <source> Só por convite (link, QR ou código) </source>
+        <target state="translated">Invite only (link, QR, or code)</target>
+      </trans-unit>
+      <trans-unit id="createRoom.visibilityPublic" datatype="html">
+        <source> Público (aparece na lista de eventos) </source>
+        <target state="translated">Public (listed in upcoming events)</target>
+      </trans-unit>
+      <trans-unit id="createRoom.submitEvent" datatype="html">
+        <source>Criar evento</source>
+        <target state="translated">Create event</target>
+      </trans-unit>
+      <trans-unit id="createRoom.scheduleRequired" datatype="html">
+        <source>Informe data e horário válidos para o evento.</source>
+        <target state="translated">Enter a valid date and time for the event.</target>
+      </trans-unit>
+      <trans-unit id="createRoom.schedulePast" datatype="html">
+        <source>Escolha uma data e horário no futuro.</source>
+        <target state="translated">Choose a date and time in the future.</target>
+      </trans-unit>
+      <trans-unit id="calendar.addGoogle" datatype="html">
+        <source>Adicionar ao Google Agenda</source>
+        <target state="translated">Add to Google Calendar</target>
+      </trans-unit>
+      <trans-unit id="calendar.downloadIcs" datatype="html">
+        <source>Baixar .ics</source>
+        <target state="translated">Download .ics</target>
+      </trans-unit>
+      <trans-unit id="calendar.icsFailed" datatype="html">
+        <source>Não foi possível gerar o arquivo do evento.</source>
+        <target state="translated">Could not generate the event file.</target>
+      </trans-unit>
+      <trans-unit id="calendar.eventSummary" datatype="html">
+        <source>Karaokê Live — Sala <x id="code" equiv-text="room.code"/></source>
+        <target state="translated">Karaokê Live — Room <x id="code" equiv-text="room.code"/></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

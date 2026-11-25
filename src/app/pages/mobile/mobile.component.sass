@@ -81,6 +81,9 @@
     background: var(--mat-sys-primary)
     flex-shrink: 0
 
+    &.scheduled
+      background: var(--app-accent-gold)
+
   .code
     font-family: 'Roboto Mono', monospace
     font-weight: 700
@@ -168,3 +171,38 @@
   .mine-tag
     color: var(--app-accent-gold)
     font-weight: 500
+
+.event-banner
+  display: flex
+  flex-direction: column
+  gap: 10px
+  padding: 16px
+  border-radius: 12px
+  background: var(--mat-sys-surface-container)
+  border-left: 3px solid var(--app-accent-gold)
+
+.event-banner-head
+  display: flex
+  flex-wrap: wrap
+  align-items: center
+  gap: 8px
+
+.badge.scheduled
+  font-size: 11px
+  font-weight: 600
+  text-transform: uppercase
+  letter-spacing: 0.4px
+  padding: 2px 8px
+  border-radius: 999px
+  background: color-mix(in srgb, var(--app-accent-gold) 18%, transparent)
+  color: var(--app-accent-gold)
+
+.scheduled-when
+  font-size: 15px
+  font-weight: 600
+
+.scheduled-hint
+  margin: 0
+  color: var(--mat-sys-on-surface-variant)
+  font-size: 14px
+

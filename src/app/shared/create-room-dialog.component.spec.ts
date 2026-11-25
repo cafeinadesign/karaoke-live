@@ -104,4 +104,91 @@ describe('CreateRoomDialogComponent', () => {
     }
   });
 
+  it('creates a scheduled public event with start/end timestamps, timezone, and started_at null', () => {
+    const close = vi.fn();
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: MatDialogRef, useValue: { close } },
+      ],
+    });
+
+    const fixture = TestBed.createComponent(CreateRoomDialogComponent);
+    fixture.detectChanges();
+    const view: HTMLElement = fixture.nativeElement;
+
+    const eventToggle = view.querySelectorAll<HTMLButtonElement>('mat-button-toggle button')[1];
+    eventToggle.click();
+    fixture.detectChanges();
+
+    const nameInput = view.querySelector<HTMLInputElement>('input[type="text"]')!;
+    nameInput.value = 'Karaokê do Sábado';
+    nameInput.dispatchEvent(new Event('input'));
+
+    const dateInput = view.querySelector<HTMLInputElement>('input[type="date"]')!;
+    dateInput.value = '2026-12-12';
+    dateInput.dispatchEvent(new Event('input'));
+
+    const timeInput = view.querySelector<HTMLInputElement>('input[type="time"]')!;
+    timeInput.value = '21:00';
+    timeInput.dispatchEvent(new Event('input'));
+
+    const venueInput = view.querySelector<HTMLInputElement>('.venue input')!;
+    venueInput.value = 'Pub Central';
+    venueInput.dispatchEvent(new Event('input'));
+
+    const publicRadio = view.querySelectorAll<HTMLInputElement>('.visibility input[type="radio"]')[1];
+    publicRadio.click();
+    fixture.detectChanges();
+
+    const save = view.querySelector<HTMLButtonElement>('mat-dialog-actions button:last-child')!;
+    expect(save.disabled).toBe(false);
+    save.click();
+
+    expect(close).toHaveBeenCalledTimes(1);
+    const payload = close.mock.calls[0][0];
+    expect(payload.name).toBe('Karaokê do Sábado');
+    expect(payload.venue_name).toBe('Pub Central');
+    expect(payload.is_public).toBe(true);
+    expect(payload.started_at).toBeNull();
+    expect(payload.event_timezone).toBeTruthy();
+    expect(typeof payload.scheduled_at).toBe('string');
+    expect(new Date(payload.scheduled_end_at).getTime() - new Date(payload.scheduled_at).getTime())
+      .toBe(3 * 3_600_000);
+  });
+
+  it('rejects past date/time when creating an event and shows an error after interaction', () => {
+    const close = vi.fn();
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: MatDialogRef, useValue: { close } },
+      ],
+    });
+
+    const fixture = TestBed.createComponent(CreateRoomDialogComponent);
+    fixture.detectChanges();
+    const view: HTMLElement = fixture.nativeElement;
+
+    const eventToggle = view.querySelectorAll<HTMLButtonElement>('mat-button-toggle button')[1];
+    eventToggle.click();
+    fixture.detectChanges();
+
+    const nameInput = view.querySelector<HTMLInputElement>('input[type="text"]')!;
+    nameInput.value = 'Evento passado';
+    nameInput.dispatchEvent(new Event('input'));
+
+    const venueInput = view.querySelector<HTMLInputElement>('.venue input')!;
+    venueInput.value = 'Casa';
+    venueInput.dispatchEvent(new Event('input'));
+
+    const dateInput = view.querySelector<HTMLInputElement>('input[type="date"]')!;
+    dateInput.value = '2020-01-01';
+    dateInput.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    const save = view.querySelector<HTMLButtonElement>('mat-dialog-actions button:last-child')!;
+    expect(save.disabled).toBe(true);
+    expect(view.querySelector('.schedule-error')?.textContent).toContain('futuro');
+    expect(close).not.toHaveBeenCalled();
+  });
+
 });

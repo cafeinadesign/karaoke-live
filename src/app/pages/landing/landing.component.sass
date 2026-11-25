@@ -10,7 +10,7 @@
   padding: 64px 24px 32px
   display: flex
   flex-direction: column
-  gap: 48px
+  gap: 36px
   text-align: center
 
 header
@@ -40,13 +40,13 @@ h1
   flex-direction: column
   gap: 12px
 
-.my-rooms
+.my-rooms, .public-events
   text-align: start
 
   h2
     margin: 0 0 12px
 
-  p, .room-status
+  p, .room-status, .event-meta, .status-hint
     color: var(--mat-sys-on-surface-variant)
 
   ul
@@ -67,9 +67,55 @@ h1
     background: var(--mat-sys-surface-container)
     overflow-wrap: anywhere
 
-  .room-status
+  .room-status, .event-meta
     display: block
     font-size: 14px
+
+.section-head
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 12px
+  margin-bottom: 12px
+
+  h2
+    margin: 0
+
+.search-events-field
+  width: 100%
+
+.status-hint
+  margin: 0 0 10px
+  font-size: 13px
+
+.event-info
+  display: flex
+  flex-direction: column
+  gap: 4px
+  min-width: 0
+  flex: 1
+
+.event-title-row
+  display: flex
+  align-items: center
+  gap: 8px
+  flex-wrap: wrap
+
+.badge
+  font-size: 11px
+  font-weight: 600
+  text-transform: uppercase
+  letter-spacing: 0.4px
+  padding: 2px 8px
+  border-radius: 999px
+
+  &.scheduled
+    background: color-mix(in srgb, var(--app-accent-gold) 18%, transparent)
+    color: var(--app-accent-gold)
+
+  &.live
+    background: color-mix(in srgb, var(--mat-sys-primary) 22%, transparent)
+    color: var(--mat-sys-primary)
 
 app-version-footer
   margin-top: auto

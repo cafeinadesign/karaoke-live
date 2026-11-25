@@ -48,7 +48,12 @@ export const rooms = pgTable(
     name: text('name').notNull(),
     currentItemId: uuid('current_item_id'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    scheduledAt: timestamp('scheduled_at', { withTimezone: true }),
+    scheduledEndAt: timestamp('scheduled_end_at', { withTimezone: true }),
+    eventTimezone: text('event_timezone'),
+    startedAt: timestamp('started_at', { withTimezone: true }).defaultNow(),
     endedAt: timestamp('ended_at', { withTimezone: true }),
+    isPublic: boolean('is_public').notNull().default(false),
     latitude: doublePrecision('latitude'),
     longitude: doublePrecision('longitude'),
     venueName: text('venue_name'),
@@ -57,6 +62,9 @@ export const rooms = pgTable(
   (t) => [
     index('rooms_host_id_idx').on(t.hostId),
     index('rooms_code_idx').on(t.code),
+    index('rooms_public_active_idx')
+      .on(t.isPublic, t.scheduledAt)
+      .where(sql`${t.endedAt} is null and ${t.isPublic} = true`),
     check('rooms_code_length', sql`char_length(${t.code}) = 6`),
     check(
       'rooms_name_length_check',
@@ -67,6 +75,14 @@ export const rooms = pgTable(
     check('rooms_google_place_id_not_blank_check', sql`char_length(trim(${t.googlePlaceId})) > 0`),
     check('rooms_latitude_range_check', sql`${t.latitude} between -90 and 90`),
     check('rooms_longitude_range_check', sql`${t.longitude} between -180 and 180`),
+    check(
+      'rooms_schedule_pair_check',
+      sql`${t.scheduledEndAt} is null or (${t.scheduledAt} is not null and ${t.scheduledEndAt} > ${t.scheduledAt})`,
+    ),
+    check(
+      'rooms_event_timezone_not_blank_check',
+      sql`${t.eventTimezone} is null or char_length(trim(${t.eventTimezone})) > 0`,
+    ),
   ],
 );
 

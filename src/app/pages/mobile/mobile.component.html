@@ -41,7 +41,7 @@
     </section>
   } @else {
     <header class="room-bar">
-      <span class="dot" aria-hidden="true"></span>
+      <span class="dot" [class.scheduled]="isScheduled()" aria-hidden="true"></span>
       <span class="code">{{ room()!.code }}</span>
       @if (room()!.name) {
         <span class="name">{{ room()!.name }}</span>
@@ -74,6 +74,21 @@
     @if (room()!.ended_at) {
       <p role="status" i18n="@@rooms.closed">Esta sala foi encerrada.</p>
     } @else {
+      @if (isScheduled()) {
+        <section class="event-banner" i18n-aria-label="@@mobile.eventDetailsAria" aria-label="Detalhes do evento">
+          <div class="event-banner-head">
+            <span class="badge scheduled" i18n="@@events.badgeScheduled">Agendado</span>
+            @if (scheduledLabel(); as when) {
+              <span class="scheduled-when">{{ when }}</span>
+            }
+          </div>
+          <p class="scheduled-hint" i18n="@@mobile.scheduledHint">
+            O evento ainda não começou. Você já pode adicionar sua música na pré-fila.
+          </p>
+          <app-event-calendar-actions [room]="room()!" />
+        </section>
+      }
+
       @if (currentItem(); as current) {
         <section class="now-playing" [class.mine]="isMine(current)">
           <span class="label" i18n="@@status.nowPlaying">Cantando agora</span>

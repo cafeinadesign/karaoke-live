@@ -4,10 +4,30 @@ import { SupabaseService } from '../supabase.service';
 import { AuthService } from '../auth/auth.service';
 import { NewRoom, Room } from '../types';
 
+export type RoomSummary = Pick<
+  Room,
+  | 'id'
+  | 'code'
+  | 'ended_at'
+  | 'host_id'
+  | 'name'
+  | 'scheduled_at'
+  | 'scheduled_end_at'
+  | 'event_timezone'
+  | 'started_at'
+  | 'is_public'
+  | 'venue_name'
+  | 'latitude'
+  | 'longitude'
+>;
+
 export interface RoomMembership {
   readonly left_at: string | null;
-  readonly rooms: Pick<Room, 'id' | 'code' | 'ended_at' | 'host_id' | 'name'>;
+  readonly rooms: RoomSummary;
 }
+
+const ROOM_SUMMARY_COLUMNS =
+  'id, code, ended_at, host_id, name, scheduled_at, scheduled_end_at, event_timezone, started_at, is_public, venue_name, latitude, longitude';
 
 const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
@@ -31,12 +51,25 @@ export class RoomsService {
   async listMemberships(userId: string): Promise<RoomMembership[]> {
     const { data, error } = await this.supabase.client
       .from('room_memberships')
-      .select('left_at, rooms!inner(id, code, ended_at, host_id, name)')
+      .select(`left_at, rooms!inner(${ROOM_SUMMARY_COLUMNS})`)
       .eq('user_id', userId)
       .order('last_joined_at', { ascending: false });
 
     if (error) throw new Error(error.message);
     return data;
+  }
+
+  async listPublicRooms(): Promise<RoomSummary[]> {
+    const { data, error } = await this.supabase.client
+      .from('rooms')
+      .select(ROOM_SUMMARY_COLUMNS)
+      .eq('is_public', true)
+      .is('ended_at', null)
+      .order('scheduled_at', { ascending: true, nullsFirst: false })
+      .limit(50);
+
+    if (error) throw new Error(error.message);
+    return data ?? [];
   }
 
   async leaveMembership(roomId: string): Promise<void> {
@@ -50,11 +83,23 @@ export class RoomsService {
     const userId = this.auth.user()?.id;
     if (!userId) throw new Error('not_authenticated');
 
+    const isScheduled = Boolean(room.scheduled_at);
     for (let attempt = 0; attempt < 5; attempt++) {
       const code = generateCode();
       const { data, error } = await this.supabase.client
         .from('rooms')
-        .insert({ ...room, code, host_id: userId })
+        .insert({
+          ...room,
+          code,
+          host_id: userId,
+          is_public: room.is_public ?? false,
+          started_at:
+            room.started_at !== undefined
+              ? room.started_at
+              : isScheduled
+                ? null
+                : new Date().toISOString(),
+        })
         .select()
         .single();
 
@@ -128,6 +173,16 @@ export class RoomsService {
     });
     if (error || !data) throw new Error(error?.message ?? 'transfer_failed');
     this.currentRoom.set(data);
+  }
+
+  /** Marks a scheduled event room as live. Only the host may call this. */
+  async startRoom(roomId: string): Promise<Room> {
+    const { data, error } = await this.supabase.client.rpc('start_room', {
+      p_room_id: roomId,
+    });
+    if (error || !data) throw new Error(error?.message ?? 'start_failed');
+    this.currentRoom.set(data);
+    return data;
   }
 
   /** Marks the room as ended. */

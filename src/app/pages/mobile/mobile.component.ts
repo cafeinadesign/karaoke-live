@@ -31,7 +31,9 @@ import {
 } from '../../shared/replace-video-dialog.component';
 import { SongSearchComponent } from '../../song-search/song-search.component';
 import { PlaybackBarComponent } from '../../playback-bar/playback-bar.component';
-import { QueueItem } from '../../types';
+import { EventCalendarActionsComponent } from '../../shared/event-calendar-actions.component';
+import { QueueItem, isRoomScheduled } from '../../types';
+import { formatEventDateTime } from '../../utils/calendar';
 import { formatDuration } from '../../utils/format';
 import { YourTurnSheetComponent, YourTurnData } from './your-turn-sheet.component';
 import { QrScannerDialogComponent } from './qr-scanner-dialog.component';
@@ -52,6 +54,7 @@ import { QrScannerDialogComponent } from './qr-scanner-dialog.component';
     PlaybackBarComponent,
     ParticipantsListComponent,
     RoomVenueComponent,
+    EventCalendarActionsComponent,
   ],
   templateUrl: './mobile.component.html',
   styleUrl: './mobile.component.sass',
@@ -78,6 +81,14 @@ export class MobileComponent {
   protected readonly joining = signal(false);
   protected readonly room = this.rooms.currentRoom;
   protected readonly people = this.participants.participants;
+  protected readonly isScheduled = computed(() => {
+    const r = this.room();
+    return r !== null && isRoomScheduled(r);
+  });
+  protected readonly scheduledLabel = computed(() => {
+    const r = this.room();
+    return r?.scheduled_at ? formatEventDateTime(r.scheduled_at, r.event_timezone) : '';
+  });
 
   /** Ticks every second so playback time recomputes from started_at. */
   private readonly nowTick = signal(Date.now());
